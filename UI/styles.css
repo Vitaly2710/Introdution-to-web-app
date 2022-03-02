@@ -316,8 +316,63 @@ header {
 }
 
 .fitrationBlock {
-    border-left: 1px solid rgba(129, 129, 129, 0.5);;
+    border-left: 1px solid rgba(129, 129, 129, 0.5);
 }
+
+footer {
+    background: linear-gradient(355.31deg, #38A6FF 50.1%, rgba(56, 166, 255, 0.19) 96.31%);
+    display: flex;
+    padding-left: 4%;
+    padding-top: 3%;
+    align-items: center;
+    padding-bottom: 5%;
+}
+
+.logoInFooter {
+    display: flex;
+    align-items: center;
+}
+
+.logoInFooter img {
+    width: 31%;
+    height: 99%;
+}
+
+.logoInFooter h2 {
+    margin-left: 5% ;
+    color: white;
+    font-family: 'Montserrat', Bold, sans-serif;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+
+.howAndWhen {
+    margin-left: 4%;
+}
+
+.howAndWhen p {
+    color: #FFFFFF;
+    font-family: 'Montserrat', Bold, sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.howAndWhen p:last-child {
+    font-family: 'Montserrat', Regular, sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    margin-top: 8%;
+}
+
+.mailInFooter {
+    margin-left: 2%;
+    color: #FFFFFF;
+    font-family: 'Montserrat', Regular, sans-serif;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+
 
 
 
