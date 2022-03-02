@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.mainPage_container {
+    max-width: 1512px;
+    margin: 0 auto;background: #FFFFFF;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+header {
+    max-width: 95%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 160px 204px;
+    justify-content: space-between;
+    padding-bottom: 4px;
+    padding-top: 4px;
+}
+
+.logoBlockInHeader {
+    display: flex;
+}
+
+.logoBlockInHeader img {
+    width: 56px;
+    height: 56px;
+}
+
+.trotterInHeader {
+    margin-left: 8px;
+    margin-top: 18px;
+    font-family: 'Montserrat', Bold, sans-serif;
+    font-size: 18px;
+    text-transform: uppercase;
+    color: #38A6FF;
+    cursor: pointer;
+}
+
+.logInButton {
+    max-width: 96px;
+    margin-top: 15px;
+    padding: 8px 25px 8px 26px;
+    background: #38A6FF;
+    border-radius: 30px;
+    border: none;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.logInButton:hover {
+    background-color: #115D8C ;
+}
+
+.trotterInHeader:hover {
+    color: #115D8C;
+}
+
+.headerUserBlock {
+    display: grid;
+    grid-template-columns: 32px 121px 24px;
+    margin-top: 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.headerUserBlock img:first-child {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.headerUserBlock h4 {
+    font-family: 'Montserrat', Bold, sans-serif;
+    font-size: 18px;
+    line-height: 22px;
+}
+
+.buttonLoginOut img {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    margin-top: 3px;
+}
+
+
+
+
+
+
+
