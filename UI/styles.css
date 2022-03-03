@@ -265,6 +265,7 @@ header {
     font-size: 18px;
     color: #818181;
     position: relative;
+    width: 7%;
 }
 
 .response ul li:first-child {
@@ -416,6 +417,7 @@ footer {
 .fitrationBlock {
     padding-left: 1.6%;
     padding-right: 1.6%;
+    padding-bottom: 3%;
     width: 25%;
 }
 
@@ -498,8 +500,49 @@ footer {
 
 
 
+/*Styles for trotter page*/
 
+.trotter_container {
+    max-width: 1512px;
+    margin: 0 auto;background: #FFFFFF;
+}
 
+.backInMain {
+    display: flex;
+    width: 62%;
+    margin: 1% auto;
+    align-items: center;
+}
+
+.backInMain a {
+    width: 5%;
+    cursor: pointer;
+}
+
+.backInMain img {
+    width: 96%;
+    margin-top: 43%;
+}
+
+.backInMain h2 {
+    margin-left: 2%;
+}
+
+.trotter>img {
+    width: 95%;
+    margin-top: 5%;
+}
+
+.reTrott {
+    color: #818181;
+    font-family: 'Montserrat', Regular, sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+}
+
+.reTrott span {
+    color: #38A6FF;
+}
 
 
 
