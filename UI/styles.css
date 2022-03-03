@@ -207,6 +207,27 @@ header {
     font-weight: 400;
 }
 
+.correctTrotter_block {
+    position: absolute;
+    background-color: #ececec;
+    transform: translateX(385%);
+    padding: 1%;
+    border-radius: 10%;
+    display: none;
+}
+
+.correctTrotter_block li {
+    display: flex;
+    }
+
+.correctTrotter_block img {
+    width: 27%;
+}
+
+.correctTrotter_block li:last-child {
+    margin-top: 9%;
+}
+
 .mainBlock_trotteList_trotter .userInfo h4:last-child {
     margin-left: 1.3%;
 }
@@ -257,6 +278,11 @@ header {
     transform: translate(-120%, 0%);
 }
 
+.response ul li:first-child:hover:before {
+    cursor: pointer;
+    background-image: url("./assets/response_message_hover.png");
+}
+
 .response ul li:nth-child(2)::before {
     content: "";
     width: 100%;
@@ -269,6 +295,11 @@ header {
     transform: translate(-100%, 0%);
 }
 
+.response ul li:nth-child(2):hover:before {
+    cursor: pointer;
+    background-image: url("./assets/response_likes_hover.png");
+}
+
 .response ul li:last-child::before {
     content: "";
     width: 100%;
@@ -279,6 +310,11 @@ header {
     background-size: contain;
     background-repeat: no-repeat;
     transform: translate(-100%, -10%);
+}
+
+.response ul li:last-child:hover:before {
+    background-image: url("./assets/response_retrote_hover.png");
+    cursor: pointer;
 }
 
 .correctTrotter {
