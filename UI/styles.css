@@ -143,6 +143,7 @@ header {
     font-family: 'Montserrat', Regular, sans-serif;
     font-size: 18px;
     line-height: 22px;
+    width: 100%;
 }
 
 .inclosureAndInput {
@@ -170,6 +171,10 @@ header {
     width: 15%;
     font-family: 'Montserrat', Semiold, sans-serif ;
     font-size: 90%;
+}
+
+.inclosureAndInput button:hover {
+    background-color: #115D8C;
 }
 
 .mainBlock_trotteList_trotter .container {
@@ -407,6 +412,92 @@ footer {
     font-size: 18px;
     font-weight: normal;
 }
+
+.fitrationBlock {
+    padding-left: 1.6%;
+    padding-right: 1.6%;
+    width: 25%;
+}
+
+.fitrationBlock_container form {
+    display: grid;
+}
+
+.fitrationBlock_container {
+    margin-top: 19%;
+    border: 1px solid rgba(129, 129, 129, 0.5);
+    box-sizing: border-box;
+    border-radius: 20px;
+    padding-right: 4%;
+    padding-left: 4%;
+}
+
+.fitrationBlock_container h2 {
+    margin-top: 3%;
+    font-family: 'Montserrat', Bold, sans-serif;
+    font-size: 32px;
+}
+
+.fitrationBlock_container form {
+    margin-top: 10%;
+}
+
+.fitrationBlock_container label {
+    font-family: 'Montserrat', Bold, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.fitrationBlock_container input {
+    display: block;
+    margin-top: 5%;
+    width: 100%;
+    background: #EFF3F4;
+    border-radius: 30px;
+    border: none;
+    padding: 1% 0% 1% 6%;
+    font-family: 'Montserrat', Regular, sans-serif;
+    font-size: 18px;
+}
+
+.fitrationBlock_container input:first-child {
+    margin-bottom: 3%;
+}
+
+.fitrationBlock_container input:nth-child(1) {
+    margin-bottom: 5%;
+}
+
+.fitrationBlock_container input:nth-child(2) {
+    margin-bottom: 5%;
+}
+
+.fitrationBlock_container label:last-child {
+    margin-bottom: 20%;
+    margin-top: 5%;
+}
+
+.fitrationBlock_container h3 {
+    margin-top: 3%;
+    margin-bottom: 3%;
+    font-family: 'Montserrat', Bold, sans-serif;
+    font-size: 18px;
+}
+
+.fitrationBlock_container form label:nth-child(4) {
+    color: #818181;
+    font-weight: 300;
+}
+
+.fitrationBlock_container form label:nth-child(3) {
+    color: #818181;
+    font-weight: 300;
+}
+
+
+
+
 
 
 

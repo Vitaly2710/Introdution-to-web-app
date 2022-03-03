@@ -34,7 +34,7 @@
                         <div class="mainBlock_trotteList_container">
                             <div class="photoInput">
                                 <img src="./assets/UserFoto.png"/>
-                                <input placeholder="What’s happening?"/>
+                                <input placeholder="What’s happening?" maxlength="280"/>
                             </div>
                             <div class="inclosureAndInput">
                                 <div class="inclosure">
@@ -270,7 +270,32 @@
                     <h3 class="moreTrotter">See more</h3>
                 </article>
                 <aside class="fitrationBlock">
-
+                    <div class="fitrationBlock_container">
+                        <h2>Search filters</h2>
+                        <form>
+                            <label>
+                                People
+                                <input placeholder="Write the name @"/>
+                            </label>
+                            <h3>Date of publishing</h3>
+                            <label>
+                                From
+                                <input type="date">
+                            </label>
+                            <label>
+                            To
+                            <input type="date">
+                        </label>
+                            <label>
+                                Text
+                                <input placeholder="Any of these words">
+                            </label>
+                            <label>
+                                Hashtag
+                                <input placeholder="These hashtags #">
+                            </label>
+                        </form>
+                    </div>
                 </aside>
             </section>
             <footer>
