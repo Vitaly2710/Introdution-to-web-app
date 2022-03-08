@@ -22,8 +22,12 @@ header {
     padding-bottom: 4px;
     padding-top: 4px;
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+    background-color: #FFFFFF;
+    z-index: 1;
     padding-left: 2%;
     padding-right: 2%;
+    position: sticky;
+    top: 0;
 }
 
 .logoBlockInHeader {
@@ -368,6 +372,9 @@ footer {
     padding-top: 3%;
     align-items: center;
     padding-bottom: 5%;
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
 }
 
 .logoInFooter {
