@@ -293,7 +293,7 @@ header {
     width: 100%;
     height: 110%;
     position: absolute;
-    background-image: url("./assets/response_message.png");
+    background-image: url("./assets/response_message.svg");
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
@@ -302,7 +302,7 @@ header {
 
 .response ul li:first-child:hover:before {
     cursor: pointer;
-    background-image: url("./assets/response_message_hover.png");
+    background-image: url("./assets/response_message_hover.svg");
 }
 
 .response ul li:nth-child(2)::before {
@@ -310,7 +310,7 @@ header {
     width: 100%;
     height: 110%;
     position: absolute;
-    background-image: url("./assets/response_likes.png");
+    background-image: url("./assets/response_likes.svg");
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
@@ -319,7 +319,7 @@ header {
 
 .response ul li:nth-child(2):hover:before {
     cursor: pointer;
-    background-image: url("./assets/response_likes_hover.png");
+    background-image: url("./assets/response_likes_hover.svg");
 }
 
 .response ul li:last-child::before {
@@ -327,7 +327,7 @@ header {
     width: 100%;
     height: 130%;
     position: absolute;
-    background-image: url("./assets/response_retrote.png");
+    background-image: url("./assets/response_retrote.svg");
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
@@ -335,7 +335,7 @@ header {
 }
 
 .response ul li:last-child:hover:before {
-    background-image: url("./assets/response_retrote_hover.png");
+    background-image: url("./assets/response_retrote_hover.svg");
     cursor: pointer;
 }
 
@@ -362,7 +362,7 @@ header {
 
 .moreTrotter::after {
     content: '';
-    background-image: url("./assets/seeMore.png");
+    background-image: url("./assets/seeMore.svg");
     position: absolute;
     width: 4%;
     height: 50%;
@@ -521,7 +521,7 @@ footer {
 
 /*Styles for trotter page*/
 
-.trotter_container {
+.trotterContainer {
     max-width: 1512px;
     margin: 0 auto;
     background: var(--white-color);
