@@ -8,7 +8,7 @@
     box-sizing: border-box;
 }
 
-.mainPage_container {
+.mainPageContainer {
     max-width: 1512px;
     margin: 0 auto;
     background: #FFFFFF;
@@ -102,19 +102,19 @@ header {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
 }
 
-.mainBlock_trotteList {
+.mainBlockTrotteList {
     width: 75%;
 }
 
-.mainBlock_trotteList_wrapper {
+.mainBlockTrotteListWrapper {
     border-bottom: 1px solid rgba(129, 129, 129, 0.5);
 }
 
-.mainBlock_trotteList_trotter {
+.mainBlockTrotteListTrotter {
     border-bottom: 1px solid rgba(129, 129, 129, 0.5);
 }
 
-.mainBlock_trotteList h2 {
+.mainBlockTrotteList h2 {
     margin-top: 1.5%;
     font-family: 'Montserrat', Bold, sans-serif;
     font-size: 32px;
@@ -124,7 +124,7 @@ header {
     margin-right: auto;
 }
 
-.mainBlock_trotteList_container {
+.mainBlockTrotteListContainer {
     width: 62%;
     margin: 3% auto 0%;
 }
@@ -182,7 +182,7 @@ header {
     background-color: #115D8C;
 }
 
-.mainBlock_trotteList_trotter .container {
+.mainBlockTrotteListTrotter .container {
     width: 62%;
     margin: 1.5% auto 0%;
 
@@ -193,22 +193,22 @@ header {
     grid-template-columns: 10% 90%;
 }
 
-.wrapper_userPhoto img {
+.wrapperUserPhoto img {
     width: 80%;
     border-radius: 50%;
 }
 
-.mainBlock_trotteList_trotter .userInfo {
+.mainBlockTrotteListTrotter .userInfo {
     display: flex;
 }
 
-.mainBlock_trotteList_trotter .userInfo h3 {
+.mainBlockTrotteListTrotter .userInfo h3 {
     font-family: 'Montserrat', Bold, sans-serif;
     font-size: 18px;
     line-height: 22px;
 }
 
-.mainBlock_trotteList_trotter .userInfo h4{
+.mainBlockTrotteListTrotter .userInfo h4{
     margin-left: 7%;
     font-family: 'Montserrat', Regular, sans-serif;
     font-size: 18px;
@@ -217,7 +217,7 @@ header {
     font-weight: 400;
 }
 
-.correctTrotter_block {
+.correctTrotterBlock {
     position: absolute;
     background-color: #ececec;
     transform: translateX(385%);
@@ -226,23 +226,23 @@ header {
     display: none;
 }
 
-.correctTrotter_block li {
+.correctTrotterBlock li {
     display: flex;
     }
 
-.correctTrotter_block img {
+.correctTrotterBlock img {
     width: 27%;
 }
 
-.correctTrotter_block li:last-child {
+.correctTrotterBlock li:last-child {
     margin-top: 9%;
 }
 
-.mainBlock_trotteList_trotter .userInfo h4:last-child {
+.mainBlockTrotteListTrotter .userInfo h4:last-child {
     margin-left: 1.3%;
 }
 
-.trotter .trotter_text {
+.trotter .trotterText {
     margin-top: 1%;
     font-family: 'Montserrat', Regular, sans-serif;
     font-weight: normal;
@@ -250,7 +250,7 @@ header {
     line-height: 22px;
 }
 
-.trotter .trotter_text span {
+.trotter .trotterText span {
     color: #38A6FF;
 }
 
@@ -362,7 +362,7 @@ header {
     cursor: pointer;
 }
 
-.fitrationBlock {
+.filtrationBlock {
     border-left: 1px solid rgba(129, 129, 129, 0.5);
 }
 
@@ -422,18 +422,18 @@ footer {
     font-weight: normal;
 }
 
-.fitrationBlock {
+.filtrationBlock {
     padding-left: 1.6%;
     padding-right: 1.6%;
     padding-bottom: 3%;
     width: 25%;
 }
 
-.fitrationBlock_container form {
+.filtrationBlockContainer form {
     display: grid;
 }
 
-.fitrationBlock_container {
+.filtrationBlockContainer {
     margin-top: 19%;
     border: 1px solid rgba(129, 129, 129, 0.5);
     box-sizing: border-box;
@@ -442,24 +442,24 @@ footer {
     padding-left: 4%;
 }
 
-.fitrationBlock_container h2 {
+.filtrationBlockContainer h2 {
     margin-top: 3%;
     font-family: 'Montserrat', Bold, sans-serif;
     font-size: 32px;
 }
 
-.fitrationBlock_container form {
+.filtrationBlockContainer form {
     margin-top: 10%;
 }
 
-.fitrationBlock_container label {
+.filtrationBlockContainer label {
     font-family: 'Montserrat', Bold, sans-serif;
     font-size: 18px;
     font-weight: 700;
     cursor: pointer;
 }
 
-.fitrationBlock_container input {
+.filtrationBlockContainer input {
     display: block;
     margin-top: 5%;
     width: 100%;
@@ -471,36 +471,36 @@ footer {
     font-size: 18px;
 }
 
-.fitrationBlock_container input:first-child {
+.filtrationBlockContainer input:first-child {
     margin-bottom: 3%;
 }
 
-.fitrationBlock_container input:nth-child(1) {
+.filtrationBlockContainer input:nth-child(1) {
     margin-bottom: 5%;
 }
 
-.fitrationBlock_container input:nth-child(2) {
+.filtrationBlockContainer input:nth-child(2) {
     margin-bottom: 5%;
 }
 
-.fitrationBlock_container label:last-child {
+.filtrationBlockContainer label:last-child {
     margin-bottom: 20%;
     margin-top: 5%;
 }
 
-.fitrationBlock_container h3 {
+.filtrationBlockContainer h3 {
     margin-top: 3%;
     margin-bottom: 3%;
     font-family: 'Montserrat', Bold, sans-serif;
     font-size: 18px;
 }
 
-.fitrationBlock_container form label:nth-child(4) {
+.filtrationBlockContainer form label:nth-child(4) {
     color: #818181;
     font-weight: 300;
 }
 
-.fitrationBlock_container form label:nth-child(3) {
+.filtrationBlockContainer form label:nth-child(3) {
     color: #818181;
     font-weight: 300;
 }
