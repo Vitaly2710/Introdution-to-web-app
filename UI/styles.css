@@ -8,10 +8,18 @@
     box-sizing: border-box;
 }
 
+:root {
+    --primary-color:#38A6FF;
+    --secondary-color:#115D8C;
+    --border-color:rgba(129, 129, 129, 0.5);
+    --footerBackground-color:linear-gradient(355.31deg, #38A6FF 50.1%, rgba(56, 166, 255, 0.19) 96.31%);
+    --white-color:#FFFFFF;
+}
+
 .mainPageContainer {
     max-width: 1512px;
     margin: 0 auto;
-    background: #FFFFFF;
+    background: var(--white-color);
 }
 
 header {
@@ -23,7 +31,7 @@ header {
     padding-bottom: 4px;
     padding-top: 4px;
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
-    background-color: #FFFFFF;
+    background-color: var(--white-color);
     z-index: 1;
     padding-left: 2%;
     padding-right: 2%;
@@ -46,7 +54,7 @@ header {
     font-family: 'Montserrat', Bold, sans-serif;
     font-size: 18px;
     text-transform: uppercase;
-    color: #38A6FF;
+    color: var(--primary-color);
     cursor: pointer;
 }
 
@@ -54,19 +62,19 @@ header {
     max-width: 96px;
     margin-top: 15px;
     padding: 8px 25px 8px 26px;
-    background: #38A6FF;
+    background: var(--primary-color);
     border-radius: 30px;
     border: none;
-    color: #FFFFFF;
+    color: var(--white-color);
     cursor: pointer;
 }
 
 .logInButton:hover {
-    background-color: #115D8C ;
+    background-color: var(--secondary-color) ;
 }
 
 .trotterInHeader:hover {
-    color: #115D8C;
+    color: var(--secondary-color);
 }
 
 .headerUserBlock {
@@ -107,11 +115,11 @@ header {
 }
 
 .mainBlockTrotteListWrapper {
-    border-bottom: 1px solid rgba(129, 129, 129, 0.5);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .mainBlockTrotteListTrotter {
-    border-bottom: 1px solid rgba(129, 129, 129, 0.5);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .mainBlockTrotteList h2 {
@@ -169,8 +177,8 @@ header {
 .inclosureAndInput button {
     border-radius: 30px;
     padding: 1% 3.7% 1% 3.7%;
-    background-color: #38A6FF;
-    color: #FFFFFF;
+    background-color: var(--primary-color);
+    color: var(--white-color);
     border: none;
     margin-bottom: 2.2%;
     width: 15%;
@@ -179,7 +187,7 @@ header {
 }
 
 .inclosureAndInput button:hover {
-    background-color: #115D8C;
+    background-color: var(--secondary-color);
 }
 
 .mainBlockTrotteListTrotter .container {
@@ -251,7 +259,7 @@ header {
 }
 
 .trotter .trotterText span {
-    color: #38A6FF;
+    color: var(--primary-color);
 }
 
 .trotter .response {
@@ -363,11 +371,11 @@ header {
 }
 
 .filtrationBlock {
-    border-left: 1px solid rgba(129, 129, 129, 0.5);
+    border-left: 1px solid var(--border-color);
 }
 
 footer {
-    background: linear-gradient(355.31deg, #38A6FF 50.1%, rgba(56, 166, 255, 0.19) 96.31%);
+    background: var(--footerBackground-color);
     display: flex;
     padding-left: 4%;
     padding-top: 3%;
@@ -390,7 +398,7 @@ footer {
 
 .logoInFooter h2 {
     margin-left: 5% ;
-    color: white;
+    color: var(--white-color);
     font-family: 'Montserrat', Bold, sans-serif;
     font-size: 18px;
     text-transform: uppercase;
@@ -401,7 +409,7 @@ footer {
 }
 
 .howAndWhen p {
-    color: #FFFFFF;
+    color: var(--white-color);
     font-family: 'Montserrat', Bold, sans-serif;
     font-weight: 700;
     font-size: 18px;
@@ -416,7 +424,7 @@ footer {
 
 .mailInFooter {
     margin-left: 2%;
-    color: #FFFFFF;
+    color: var(--white-color);
     font-family: 'Montserrat', Regular, sans-serif;
     font-size: 18px;
     font-weight: normal;
@@ -435,7 +443,7 @@ footer {
 
 .filtrationBlockContainer {
     margin-top: 19%;
-    border: 1px solid rgba(129, 129, 129, 0.5);
+    border: 1px solid var(--border-color);
     box-sizing: border-box;
     border-radius: 20px;
     padding-right: 4%;
@@ -512,7 +520,8 @@ footer {
 
 .trotter_container {
     max-width: 1512px;
-    margin: 0 auto;background: #FFFFFF;
+    margin: 0 auto;
+    background: var(--white-color);
 }
 
 .backInMain {
@@ -549,7 +558,7 @@ footer {
 }
 
 .reTrott span {
-    color: #38A6FF;
+    color: var(--primary-color);
 }
 
 
