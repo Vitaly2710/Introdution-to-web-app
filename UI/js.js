@@ -20,7 +20,7 @@ const tweets = [
     },
     {
         id:'3',
-        text: 'Как тебе погода?#погода',
+        text: 'Как тебе погода?#погода#погода#погода#погода',
         createAt: new Date ('2022-04-10T11:03:00'),
         author: 'Семен Семенов',
         comments: [{
@@ -32,7 +32,7 @@ const tweets = [
     },
     {
         id: '4',
-        text: 'Ну где же 3-е сентября#сентябрь',
+        text: 'Ну где же 3-е сентября#сентябрь#datamola',
         createAt: new Date('2022-04-10T12:00:12'),
         author: 'Михаил Шуфутинский',
         comments: [{
@@ -44,7 +44,7 @@ const tweets = [
     },
     {
         id:'5',
-        text: 'Поехали #поехали',
+        text: 'Поехали #поехали#datamola',
         createAt: new Date('1961-04-12T12:00:00'),
         author: 'Юрий Гагарин',
         comments: [{
@@ -62,7 +62,7 @@ const tweets = [
     },
     {
         id:'6',
-        text: 'Если у тебя получилось обмануть человека, это не значит, что он дурак, это значит, что тебе доверяли больше, чем ты этого заслуживаешь.#обман',
+        text: 'Если у тебя получилось обмануть человека, это не значит, что он дурак, это значит, что тебе доверяли больше, чем ты этого заслуживаешь.#обман#datamola',
         createAt: new Date('2022-02-22T09:45:03'),
         author: 'Чарльз Буковски',
         comments: [{
@@ -249,4 +249,49 @@ const tweets = [
     }
 ]
 
-console.log(tweets)
+
+const myModule = (function (){
+    const user = 'admin'
+    function getTweets(top,skip,filterConfig){
+
+        tweets.sort((a, b) => b.createAt - a.createAt)
+
+        let filterKeys = Object.keys(filterConfig)
+
+        let filterTweets;
+
+        if(filterKeys.includes('author')){
+            filterTweets = tweets.filter((tweet) => tweet.author === filterConfig.author);
+        } else if (filterKeys.includes('dateTo')){
+            filterTweets = tweets.filter((tweet) => tweet.createAt < filterConfig.dateTo);
+        } else if (filterKeys.includes('dateFrom')){
+            filterTweets = tweets.filter((tweet) => tweet.createAt > filterConfig.dateFrom);
+        } else if(filterKeys.includes('hashtags')) {
+            filterTweets = tweets.filter((tweet) =>  tweet.text.split('#').find((item) => item === filterConfig.hashtags) === filterConfig.hashtags)
+        } else if (filterKeys.includes('text')) {
+            filterTweets = tweets.filter((tweet) => tweet.text === filterConfig.text)
+        }
+        return filterTweets.splice(top,skip)
+     }
+
+    function getTweet (id) {
+        return tweets.find((tweet) => tweet.id === id)
+    }
+
+    return {
+        user,
+        getTweets,
+        getTweet
+    };
+})()
+
+// test getTweet method
+// console.log(myModule.getTweet('5'))
+
+// tests getTweets method
+// console.log(myModule.getTweets(0,1,{author:'Ричард Брэнсон'}))
+// console.log(myModule.getTweets(0,2,{hashtags:'datamola'}))
+// console.log(myModule.getTweets(0,10,{dateFrom: new Date('2022-02-23T13:12:11')}))
+
+
+
