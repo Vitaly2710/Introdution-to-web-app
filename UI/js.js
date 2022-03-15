@@ -111,13 +111,6 @@ const tweets = [
         ]
     },
     {
-        id:'9',
-        text: 'В падающем самолёте нет атеистов.#вера',
-        createAt: new Date('2022-03-08T12:21:12'),
-        author: 'Михаил Задорнов',
-        comments: []
-    },
-    {
         id:'10',
         text: 'Победи себя и выиграешь тысячи битв#самссобой',
         createAt: new Date('2022-03-12T22:00:01'),
@@ -246,21 +239,33 @@ const tweets = [
             createAt: new Date('2022-02-23T16:01:11'),
             author: 'Антон Чехов'
         }]
+    },
+    {
+        id:'21',
+        text: 'В падающем самолёте нет атеистов.#вера',
+        createAt: new Date('2022-03-08T12:21:12'),
+        author: 'Михаил Задорнов',
+        comments: []
     }
 ]
 
 
 const myModule = (function (){
     const user = 'admin'
-    function getTweets(top,skip,filterConfig){
+    function getTweets(top,skip,filterConfig) {
 
         tweets.sort((a, b) => b.createAt - a.createAt)
-
-        let filterKeys = Object.keys(filterConfig)
+        console.log(filterConfig)
+        let filterKeys = filterConfig ? Object.keys(filterConfig): null
+        console.log(filterKeys)
 
         let filterTweets;
 
-        if(filterKeys.includes('author')){
+        if(filterKeys === null){
+            let newQuantity = new Array(...tweets)
+            newQuantity.splice(top,skip)
+            return newQuantity
+        } else if (filterKeys.includes('author')){
             filterTweets = tweets.filter((tweet) => tweet.author === filterConfig.author);
         } else if (filterKeys.includes('dateTo')){
             filterTweets = tweets.filter((tweet) => tweet.createAt < filterConfig.dateTo);
@@ -271,7 +276,8 @@ const myModule = (function (){
         } else if (filterKeys.includes('text')) {
             filterTweets = tweets.filter((tweet) => tweet.text === filterConfig.text)
         }
-        return filterTweets.splice(top,skip)
+        let newQuantity = new Array(...filterTweets).splice(top,skip)
+        return  newQuantity
      }
 
     function getTweet (id) {
@@ -296,7 +302,9 @@ const myModule = (function (){
 // tests getTweets method
 // console.log(myModule.getTweets(0,1,{author:'Ричард Брэнсон'}))
 // console.log(myModule.getTweets(0,2,{hashtags:'datamola'}))
-// console.log(myModule.getTweets(0,10,{dateFrom: new Date('2022-02-23T13:12:11')}))
+// console.log(myModule.getTweets(0,5,{dateFrom: new Date('2022-02-23T13:12:11')}))
+// console.log(myModule.getTweets(10,10))
+
 
 
 //test changeUser method
