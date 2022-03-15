@@ -273,7 +273,6 @@ const myModule = (function (){
         } else if (filterKeys.includes('text')) {
             filterTweets = tweets.filter((tweet) => tweet.text === filterConfig.text)
         }
-
         let newQuantity =  JSON.parse(JSON.stringify(filterTweets)).splice(top,skip)
         return  newQuantity
      }
@@ -282,12 +281,29 @@ const myModule = (function (){
         return tweets.find((tweet) => tweet.id === id)
     }
 
+    function validateTweet (tweet) {
+        let template = {
+            id:'string',
+            text:'string',
+            createAt: 'object',
+            author:'string',
+            comments: 'object'
+        }
+        let keysTemplate = Object.keys(template)
+        let result = keysTemplate.every((key) => tweet[key] && typeof tweet[key] === template[key]);
+        if(result){
+            console.log(true, 'validate tweet')
+        } else {
+            console.log(false, 'no validate tweet')
+        }
 
+    }
 
     return {
         user,
         getTweets,
         getTweet,
+        validateTweet,
         changeUser: function (usr){
             this.user = usr
         }
@@ -298,7 +314,7 @@ const myModule = (function (){
 // console.log(myModule.getTweet('5'))
 
 // tests getTweets method
-// console.log(myModule.getTweets(0,1,{author:'Ричард Брэнсон'}))
+// console.log(myModule.getTweets(0,1,{author:'snow'}))
 // console.log(myModule.getTweets(0,2,{hashtags:'datamola'}))
 // console.log(myModule.getTweets(0,5,{dateFrom: new Date('2022-02-23T13:12:11')}))
 // console.log(myModule.getTweets(10,10))
@@ -307,6 +323,21 @@ const myModule = (function (){
 
 //test changeUser method
 // console.log(myModule.user)
-// myModule.changeUser('hello')
+// myModule.changeUser('John')
 // console.log(myModule.user)
+
+
+// test validateTweet method
+// myModule.validateTweet({id:'hello'})
+// myModule.validateTweet({
+//     id:'18',
+//     text: 'Ни в коем случае нельзя отчитывать тех, кто старался изо всех сил, но совершил ошибку.#ошибки',
+//     createAt: new Date('2022-03-11T12:11:10'),
+//     author: 'Ричард Брэнсон',
+//     comments: []
+// })
+
+
+
+
 
