@@ -358,6 +358,19 @@ const myModule = (function (){
         return result
     }
 
+
+    function addComment (id, text) {
+
+        let tweetComment = tweets.filter((tweet) => tweet.comments[0] && tweet.id === id)
+        console.log(validateComment(tweetComment[0].comments[0]))
+        if(tweetComment && validateComment(tweetComment[0].comments[0])){
+            tweetComment[0].comments[0].text = text
+            return true
+        } else {
+            return false
+        }
+    }
+
     return {
         user,
         getTweets,
@@ -367,6 +380,7 @@ const myModule = (function (){
         editTweet,
         removeTweet,
         validateComment,
+        addComment,
         changeUser: function (usr){
             this.user = usr
         }
@@ -426,4 +440,6 @@ const myModule = (function (){
 // console.log(myModule.validateComment({id:'1919'})
 
 
-
+// test addComment method - not the best implementation and result!!!!!!!!!!!!!!!!!!!!
+// console.log(myModule.addComment('16','Получилось поменять комментарий'))
+// console.log(tweets)
