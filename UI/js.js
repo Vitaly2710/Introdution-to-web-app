@@ -255,15 +255,12 @@ const myModule = (function (){
     function getTweets(top,skip,filterConfig) {
 
         tweets.sort((a, b) => b.createAt - a.createAt)
-        console.log(filterConfig)
-        let filterKeys = filterConfig ? Object.keys(filterConfig): null
-        console.log(filterKeys)
 
+        let filterKeys = filterConfig ? Object.keys(filterConfig): null
         let filterTweets;
 
         if(filterKeys === null){
-            let newQuantity = new Array(...tweets)
-            newQuantity.splice(top,skip)
+            let newQuantity =  JSON.parse(JSON.stringify(tweets)).splice(top,skip)
             return newQuantity
         } else if (filterKeys.includes('author')){
             filterTweets = tweets.filter((tweet) => tweet.author === filterConfig.author);
@@ -276,7 +273,8 @@ const myModule = (function (){
         } else if (filterKeys.includes('text')) {
             filterTweets = tweets.filter((tweet) => tweet.text === filterConfig.text)
         }
-        let newQuantity = new Array(...filterTweets).splice(top,skip)
+
+        let newQuantity =  JSON.parse(JSON.stringify(filterTweets)).splice(top,skip)
         return  newQuantity
      }
 
