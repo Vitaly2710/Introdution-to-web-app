@@ -345,6 +345,19 @@ const myModule = (function (){
         }
     }
 
+    function validateComment (com) {
+        let template = {
+            id:'string',
+            text: 'string',
+            createAt:'object',
+            author:'string'
+        }
+
+        let templateKeys = Object.keys(template)
+        let result = templateKeys.every((key) => com[key] && typeof com[key] === template[key])
+        return result
+    }
+
     return {
         user,
         getTweets,
@@ -353,6 +366,7 @@ const myModule = (function (){
         addTweet,
         editTweet,
         removeTweet,
+        validateComment,
         changeUser: function (usr){
             this.user = usr
         }
@@ -402,7 +416,14 @@ const myModule = (function (){
 // console.log(myModule.removeTweet('4'))
 // console.log(tweets)
 
-
+// test validateComment method
+// console.log(myModule.validateComment({
+//     id:'777',
+//     text: 'Лучше и не скажешь',
+//     createAt: new Date('2022-02-23T16:01:11'),
+//     author: 'Антон Чехов'
+// }))
+// console.log(myModule.validateComment({id:'1919'})
 
 
 
