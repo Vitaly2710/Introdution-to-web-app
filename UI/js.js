@@ -278,10 +278,15 @@ const myModule = (function (){
         return tweets.find((tweet) => tweet.id === id)
     }
 
+
+
     return {
         user,
         getTweets,
-        getTweet
+        getTweet,
+        changeUser: function (usr){
+            this.user = usr
+        }
     };
 })()
 
@@ -294,4 +299,8 @@ const myModule = (function (){
 // console.log(myModule.getTweets(0,10,{dateFrom: new Date('2022-02-23T13:12:11')}))
 
 
+//test changeUser method
+// console.log(myModule.user)
+// myModule.changeUser('hello')
+// console.log(myModule.user)
 
