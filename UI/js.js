@@ -251,7 +251,7 @@ const tweets = [
 
 
 const myModule = (function (){
-    const user = 'admin'
+    const user = 'Семен Семенов'
     function getTweets(top,skip,filterConfig) {
 
         tweets.sort((a, b) => b.createAt - a.createAt)
@@ -314,7 +314,19 @@ const myModule = (function (){
         } else {
             console.log(false)
         }
+    }
 
+    function editTweet (id, text){
+
+        let correctUser = tweets.find((tweet) => tweet.id === id && tweet.author === user );
+        if(correctUser === undefined) {
+            return false
+        } else if (validateTweet(correctUser)) {
+            correctUser.text = text
+            return true
+        } else {
+            return false
+        }
 
     }
 
@@ -324,6 +336,7 @@ const myModule = (function (){
         getTweet,
         validateTweet,
         addTweet,
+        editTweet,
         changeUser: function (usr){
             this.user = usr
         }
@@ -363,6 +376,11 @@ const myModule = (function (){
 // console.log(tweets)
 
 
+
+//test editTweet method
+// myModule.editTweet('3','Change tweeter text')
+// console.log(myModule.editTweet('3','Change tweeter text'))
+// myModule.editTweet('4','mistake')
 
 
 
