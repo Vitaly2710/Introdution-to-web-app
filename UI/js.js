@@ -310,9 +310,9 @@ const myModule = (function (){
 
         if(validateTweet(newTweet) === true){
             tweets.push(newTweet);
-            console.log(true)
+            return true
         } else {
-            console.log(false)
+            return false
         }
     }
 
@@ -330,6 +330,21 @@ const myModule = (function (){
 
     }
 
+    function removeTweet (id) {
+         let indexForDelete;
+         tweets.forEach((elem,index) => {
+            if(elem.id === id && elem.author === user){
+                indexForDelete = index
+            }
+        })
+        if(indexForDelete){
+            tweets.splice(indexForDelete,1)
+            return true
+        } else {
+            return false
+        }
+    }
+
     return {
         user,
         getTweets,
@@ -337,6 +352,7 @@ const myModule = (function (){
         validateTweet,
         addTweet,
         editTweet,
+        removeTweet,
         changeUser: function (usr){
             this.user = usr
         }
@@ -381,6 +397,10 @@ const myModule = (function (){
 // myModule.editTweet('3','Change tweeter text')
 // console.log(myModule.editTweet('3','Change tweeter text'))
 // myModule.editTweet('4','mistake')
+
+//test removeTweet method
+// console.log(myModule.removeTweet('4'))
+// console.log(tweets)
 
 
 
