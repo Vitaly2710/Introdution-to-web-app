@@ -292,10 +292,29 @@ const myModule = (function (){
         let keysTemplate = Object.keys(template)
         let result = keysTemplate.every((key) => tweet[key] && typeof tweet[key] === template[key]);
         if(result){
-            console.log(true, 'validate tweet')
+            return true
         } else {
-            console.log(false, 'no validate tweet')
+            return false
         }
+
+    }
+
+    function addTweet(text){
+        let newTweet = {
+            id: String(Math.random()),
+            text,
+            createAt:new Date(),
+            author: user,
+            comments:[]
+        }
+
+        if(validateTweet(newTweet) === true){
+            tweets.push(newTweet);
+            console.log(true)
+        } else {
+            console.log(false)
+        }
+
 
     }
 
@@ -304,6 +323,7 @@ const myModule = (function (){
         getTweets,
         getTweet,
         validateTweet,
+        addTweet,
         changeUser: function (usr){
             this.user = usr
         }
@@ -336,6 +356,13 @@ const myModule = (function (){
 //     author: 'Ричард Брэнсон',
 //     comments: []
 // })
+
+//test addTweet method
+// myModule.addTweet('hello world')
+// myModule.addTweet('how are you')
+// console.log(tweets)
+
+
 
 
 
