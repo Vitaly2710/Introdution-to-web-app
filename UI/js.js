@@ -252,7 +252,7 @@ const tweets = [
 
 const myModule = (function (){
     const user = 'Семен Семенов'
-    function getTweets(top,skip,filterConfig) {
+    function getTweets(top=0,skip=10,filterConfig) {
 
         tweets.sort((a, b) => b.createAt - a.createAt)
 
@@ -443,3 +443,4 @@ const myModule = (function (){
 // test addComment method - not the best implementation and result!!!!!!!!!!!!!!!!!!!!
 // console.log(myModule.addComment('16','Получилось поменять комментарий'))
 // console.log(tweets)
+
