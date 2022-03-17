@@ -1,14 +1,16 @@
-function maxSum (arr) {
-    let sum = 0;
-    let now = 0;
+function maxSum(arr) {
+  let sum = 0;
+  let now = 0;
 
-    arr.forEach((elem) => {
-        now += elem;
-        sum = Math.max(sum,now);
-        if(now<0) {now = 0}
+  arr.forEach((elem) => {
+    now += elem;
+    sum = Math.max(sum, now);
+    if (now < 0) {
+      now = 0
+    }
 
-    })
-    return sum
+  })
+  return sum
 }
 //test maxSum
 // console.log(maxSum([1,2,56,-1,13,12,-87,23]));
@@ -16,27 +18,27 @@ function maxSum (arr) {
 
 
 function brokerProfit (arr) {
-    let pointOfPurchase = 0;
-    let buySell = 0;
-    arr.forEach((elem,indexElem) => {
+  let pointOfPurchase = 0;
+  let buySell = 0;
+  arr.forEach((elem,indexElem) => {
 
-        arr.forEach((item,indexItem) => {
+    arr.forEach((item,indexItem) => {
 
-            if(indexElem >= indexItem){
-                return
-            } else {
-                if(elem > item){
-                    buySell = -(elem - item)
-                } else {
-                    buySell = item - elem
-                    pointOfPurchase = Math.max(buySell,pointOfPurchase)
-                }
-            }
+      if(indexElem >= indexItem){
+        return
+      } else {
+        if(elem > item){
+          buySell = -(elem - item)
+        } else {
+          buySell = item - elem
+          pointOfPurchase = Math.max(buySell,pointOfPurchase)
+        }
+      }
 
 
-        })
     })
-    return pointOfPurchase
+  })
+  return pointOfPurchase
 }
 
 //test brokerProfit
@@ -54,8 +56,9 @@ function brokerProfit (arr) {
 
 
 
+function foo() {
 
-
+}
 
 
 
