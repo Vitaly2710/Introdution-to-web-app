@@ -345,23 +345,23 @@ const myModule = (function (){
 
   function validateComment (com) {
     let templateKeys = Object.keys(commonTemplate)
-    console.log(templateKeys)
-    console.log(com)
     let result = templateKeys.every((key) => commonTemplate[key](com[key]))
     return result
   }
 
 
   function addComment (id, text) {
-
-    let tweetComment = tweets.filter((tweet) => tweet.comments[0] && tweet.id === id)
-    console.log(validateComment(tweetComment[0].comments[0]))
-    if(tweetComment && validateComment(tweetComment[0].comments[0])){
-      tweetComment[0].comments[0].text = text
-      return true
-    } else {
-      return false
+    const newComment = getTweet(id)
+    const comment = {
+      id: String(Math.random()),
+      text,
+      author: user,
+      createAt: new Date(),
     }
+    if(newComment && validateComment(comment)){
+      newComment.comments.push(comment)
+      return true
+    } return false
   }
 
   return {
@@ -425,16 +425,16 @@ const myModule = (function (){
 // console.log(tweets)
 
 // test validateComment method
-console.log(myModule.validateComment({
-    id:'777',
-    text: 'Лучше и не скажешь',
-    createAt: new Date('2022-02-23T16:01:11'),
-    author: 'Антон Чехов'
-}))
-console.log(myModule.validateComment({id:'1919'}))
+// console.log(myModule.validateComment({
+//     id:'777',
+//     text: 'Лучше и не скажешь',
+//     createAt: new Date('2022-02-23T16:01:11'),
+//     author: 'Антон Чехов'
+// }))
+// console.log(myModule.validateComment({id:'1919'}))
 
 
 // test addComment method - not the best implementation and result!!!!!!!!!!!!!!!!!!!!
-// console.log(myModule.addComment('16','Получилось поменять комментарий'))
+// myModule.addComment('16','Получилось создать новый коментарий')
 // console.log(tweets)
 
