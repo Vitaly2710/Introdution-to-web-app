@@ -251,7 +251,7 @@ const tweets = [
 
 
 const myModule = (function (){
-  const user = 'Семен Семенов'
+  const user = 'Юрий Гагарин'
   function getTweets(top=0,skip=10,filterConfig) {
     let filterKeys = filterConfig ? Object.keys(filterConfig): null
     let filterTweets;
@@ -292,20 +292,18 @@ const myModule = (function (){
   }
 
   function validateTweet (tweet) {
-    let template = {
-      id:'string',
-      text:'string',
-      createAt: 'object',
-      author:'string',
-      comments: 'object'
+    const template = {
+      id:(id) => id.length && typeof id === 'string',
+      text:(text) => typeof text === 'string' && text.length < 280 ,
+      createAt: (date) => date instanceof Date,
+      author: (author) => author.length && typeof author === 'string',
+      comments: (array) => Array.isArray(array)
     }
-    let keysTemplate = Object.keys(template)
-    let result = keysTemplate.every((key) => tweet[key] && typeof tweet[key] === template[key]);
+    const keysTemplate = Object.keys(template)
+    const result = keysTemplate.every((key) => template[key](tweet[key]) );
     if(result){
       return true
-    } else {
-      return false
-    }
+    } return false
 
   }
 
@@ -318,41 +316,27 @@ const myModule = (function (){
       comments:[]
     }
 
-    if(validateTweet(newTweet) === true){
+    if(validateTweet(newTweet)){
       tweets.push(newTweet);
       return true
-    } else {
-      return false
-    }
+    } return false
   }
 
   function editTweet (id, text){
-
-    let correctUser = tweets.find((tweet) => tweet.id === id && tweet.author === user );
-    if(correctUser === undefined) {
-      return false
-    } else if (validateTweet(correctUser)) {
+    let correctUser = getTweet(id)
+    if (validateTweet(correctUser)) {
       correctUser.text = text
       return true
-    } else {
-      return false
-    }
+    } return false
 
   }
 
   function removeTweet (id) {
-    let indexForDelete;
-    tweets.forEach((elem,index) => {
-      if(elem.id === id && elem.author === user){
-        indexForDelete = index
-      }
-    })
-    if(indexForDelete){
+    let indexForDelete = tweets.findIndex((elem) => elem.id === id && elem.author === user)
+    if(indexForDelete != -1){
       tweets.splice(indexForDelete,1)
       return true
-    } else {
-      return false
-    }
+    } return false
   }
 
   function validateComment (com) {
@@ -404,7 +388,7 @@ const myModule = (function (){
 // console.log(myModule.getTweets(0,1,{author:'snow'}))
 // console.log(myModule.getTweets(0,4,{hashtags:'datamola'}))
 // console.log(myModule.getTweets(0,5,{dateFrom: new Date('2022-02-23T13:12:11')}))
-console.log(myModule.getTweets(10,10))
+// console.log(myModule.getTweets(10,10))
 
 
 
@@ -415,7 +399,7 @@ console.log(myModule.getTweets(10,10))
 
 
 // test validateTweet method
-// myModule.validateTweet({id:'hello'})
+// console.log(myModule.validateTweet({id:'hello'}))
 // myModule.validateTweet({
 //     id:'18',
 //     text: 'Ни в коем случае нельзя отчитывать тех, кто старался изо всех сил, но совершил ошибку.#ошибки',
@@ -433,11 +417,12 @@ console.log(myModule.getTweets(10,10))
 
 //test editTweet method
 // myModule.editTweet('3','Change tweeter text')
-// console.log(myModule.editTweet('3','Change tweeter text'))
+// // console.log(myModule.editTweet('3','Change tweeter text'))
 // myModule.editTweet('4','mistake')
+// console.log(tweets)
 
 //test removeTweet method
-// console.log(myModule.removeTweet('4'))
+// console.log(myModule.removeTweet('5'))
 // console.log(tweets)
 
 // test validateComment method
