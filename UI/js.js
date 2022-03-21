@@ -291,16 +291,20 @@ const myModule = (function (){
     return tweets.find((tweet) => tweet.id === id)
   }
 
+  const commonTemplate = {
+    id:(id) => id.length && typeof id === 'string',
+    text:(text) => typeof text === 'string' && text.length < 280 ,
+    createAt: (date) => date instanceof Date,
+    author: (author) => author.length && typeof author === 'string',
+  }
+
   function validateTweet (tweet) {
     const template = {
-      id:(id) => id.length && typeof id === 'string',
-      text:(text) => typeof text === 'string' && text.length < 280 ,
-      createAt: (date) => date instanceof Date,
-      author: (author) => author.length && typeof author === 'string',
+     ...commonTemplate,
       comments: (array) => Array.isArray(array)
     }
     const keysTemplate = Object.keys(template)
-    const result = keysTemplate.every((key) => template[key](tweet[key]) );
+    const result = keysTemplate.every((key) => template[key](tweet[key]));
     if(result){
       return true
     } return false
@@ -340,15 +344,10 @@ const myModule = (function (){
   }
 
   function validateComment (com) {
-    let template = {
-      id:'string',
-      text: 'string',
-      createAt:'object',
-      author:'string'
-    }
-
-    let templateKeys = Object.keys(template)
-    let result = templateKeys.every((key) => com[key] && typeof com[key] === template[key])
+    let templateKeys = Object.keys(commonTemplate)
+    console.log(templateKeys)
+    console.log(com)
+    let result = templateKeys.every((key) => commonTemplate[key](com[key]))
     return result
   }
 
@@ -426,13 +425,13 @@ const myModule = (function (){
 // console.log(tweets)
 
 // test validateComment method
-// console.log(myModule.validateComment({
-//     id:'777',
-//     text: 'Лучше и не скажешь',
-//     createAt: new Date('2022-02-23T16:01:11'),
-//     author: 'Антон Чехов'
-// }))
-// console.log(myModule.validateComment({id:'1919'})
+console.log(myModule.validateComment({
+    id:'777',
+    text: 'Лучше и не скажешь',
+    createAt: new Date('2022-02-23T16:01:11'),
+    author: 'Антон Чехов'
+}))
+console.log(myModule.validateComment({id:'1919'}))
 
 
 // test addComment method - not the best implementation and result!!!!!!!!!!!!!!!!!!!!
