@@ -15,6 +15,7 @@ function maxSum(arr) {
 //test maxSum
 // console.log(maxSum([1,2,56,-1,13,12,-87,23]));
 // console.log(maxSum([-2,1,-3,4,-1,2,1,-5,4]));
+console.log(maxSum([-1]));
 
 
 function brokerProfit (arr) {
@@ -42,23 +43,10 @@ function brokerProfit (arr) {
 }
 
 //test brokerProfit
-// console.log(brokerProfit([7,1,5,4,6,4]))
+console.log(brokerProfit([7,1,5,4,6,4]))
 // console.log(brokerProfit([1,2,3,4,5]))
 // console.log(brokerProfit([7,6,4,3,1]))
 
-
-
-
-
-
-
-
-
-
-
-function foo() {
-
-}
 
 
 
