@@ -436,124 +436,70 @@ const myModule = (function (){
 // console.log(tweets)
 
 
-// let obj = {
-//   name: 'John',
-//   age: 34,
-//   sex: 'female'
-// };
 
 
-// Object.defineProperty( obj, 'a', {
-//   value: 13,
-//   writable:true,
-//   enumerable: true,
-//   configurable:true
-// })
-//
-//
-// Object.defineProperty(obj, 'hey', {
-//   value: '10000$',
-//   writable: false,
-//   configurable: false,
-//   enumerable: false
-// })
-//
-// const newObj = Object.create(obj)
-//
-// obj.age = 122
-// newObj.__proto__.sex = 'male'
-// console.log(obj)
-// console.log(newObj.sex)
+class Tweet {
+  constructor(id,text,author,comments) {
+    this._id = id;
+    this.text = text;
+    this._createAt = new Date();
+    this._author = author;
+    this.comments = comments;
+  }
 
+  get id () {
+    return this._id
+  }
 
+  set id (id) {
+    console.log('can not change')
+    return;
+  }
 
-// for (let value in obj){
-//     console.log(obj[value])
-// }
+  get createAt () {
+    return this._createAt
+  }
 
-// console.log(obj.a)
-// obj.a =21
-// console.log(obj.a)
+  set createAt (newCreateAt) {
+    console.log('can not change time')
+    return
+  }
 
+  get author () {
+    return this._author
+  }
 
+  set author (newAuthor) {
+    console.log('can not change author')
+    return
+  }
+}
 
-// const obj = {};
-//
-// Object.defineProperty(obj, 'Pi', {
-//   get: function (){
-//     return 3.14;
-//   },
-//   set: function (val) {
-//     if(val !== obj.Pi) {
-//       console.log('не совпадает')
-//     }
-//   }
-// })
-//
-// console.log(obj.Pi)
-// obj.Pi = 3.1
-//
-// console.log(obj)
+const tweetik = new Tweet(1, 'hello', 'петр первый',[])
+
+console.log(tweetik)
+
+tweetik.id = -1
+tweetik.createAt = new Date()
+tweetik.author = 'John'
+
+console.log(tweetik)
 
 
 
-// const arr = [1,2,3]
-//
-// console.log(arr)
 
 
-// const proto = {
-//   a:1
-// }
-//
-// const obj = {
-//   b:2
-// }
-//
-// // Object.setPrototypeOf(obj,proto)
-// // Object.getPrototypeOf(obj)
-// console.log(obj)
-
-// class Hey {
-//   constructor(x,y) {
-//     this.x = x,
-//     this.y = y
-//   }
-//
-//   toString () {
-//     return (`${this.x}`+ '' + `${this.y}`)
-//   }
-//
-//   summ() {
-//     return (this.x + this.y)
-//   }
-// }
-//
-// const point = new Hey(2,4)
-//
-// console.log(point.summ())
-// console.log(point)
 
 
-// class Hey {
-//   constructor(x,y) {
-//     this.x = x,
-//     this.y = y
-//   }
-//
-//   get pair () {
-//     return [this.x, this.y]
-//   }
-//
-//   set pair (arr) {
-//     return [this.x = arr[0] ,this.y = arr[1] ]
-//   }
-// }
-//
-// const la = new Hey(23,22)
-//
-// console.log(la.pair)
-//
-// la.pair = [11,22]
-//
-// console.log(la.pair)
+
+
+
+
+
+
+
+
+
+
+
+
