@@ -300,14 +300,12 @@ const myModule = (function (){
 
   function validateTweet (tweet) {
     const template = {
-     ...commonTemplate,
+      ...commonTemplate,
       comments: (array) => Array.isArray(array)
     }
     const keysTemplate = Object.keys(template)
     const result = keysTemplate.every((key) => template[key](tweet[key]));
-    if(result){
-      return true
-    } return false
+    return !!result;
 
   }
 
@@ -337,7 +335,7 @@ const myModule = (function (){
 
   function removeTweet (id) {
     let indexForDelete = tweets.findIndex((elem) => elem.id === id && elem.author === user)
-    if(indexForDelete != -1){
+    if(indexForDelete !== -1){
       tweets.splice(indexForDelete,1)
       return true
     } return false
@@ -345,8 +343,7 @@ const myModule = (function (){
 
   function validateComment (com) {
     let templateKeys = Object.keys(commonTemplate)
-    let result = templateKeys.every((key) => commonTemplate[key](com[key]))
-    return result
+    return templateKeys.every((key) => commonTemplate[key](com[key]))
   }
 
 
@@ -438,3 +435,125 @@ const myModule = (function (){
 // myModule.addComment('16','Получилось создать новый коментарий')
 // console.log(tweets)
 
+
+// let obj = {
+//   name: 'John',
+//   age: 34,
+//   sex: 'female'
+// };
+
+
+// Object.defineProperty( obj, 'a', {
+//   value: 13,
+//   writable:true,
+//   enumerable: true,
+//   configurable:true
+// })
+//
+//
+// Object.defineProperty(obj, 'hey', {
+//   value: '10000$',
+//   writable: false,
+//   configurable: false,
+//   enumerable: false
+// })
+//
+// const newObj = Object.create(obj)
+//
+// obj.age = 122
+// newObj.__proto__.sex = 'male'
+// console.log(obj)
+// console.log(newObj.sex)
+
+
+
+// for (let value in obj){
+//     console.log(obj[value])
+// }
+
+// console.log(obj.a)
+// obj.a =21
+// console.log(obj.a)
+
+
+
+// const obj = {};
+//
+// Object.defineProperty(obj, 'Pi', {
+//   get: function (){
+//     return 3.14;
+//   },
+//   set: function (val) {
+//     if(val !== obj.Pi) {
+//       console.log('не совпадает')
+//     }
+//   }
+// })
+//
+// console.log(obj.Pi)
+// obj.Pi = 3.1
+//
+// console.log(obj)
+
+
+
+// const arr = [1,2,3]
+//
+// console.log(arr)
+
+
+// const proto = {
+//   a:1
+// }
+//
+// const obj = {
+//   b:2
+// }
+//
+// // Object.setPrototypeOf(obj,proto)
+// // Object.getPrototypeOf(obj)
+// console.log(obj)
+
+// class Hey {
+//   constructor(x,y) {
+//     this.x = x,
+//     this.y = y
+//   }
+//
+//   toString () {
+//     return (`${this.x}`+ '' + `${this.y}`)
+//   }
+//
+//   summ() {
+//     return (this.x + this.y)
+//   }
+// }
+//
+// const point = new Hey(2,4)
+//
+// console.log(point.summ())
+// console.log(point)
+
+
+// class Hey {
+//   constructor(x,y) {
+//     this.x = x,
+//     this.y = y
+//   }
+//
+//   get pair () {
+//     return [this.x, this.y]
+//   }
+//
+//   set pair (arr) {
+//     return [this.x = arr[0] ,this.y = arr[1] ]
+//   }
+// }
+//
+// const la = new Hey(23,22)
+//
+// console.log(la.pair)
+//
+// la.pair = [11,22]
+//
+// console.log(la.pair)
