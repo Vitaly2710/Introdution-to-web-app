@@ -1,0 +1,27 @@
+{
+  "name": "datamola",
+  "version": "0.1.0",
+  "description": "link to figma\r https://www.figma.com/file/4cec3rLoYvmqTwm5LuTBdt/Trotter-(Copy)?node-id=0%3A1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vitaly2710/Introdution-to-web-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Vitaly2710/Introdution-to-web-app/issues"
+  },
+  "homepage": "https://github.com/Vitaly2710/Introdution-to-web-app#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/parser": "^5.16.0",
+    "eslint": "^8.11.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-react": "^7.29.4"
+  }
+}
