@@ -550,9 +550,22 @@ class Comment {
 // console.log(Comment.validateComment({author: 'Pol', id: '21312312', createAt: new Date('2022-12-21T15:21:11')}))
 
 class TweetCollection {
-  constructor() {
-    this._user = 'Vasya'
+  constructor(tweets) {
+    this._user = 'Иван Иванов'
+    this.tweets = tweets
+
   }
+
+  get user () {
+    return this._user
+  }
+
+  set user (user) {
+    if(typeof user === 'string' && this._user){
+      this._user = user
+    }
+  }
+
   static #tweets = [
     {
       id:`1`,
@@ -860,11 +873,46 @@ class TweetCollection {
     } return false
   }
 
+  edit (id, text){
+    let correctUser = this.get(id)
+    if (Tweet.validate(correctUser) && correctUser.author === this._user) {
+      correctUser.text = text
+      return true
+    } return false
+  }
+
+  remove (id) {
+    let indexForDelete = TweetCollection.#tweets.findIndex((elem) => elem.id === id && elem.author === this._user)
+    if(indexForDelete !== -1){
+      TweetCollection.#tweets.splice(indexForDelete,1)
+      return true
+    } return false
+  }
+
+  addComment (id, text) {
+    const newComment = this.get(id)
+    const comment = {
+      id: TweetCollection.#createNewId(),
+      text,
+      author: this._user,
+      createAt: new Date(),
+    }
+    if(newComment && Comment.validateComment(comment)){
+      newComment.comments.push(comment)
+      console.log(TweetCollection.#tweets)
+      return true
+    } return false
+  }
 }
 
 // create new element
 const newElem = new TweetCollection()
 console.log(newElem)
+
+//test change user name
+// newElem.user = 'Петр Иванов'
+// console.log(newElem.user)
+// console.log(newElem)
 
 //test getPage method
 // console.log(newElem.getPage(0, 7, {dateFrom: new Date('2022-02-23T13:12:11')}))
@@ -879,7 +927,17 @@ console.log(newElem)
 // newElem.add('hello bro')
 
 
+//test edit
+// newElem.edit('1', 'Change text of tweet')
+// console.log(newElem.edit('2', 'Change text of tweet'))
 
+//test remote
+// newElem.remove('1')
+
+
+// test addComment
+
+// newElem.addComment('1', 'Create new comment')
 
 
 
