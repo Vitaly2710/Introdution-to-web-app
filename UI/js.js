@@ -447,13 +447,29 @@ class Tweet {
     this.comments = comments;
   }
 
+  static commonTemplate = {
+    id:(id) => id?.length && typeof id === 'string',
+    text:(text) => typeof text === 'string' && text.length < 280 ,
+    createAt: (date) => date instanceof Date,
+    author: (author) => author?.length && typeof author === 'string',
+  }
+
+  static validate(tweet) {
+    const template = {
+      ...Tweet.commonTemplate,
+      comments: (array) => Array.isArray(array)
+    }
+    const keysTemplate = Object.keys(template)
+    const result = keysTemplate.every((key) => template[key](tweet[key]));
+    return !!result;
+  }
+
   get id () {
     return this._id
   }
 
   set id (id) {
-    console.log('can not change')
-    return;
+    console.log('can not change id')
   }
 
   get createAt () {
@@ -462,7 +478,6 @@ class Tweet {
 
   set createAt (newCreateAt) {
     console.log('can not change time')
-    return
   }
 
   get author () {
@@ -471,31 +486,17 @@ class Tweet {
 
   set author (newAuthor) {
     console.log('can not change author')
-    return
   }
 }
 
-const tweetik = new Tweet(1, 'hello', 'петр первый',[])
-
-console.log(tweetik)
-
-tweetik.id = -1
-tweetik.createAt = new Date()
-tweetik.author = 'John'
-
-console.log(tweetik)
+//test create new element with class Tweet
+const newTweet = new Tweet('1', 'Hello world', new Date('2022-11-22T12-12-21'),'John', [])
+console.log(newTweet)
 
 
-
-
-
-
-
-
-
-
-
-
+//test validate method in class
+// console.log(Tweet.validate({author:'паввп', text: 'asdasd', createAt: new Date(), id: '22222', comments:[]}))
+// console.log(Tweet.validate({author:'паввп', text: 'asdasd', createAt: new Date(), id: '22222'}))
 
 
 
