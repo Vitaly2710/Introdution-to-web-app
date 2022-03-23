@@ -435,7 +435,12 @@ const myModule = (function (){
 // myModule.addComment('16','Получилось создать новый коментарий')
 // console.log(tweets)
 
-
+const commonTemplate = {
+  id:(id) => id?.length && typeof id === 'string',
+  text:(text) => typeof text === 'string' && text.length < 280 ,
+  createAt: (date) => date instanceof Date,
+  author: (author) => author?.length && typeof author === 'string',
+}
 
 
 class Tweet {
@@ -447,16 +452,9 @@ class Tweet {
     this.comments = comments;
   }
 
-  static commonTemplate = {
-    id:(id) => id?.length && typeof id === 'string',
-    text:(text) => typeof text === 'string' && text.length < 280 ,
-    createAt: (date) => date instanceof Date,
-    author: (author) => author?.length && typeof author === 'string',
-  }
-
   static validate(tweet) {
     const template = {
-      ...Tweet.commonTemplate,
+      ...commonTemplate,
       comments: (array) => Array.isArray(array)
     }
     const keysTemplate = Object.keys(template)
@@ -490,16 +488,55 @@ class Tweet {
 }
 
 //test create new element with class Tweet
-const newTweet = new Tweet('1', 'Hello world', new Date('2022-11-22T12-12-21'),'John', [])
-console.log(newTweet)
+// const newTweet = new Tweet('1', 'Hello world', new Date('2022-11-22T12-12-21'),'John', [])
+// console.log(newTweet)
 
 
 //test validate method in class
 // console.log(Tweet.validate({author:'паввп', text: 'asdasd', createAt: new Date(), id: '22222', comments:[]}))
 // console.log(Tweet.validate({author:'паввп', text: 'asdasd', createAt: new Date(), id: '22222'}))
 
+class Comment {
+  constructor(id, text, createAt, author) {
+    this._id = id;
+    this.text = text;
+    this._createAt = createAt;
+    this._author = author;
+  }
 
+  static validateComment (com) {
+    let templateKeys = Object.keys(commonTemplate)
+    return templateKeys.every((key) => commonTemplate[key](com[key]))
+  }
 
+  get id () {
+    return this._id
+  }
+
+  set id (id) {
+    console.log('can not change id')
+  }
+
+  get createAt () {
+    return this._createAt
+  }
+
+  set createAt (newCreateAt) {
+    console.log('can not change time')
+  }
+
+  get author () {
+    return this._author
+  }
+
+  set author (newAuthor) {
+    console.log('can not change author')
+  }
+}
+
+//test validateComment method in Comment class
+// console.log(Comment.validateComment({author: 'Pol', id: '21312312', createAt: new Date('2022-12-21T15:21:11'),text: 'Buy Buy John'}))
+// console.log(Comment.validateComment({author: 'Pol', id: '21312312', createAt: new Date('2022-12-21T15:21:11')}))
 
 
 
