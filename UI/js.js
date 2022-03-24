@@ -933,11 +933,23 @@ class TweetCollection {
       return true;
     } return false;
   }
+
+  // eslint-disable-next-line class-methods-use-this
+  addAll(tws) {
+    const notValidateTweets = [];
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < tws.length; i++) {
+      if (!Tweet.validate(tws[i])) {
+        notValidateTweets.push(tws[i]);
+      }
+    }
+    return notValidateTweets;
+  }
 }
 
 // create new element
-// const newElem = new TweetCollection([{}]);
-// console.log(newElem);
+const newElem = new TweetCollection([{}]);
+console.log(newElem);
 
 // test change user name
 // newElem.user = 'Петр Иванов'
@@ -965,3 +977,11 @@ class TweetCollection {
 // test addComment
 
 // newElem.addComment('1', 'Create new comment')
+
+// test addAll method
+// console.log(newElem.addAll([{
+//   id: '20',
+//   createAt: new Date('2022-02-23T13:12:11'),
+//   author: 'Махатма Ганди',
+//   comments: [],
+// }]));
