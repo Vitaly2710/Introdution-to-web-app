@@ -59,8 +59,59 @@ class List {
   }
 }
 
-const newList = new List();
-newList.add('k=kzkz');
-newList.add('k=kzasdasdkz');
-newList.add('k=kzaaaakz');
-console.log(newList);
+// const newList = new List();
+// newList.add('k=kzkz');
+// newList.add('k=kzasdasdkz');
+// newList.add('k=kzaaaakz');
+// console.log(newList);
+
+function add(a, b) {
+  const c = 1;
+  if (!b) {
+    return function (b) {
+      return b + a;
+    };
+  } return a + b;
+}
+
+function sub(a, b) {
+  const c = 1;
+  // if (!b) {
+  function hey(z) {
+    if (!z) {
+      return c - a;
+    } return z - a;
+    // };
+  }
+  return hey();
+  // return a - b;
+}
+
+function mul(a, b) {
+  const c = 1;
+  if (!b) {
+    return function (b) {
+      return b * a;
+    };
+  } return a * b;
+}
+
+function div(a, b) {
+  const c = 1;
+  if (!b) {
+    return function (b) {
+      return b / a;
+    };
+  } return a / b;
+}
+
+const a = add(1, 2);
+const b = mul(a, 10);
+
+const sub1 = sub(1);
+
+console.log(sub1);
+
+const c = sub1(b);
+
+console.log(c);
