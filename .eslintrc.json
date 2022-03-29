@@ -14,7 +14,7 @@
         "max-len": 0,
         "max-classes-per-file": [
             "error",
-            { "ignoreExpressions": true, "max": 4 }
+            { "ignoreExpressions": true, "max": 10 }
         ]
     }
 

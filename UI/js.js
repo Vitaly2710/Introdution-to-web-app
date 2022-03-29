@@ -523,3 +523,128 @@ newElem.addAll([
 //     author: 'Сергей Королев',
 //   }],
 // }]);
+
+class HeaderView {
+  constructor(id) {
+    this._containerId = id;
+  }
+
+  get id() {
+    return this._containerId;
+  }
+
+  display(params = null) {
+    if (params !== null) {
+      const userInHead = document.querySelector(`.${this.id}`);
+      userInHead.classList.toggle('headerUserBlock');
+      const buttonLogIn = document.querySelector('.logInButton');
+      buttonLogIn.classList.toggle(`${this.id}`);
+      const changeNAme = document.querySelector('#userName');
+      changeNAme.innerHTML = `${params}`;
+    } else {
+      alert('Необходимо ввойти');
+    }
+  }
+}
+
+const headerView = new HeaderView('hidden');
+headerView.display('John Palansky');
+headerView.display();
+
+class TweetFeedView {
+  constructor(containerId) {
+    this._containerId = containerId;
+  }
+
+  get containerId() {
+    return this._containerId;
+  }
+
+  display(params) {
+    const wrapperForTrotterList = document.querySelector(`#${this.containerId}`);
+    newElem.tws.forEach((elem) => {
+      const time = () => {
+        const day = elem.createAt.getDate();
+        const month = elem.createAt.getMonth();
+        let fMonth;
+        switch (month) {
+          case 0: fMonth = 'января'; break;
+          case 1: fMonth = 'февраля'; break;
+          case 2: fMonth = 'марта'; break;
+          case 3: fMonth = 'апреля'; break;
+          case 4: fMonth = 'мая'; break;
+          case 5: fMonth = 'июня'; break;
+          case 6: fMonth = 'июля'; break;
+          case 7: fMonth = 'августа'; break;
+          case 8: fMonth = 'сентября'; break;
+          case 9: fMonth = 'октября'; break;
+          case 10: fMonth = 'ноября'; break;
+          case 11: fMonth = 'декабря'; break;
+          default: break;
+        }
+        return (`${day} ${fMonth}`);
+      };
+
+      function hashtags(whatNeed) {
+        const hashtag = [];
+        const withoutHashtags = [];
+        elem.text.split('#').forEach((item, index) => {
+          if (index > 0) {
+            hashtag.push(`#${item}`);
+          } else if (index === 0) {
+            withoutHashtags.push(item);
+          }
+        });
+        let result;
+        if (whatNeed === 'hashtags') {
+          result = hashtag.join('');
+        } else if (whatNeed === 'text') {
+          result = withoutHashtags;
+        }
+        return result;
+      }
+      wrapperForTrotterList.insertAdjacentHTML(
+        'beforeend',
+        `<div class="mainBlockTrotteListTrotter">
+                <div class="container">
+                    <div class="wrapperUserPhoto">
+                        <img src="./assets/UserFoto.svg" alt="user photo">
+                    </div>
+                    <div class="trotter">
+                        <div class="userInfo">
+                            <h3>${elem.author}</h3>
+                            <h4>@${elem.author}</h4>
+                            <h4>${time()}</h4>
+                            <button class=correctTrotter>...</button>
+                            <div class="correctTrotterBlock">
+                                <ul>
+                                    <li>
+                                        <img src=".assetseditTrotterIcon.svg" alt="edit trotter">
+                                        <p>Edit</p>
+                                    </li>
+                                    <li>
+                                        <img src=".assetsdeleteTrotterIcon.svg" alt="delete trotter">
+                                        <p>Delete</p>
+                                    </li>
+                                </ul>>
+                            </div>
+                        </div>
+                        <p class=trotterText>${hashtags('text')}<span>${hashtags('hashtags')}</span></p>
+                        <div class="response">
+                            <ul>
+                                <li>${elem.comments.length}</li>
+                                <li>${Math.round(Math.random() * 100)}</li>
+                                <li>${Math.round(Math.random() * 100)}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+             </div>`,
+      );
+    });
+    wrapperForTrotterList.classList.add(params);
+  }
+}
+
+const newList = new TweetFeedView('trotterList');
+newList.display('allTrotts');
