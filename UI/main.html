@@ -13,19 +13,19 @@
                     <img src="./assets/LogoInHeader.svg" alt="logo undefined"/>
                     <h2 class="trotterInHeader">Trotter</h2>
                 </div>
-                    <div class="wrapperForHeaderButton">
-                        <div class="headerUserBlock">
-                            <img src="./assets/UserFoto.svg" alt="userFoto"/>
-                            <h4>Leo DiCaprio</h4>
-                            <a class="buttonLoginOut">
-                                <img src="./assets/buttonLogOut.svg" alt="logOut">
-                            </a>
-                        </div>
-<!--                        <button class="logInButton">-->
-<!--                            Log in-->
-<!--                        </button>-->
-<!--                        added and commented on button for future-->
-                    </div>
+                <div class="wrapperForHeaderButton">
+                       <div class="none">
+                           <img src="./assets/UserFoto.svg" alt="userFoto"/>
+                           <h4 id="userName">Leo DiCaprio</h4>
+                           <a class="buttonLoginOut">
+                               <img src="./assets/buttonLogOut.svg" alt="logOut">
+                           </a>
+                       </div>
+                   <button class="logInButton">
+                            Log in
+                   </button>
+<!--                     added and commented on button for future-->
+                </div>
             </header>
             <section class="mainBlock">
                 <article class="mainBlockTrotteList">
@@ -47,226 +47,229 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mainBlockTrotteListTrotter">
-                        <div class="container">
-                            <div class="wrapperUserPhoto">
-                                <img src="./assets/UserFoto.svg" alt="user photo">
-                            </div>
-                            <div class="trotter">
-                                <div class="userInfo">
-                                    <h3>Leo DiCaprio</h3>
-                                    <h4>@Leo DiCaprio</h4>
-                                    <h4>10h</h4>
-                                    <button class="correctTrotter">...</button>
-                                    <div class="correctTrotterBlock">
+                    <div id="trotterList">
+                        <div class="mainBlockTrotteListTrotter">
+                            <div class="container">
+                                <div class="wrapperUserPhoto">
+                                    <img src="./assets/UserFoto.svg" alt="user photo">
+                                </div>
+                                <div class="trotter">
+                                    <div class="userInfo">
+                                        <h3>Leo DiCaprio</h3>
+                                        <h4>@Leo DiCaprio</h4>
+                                        <h4>10h</h4>
+                                        <button class="correctTrotter">...</button>
+                                        <div class="correctTrotterBlock">
+                                            <ul>
+                                                <li>
+                                                    <img src="./assets/editTrotterIcon.svg" alt="edit trotter">
+                                                    <p>Edit</p>
+                                                </li>
+                                                <li>
+                                                    <img src="./assets/deleteTrotterIcon.svg" alt="delete trotter">
+                                                    <p>Delete</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <p class="trotterText">Make love not War <span>#saveworld</span></p>
+                                    <div class="response">
                                         <ul>
-                                            <li>
-                                                <img src="./assets/editTrotterIcon.svg" alt="edit trotter">
-                                                <p>Edit</p>
-                                            </li>
-                                            <li>
-                                                <img src="./assets/deleteTrotterIcon.svg" alt="delete trotter">
-                                                <p>Delete</p>
-                                            </li>
+                                            <li>186</li>
+                                            <li>2,139</li>
+                                            <li>447</li>
                                         </ul>
                                     </div>
                                 </div>
-                                <p class="trotterText">Make love not War <span>#saveworld</span></p>
-                                <div class="response">
-                                    <ul>
-                                        <li>186</li>
-                                        <li>2,139</li>
-                                        <li>447</li>
-                                    </ul>
+                            </div>
+                        </div>
+                        <div class="mainBlockTrotteListTrotter">
+                            <div class="container">
+                                <div class="wrapperUserPhoto">
+                                    <img src="./assets/UserFoto.svg" alt="user photo">
+                                </div>
+                                <div class="trotter">
+                                    <div class="userInfo">
+                                        <h3>Leo DiCaprio</h3>
+                                        <h4>@Leo DiCaprio</h4>
+                                        <h4>11h</h4>
+                                        <button class="correctTrotter">...</button>
+                                    </div>
+                                    <p class="trotterText">The Polaris Dawn crew visited the suit lab at @SpaceX
+                                        headquarters this week to see progress on the new SpaceX extravehicular activity (EVA) spacesuits, which are upgrades of the current intravehicular (IVA) suits.  <span>#spaceX</span></p>
+                                    <div class="response">
+                                        <ul>
+                                            <li>186</li>
+                                            <li>2,139</li>
+                                            <li>447</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mainBlockTrotteListTrotter">
+                            <div class="container">
+                                <div class="wrapperUserPhoto">
+                                    <img src="./assets/UserFoto.svg" alt="user photo">
+                                </div>
+                                <div class="trotter">
+                                    <div class="userInfo">
+                                        <h3>Leo DiCaprio</h3>
+                                        <h4>@Leo DiCaprio</h4>
+                                        <h4>1d</h4>
+                                        <button class="correctTrotter">...</button>
+                                    </div>
+                                    <p class="trotterText">Amazon. Blue Origin. Washington Post. Bezos Earth Fund. Bezos Academy. <span>#amazon</span></p>
+                                    <div class="response">
+                                        <ul>
+                                            <li>186</li>
+                                            <li>2,139</li>
+                                            <li>447</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mainBlockTrotteListTrotter">
+                            <div class="container">
+                                <div class="wrapperUserPhoto">
+                                    <img src="./assets/UserFoto.svg" alt="user photo">
+                                </div>
+                                <div class="trotter">
+                                    <div class="userInfo">
+                                        <h3>Leo DiCaprio</h3>
+                                        <h4>@Leo DiCaprio</h4>
+                                        <h4>3mar</h4>
+                                        <button class="correctTrotter">...</button>
+                                    </div>
+                                    <p class="trotterText">It was a year ago that the White House launched . Proud of the Earth Fund team for helping drive it forward.<span>#Justice40</span></p>
+                                    <div class="response">
+                                        <ul>
+                                            <li>186</li>
+                                            <li>2,139</li>
+                                            <li>447</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mainBlockTrotteListTrotter">
+                            <div class="container">
+                                <div class="wrapperUserPhoto">
+                                    <img src="./assets/UserFoto.svg" alt="user photo">
+                                </div>
+                                <div class="trotter">
+                                    <div class="userInfo">
+                                        <h3>Leo DiCaprio</h3>
+                                        <h4>@Leo DiCaprio</h4>
+                                        <h4>2mar</h4>
+                                        <button class="correctTrotter">...</button>
+                                    </div>
+                                    <p class="trotterText">So amazing that we decompress from a single cell to over 30 trillion cells <span>#Elon Mask</span></p>
+                                    <div class="response">
+                                        <ul>
+                                            <li>186</li>
+                                            <li>2,139</li>
+                                            <li>447</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mainBlockTrotteListTrotter">
+                            <div class="container">
+                                <div class="wrapperUserPhoto">
+                                    <img src="./assets/UserFoto.svg" alt="user photo">
+                                </div>
+                                <div class="trotter">
+                                    <div class="userInfo">
+                                        <h3>Leo DiCaprio</h3>
+                                        <h4>@Leo DiCaprio</h4>
+                                        <h4>1mar</h4>
+                                        <button class="correctTrotter">...</button>
+                                    </div>
+                                    <p class="trotterText">I believe that COVID-19 can be the last pandemic. ‘How to Prevent the Next Pandemic’ will explain why. <span>#BillGates</span></p>
+                                    <div class="response">
+                                        <ul>
+                                            <li>186</li>
+                                            <li>2,139</li>
+                                            <li>447</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mainBlockTrotteListTrotter">
+                            <div class="container">
+                                <div class="wrapperUserPhoto">
+                                    <img src="./assets/UserFoto.svg" alt="user photo">
+                                </div>
+                                <div class="trotter">
+                                    <div class="userInfo">
+                                        <h3>Leo DiCaprio</h3>
+                                        <h4>@Leo DiCaprio</h4>
+                                        <h4>28feb</h4>
+                                        <button class="correctTrotter">...</button>
+                                    </div>
+                                    <p class="trotterText">I’m optimistic about our ability to prevent the next pandemic. We have learned so much from COVID, and the innovations have been tremendous.I’m optimistic about our ability to prevent the next pandemic. We have learned so much from COVID, and the innovations have been tremendous.I’m optimistic about our ability to prevent the next pandemic. We have learned so much from COVID, and the innovations have been tremendous.I’m optimistic about our ability to prevent the next pandemic. We have learned so much from COVID, and the innovations have been tremendous.<span>#covid</span></p>
+                                    <div class="response">
+                                        <ul>
+                                            <li>186</li>
+                                            <li>2,139</li>
+                                            <li>447</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mainBlockTrotteListTrotter">
+                            <div class="container">
+                                <div class="wrapperUserPhoto">
+                                    <img src="./assets/UserFoto.svg" alt="user photo">
+                                </div>
+                                <div class="trotter">
+                                    <div class="userInfo">
+                                        <h3>Leo DiCaprio</h3>
+                                        <h4>@Leo DiCaprio</h4>
+                                        <h4>27feb</h4>
+                                        <button class="correctTrotter">...</button>
+                                    </div>
+                                    <p class="trotterText">Mark Zuckerberg has a virtual assistant in his home named Jarvis which is voiced by Morgan Freeman. <span>#MorganFreeman</span></p>
+                                    <div class="response">
+                                        <ul>
+                                            <li>186</li>
+                                            <li>2,139</li>
+                                            <li>447</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mainBlockTrotteListTrotter">
+                            <div class="container">
+                                <div class="wrapperUserPhoto">
+                                    <img src="./assets/UserFoto.svg" alt="user photo">
+                                </div>
+                                <div class="trotter">
+                                    <div class="userInfo">
+                                        <h3>Leo DiCaprio</h3>
+                                        <h4>@Leo DiCaprio</h4>
+                                        <h4>26feb</h4>
+                                        <button class="correctTrotter">...</button>
+                                    </div>
+                                    <p class="trotterText">Ryan Reynolds <span>#RyanReynolds</span></p>
+                                    <div class="response">
+                                        <ul>
+                                            <li>186</li>
+                                            <li>2,139</li>
+                                            <li>447</li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="mainBlockTrotteListTrotter">
-                        <div class="container">
-                            <div class="wrapperUserPhoto">
-                                <img src="./assets/UserFoto.svg" alt="user photo">
-                            </div>
-                            <div class="trotter">
-                                <div class="userInfo">
-                                    <h3>Leo DiCaprio</h3>
-                                    <h4>@Leo DiCaprio</h4>
-                                    <h4>11h</h4>
-                                    <button class="correctTrotter">...</button>
-                                </div>
-                                <p class="trotterText">The Polaris Dawn crew visited the suit lab at @SpaceX
-                                    headquarters this week to see progress on the new SpaceX extravehicular activity (EVA) spacesuits, which are upgrades of the current intravehicular (IVA) suits.  <span>#spaceX</span></p>
-                                <div class="response">
-                                    <ul>
-                                        <li>186</li>
-                                        <li>2,139</li>
-                                        <li>447</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mainBlockTrotteListTrotter">
-                        <div class="container">
-                            <div class="wrapperUserPhoto">
-                                <img src="./assets/UserFoto.svg" alt="user photo">
-                            </div>
-                            <div class="trotter">
-                                <div class="userInfo">
-                                    <h3>Leo DiCaprio</h3>
-                                    <h4>@Leo DiCaprio</h4>
-                                    <h4>1d</h4>
-                                    <button class="correctTrotter">...</button>
-                                </div>
-                                <p class="trotterText">Amazon. Blue Origin. Washington Post. Bezos Earth Fund. Bezos Academy. <span>#amazon</span></p>
-                                <div class="response">
-                                    <ul>
-                                        <li>186</li>
-                                        <li>2,139</li>
-                                        <li>447</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mainBlockTrotteListTrotter">
-                        <div class="container">
-                            <div class="wrapperUserPhoto">
-                                <img src="./assets/UserFoto.svg" alt="user photo">
-                            </div>
-                            <div class="trotter">
-                                <div class="userInfo">
-                                    <h3>Leo DiCaprio</h3>
-                                    <h4>@Leo DiCaprio</h4>
-                                    <h4>3mar</h4>
-                                    <button class="correctTrotter">...</button>
-                                </div>
-                                <p class="trotterText">It was a year ago that the White House launched . Proud of the Earth Fund team for helping drive it forward.<span>#Justice40</span></p>
-                                <div class="response">
-                                    <ul>
-                                        <li>186</li>
-                                        <li>2,139</li>
-                                        <li>447</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mainBlockTrotteListTrotter">
-                        <div class="container">
-                            <div class="wrapperUserPhoto">
-                                <img src="./assets/UserFoto.svg" alt="user photo">
-                            </div>
-                            <div class="trotter">
-                                <div class="userInfo">
-                                    <h3>Leo DiCaprio</h3>
-                                    <h4>@Leo DiCaprio</h4>
-                                    <h4>2mar</h4>
-                                    <button class="correctTrotter">...</button>
-                                </div>
-                                <p class="trotterText">So amazing that we decompress from a single cell to over 30 trillion cells <span>#Elon Mask</span></p>
-                                <div class="response">
-                                    <ul>
-                                        <li>186</li>
-                                        <li>2,139</li>
-                                        <li>447</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mainBlockTrotteListTrotter">
-                        <div class="container">
-                            <div class="wrapperUserPhoto">
-                                <img src="./assets/UserFoto.svg" alt="user photo">
-                            </div>
-                            <div class="trotter">
-                                <div class="userInfo">
-                                    <h3>Leo DiCaprio</h3>
-                                    <h4>@Leo DiCaprio</h4>
-                                    <h4>1mar</h4>
-                                    <button class="correctTrotter">...</button>
-                                </div>
-                                <p class="trotterText">I believe that COVID-19 can be the last pandemic. ‘How to Prevent the Next Pandemic’ will explain why. <span>#BillGates</span></p>
-                                <div class="response">
-                                    <ul>
-                                        <li>186</li>
-                                        <li>2,139</li>
-                                        <li>447</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mainBlockTrotteListTrotter">
-                        <div class="container">
-                            <div class="wrapperUserPhoto">
-                                <img src="./assets/UserFoto.svg" alt="user photo">
-                            </div>
-                            <div class="trotter">
-                                <div class="userInfo">
-                                    <h3>Leo DiCaprio</h3>
-                                    <h4>@Leo DiCaprio</h4>
-                                    <h4>28feb</h4>
-                                    <button class="correctTrotter">...</button>
-                                </div>
-                                <p class="trotterText">I’m optimistic about our ability to prevent the next pandemic. We have learned so much from COVID, and the innovations have been tremendous.I’m optimistic about our ability to prevent the next pandemic. We have learned so much from COVID, and the innovations have been tremendous.I’m optimistic about our ability to prevent the next pandemic. We have learned so much from COVID, and the innovations have been tremendous.I’m optimistic about our ability to prevent the next pandemic. We have learned so much from COVID, and the innovations have been tremendous.<span>#covid</span></p>
-                                <div class="response">
-                                    <ul>
-                                        <li>186</li>
-                                        <li>2,139</li>
-                                        <li>447</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mainBlockTrotteListTrotter">
-                        <div class="container">
-                            <div class="wrapperUserPhoto">
-                                <img src="./assets/UserFoto.svg" alt="user photo">
-                            </div>
-                            <div class="trotter">
-                                <div class="userInfo">
-                                    <h3>Leo DiCaprio</h3>
-                                    <h4>@Leo DiCaprio</h4>
-                                    <h4>27feb</h4>
-                                    <button class="correctTrotter">...</button>
-                                </div>
-                                <p class="trotterText">Mark Zuckerberg has a virtual assistant in his home named Jarvis which is voiced by Morgan Freeman. <span>#MorganFreeman</span></p>
-                                <div class="response">
-                                    <ul>
-                                        <li>186</li>
-                                        <li>2,139</li>
-                                        <li>447</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mainBlockTrotteListTrotter">
-                        <div class="container">
-                            <div class="wrapperUserPhoto">
-                                <img src="./assets/UserFoto.svg" alt="user photo">
-                            </div>
-                            <div class="trotter">
-                                <div class="userInfo">
-                                    <h3>Leo DiCaprio</h3>
-                                    <h4>@Leo DiCaprio</h4>
-                                    <h4>26feb</h4>
-                                    <button class="correctTrotter">...</button>
-                                </div>
-                                <p class="trotterText">Ryan Reynolds <span>#RyanReynolds</span></p>
-                                <div class="response">
-                                    <ul>
-                                        <li>186</li>
-                                        <li>2,139</li>
-                                        <li>447</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                     <h3 class="moreTrotter">See more</h3>
                 </article>
                 <aside class="filtrationBlock">

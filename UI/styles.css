@@ -75,6 +75,10 @@ header {
     cursor: pointer;
 }
 
+.none {
+    display: none;
+}
+
 .logInButton:hover {
     background-color: var(--secondary-color) ;
 }
@@ -91,6 +95,7 @@ header {
     justify-content: space-between;
 }
 
+
 .headerUserBlock img:first-child {
     width: 32px;
     height: 32px;
@@ -102,6 +107,7 @@ header {
     font-family: var(--headers-text-style);
     font-size: 1.8rem;
     line-height: 22px;
+    text-align: center;
 }
 
 .buttonLoginOut img {
