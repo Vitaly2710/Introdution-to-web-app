@@ -38,13 +38,13 @@ class Tweet {
   }
 }
 
-// test create new element with class Tweet
-// const newTweet = new Tweet('1', 'Hello world', 'John', []);
-// console.log(newTweet)
+/* test create new element with class Tweet
+const newTweet = new Tweet('1', 'Hello world', 'John', []);
+console.log(newTweet)
 
-// test validate method in class
-// console.log(Tweet.validate({author:'паввп', text: 'asdasd', createAt: new Date(), id: '22222', comments:[]}))
-// console.log(Tweet.validate({author:'паввп', text: 'asdasd', createAt: new Date(), id: '22222'}))
+test validate method in class
+console.log(Tweet.validate({author:'паввп', text: 'asdasd', createAt: new Date(), id: '22222', comments:[]}))
+console.log(Tweet.validate({author:'паввп', text: 'asdasd', createAt: new Date(), id: '22222'})) */
 
 class Comment {
   constructor(id, text, author) {
@@ -81,14 +81,14 @@ class Comment {
   }
 }
 
-// test validateComment method in Comment class
+/* // test validateComment method in Comment class
 // console.log(Comment.validateComment({author: 'Pol', id: '21312312', createAt: new Date('2022-12-21T15:21:11'),text: 'Buy Buy John'}))
 
 // console.log(
 // Comment.validateComment({
 // author: 'Pol', id: '21312312', createAt: new Date('2022-12-21T15:21:11')
 // })
-// )
+// ) */
 
 class TweetCollection {
   constructor(tws = []) {
@@ -145,12 +145,12 @@ class TweetCollection {
     return this._tws.find((tweet) => tweet.id === id);
   }
 
-  static #createNewId() {
+  static createNewId() {
     return String(Math.random());
   }
 
   add(text) {
-    const newTweet = new Tweet(TweetCollection.#createNewId(), text, this.user);
+    const newTweet = new Tweet(TweetCollection.createNewId(), text, this.user);
     if (Tweet.validate(newTweet)) {
       this._tws.push(newTweet);
       TweetCollection.tweetIsSort(this.tws);
@@ -180,7 +180,7 @@ class TweetCollection {
 
   addComment(id, text) {
     const newComment = this.get(id);
-    const comment = new Comment(TweetCollection.#createNewId(), text, this.user);
+    const comment = new Comment(TweetCollection.createNewId(), text, this.user);
     if (newComment && Comment.validateComment(comment)) {
       newComment.comments.push(comment);
       return true;
@@ -463,66 +463,66 @@ newElem.addAll([
   },
 ]);
 
-// console.log(newElem.addAll([{ author: 'Bill' }]));
+/* console.log(newElem.addAll([{ author: 'Bill' }]));
 
-// test change user name
-// newElem.user = 'Петр Иванов'
-// console.log(newElem.user)
-// console.log(newElem)
+test change user name
+newElem.user = 'Петр Иванов'
+console.log(newElem.user)
+console.log(newElem)
 
-// test getPage method
-// console.log(newElem.getPage(0, 7, { dateFrom: new Date('2022-02-23T13:12:11') }));
-// console.log(newElem.getPage(0, 10));
-// console.log(newElem.getPage(0, 10, { author: 'snow' }));
-// console.log(newElem.getPage(0, 3, { author: 'Иван Иванов', hashtags: 'hi' }));
-// console.log(newElem.getPage(0, 2, { author: 'Иван Иванов' }));
-// console.log(newElem.getPage(0, 3, { author: 'Иван Иванов', hashtags: 'by' }));
-// console.log(newElem.getPage(0, 3, { author: 'Иван Иванов', dateFrom: new Date('2022-02-22T12:21:11') }));
-// console.log(newElem.getPage(0, 3, { dateFrom: new Date('2022-02-22T12:21:11') }));
-// console.log(newElem.getPage(0, 3));
-// console.log(newElem.getPage(0, 10, { dateTo: new Date('2022-02-23T10:10:11') }));
-// console.log(newElem.getPage(0, 3));
-// console.log(newElem.getPage(1, 3));
+test getPage method
+console.log(newElem.getPage(0, 7, { dateFrom: new Date('2022-02-23T13:12:11') }));
+console.log(newElem.getPage(0, 10));
+console.log(newElem.getPage(0, 10, { author: 'snow' }));
+console.log(newElem.getPage(0, 3, { author: 'Иван Иванов', hashtags: 'hi' }));
+console.log(newElem.getPage(0, 2, { author: 'Иван Иванов' }));
+console.log(newElem.getPage(0, 3, { author: 'Иван Иванов', hashtags: 'by' }));
+console.log(newElem.getPage(0, 3, { author: 'Иван Иванов', dateFrom: new Date('2022-02-22T12:21:11') }));
+console.log(newElem.getPage(0, 3, { dateFrom: new Date('2022-02-22T12:21:11') }));
+console.log(newElem.getPage(0, 3));
+console.log(newElem.getPage(0, 10, { dateTo: new Date('2022-02-23T10:10:11') }));
+console.log(newElem.getPage(0, 3));
+console.log(newElem.getPage(1, 3));
 
-// test get method
-// console.log(newElem.get('13'));
+test get method
+console.log(newElem.get('13'));
 
-// test add method
-// newElem.add('hello bro');
-// newElem.add('hello new world');
+test add method
+newElem.add('hello bro');
+newElem.add('hello new world');
 
-// test edit
-// newElem.edit('1', 'Change text of tweet')
-// console.log(newElem.edit('2', 'Change text of tweet'))
-// console.log(newElem.edit('1', 'Change the text'));
+test edit
+newElem.edit('1', 'Change text of tweet')
+console.log(newElem.edit('2', 'Change text of tweet'))
+console.log(newElem.edit('1', 'Change the text'));
 
-// test remote
-// newElem.remove('1');
+test remote
+newElem.remove('1');
 
-// test addComment
-// console.log(newElem.addComment('1', 'Create new comment'));
-// newElem.addComment('1', 'Create new comment');
-// console.log(newElem.addComment('1'));
+test addComment
+console.log(newElem.addComment('1', 'Create new comment'));
+newElem.addComment('1', 'Create new comment');
+console.log(newElem.addComment('1'));
 
-// test addAll method
-// console.log(newElem.addAll([{
-//   id: '20',
-//   createAt: new Date('2022-02-23T13:12:11'),
-//   author: 'Махатма Ганди',
-//   comments: [],
-// }]));
-// newElem.addAll([{
-//   id: '5',
-//   text: 'Поехали #поехали#datamola',
-//   createAt: new Date('1961-04-12T12:00:00'),
-//   author: 'Юрий Гагарин',
-//   comments: [{
-//     id: '1212',
-//     text: 'Ну наконец!!!',
-//     createAt: new Date('1961-04-12T13:00:01'),
-//     author: 'Сергей Королев',
-//   }],
-// }]);
+test addAll method
+console.log(newElem.addAll([{
+  id: '20',
+  createAt: new Date('2022-02-23T13:12:11'),
+  author: 'Махатма Ганди',
+  comments: [],
+}]));
+newElem.addAll([{
+  id: '5',
+  text: 'Поехали #поехали#datamola',
+  createAt: new Date('1961-04-12T12:00:00'),
+  author: 'Юрий Гагарин',
+  comments: [{
+    id: '1212',
+    text: 'Ну наконец!!!',
+    createAt: new Date('1961-04-12T13:00:01'),
+    author: 'Сергей Королев',
+  }],
+}]); */
 
 class HeaderView {
   constructor(id) {
@@ -547,9 +547,7 @@ class HeaderView {
   }
 }
 
-// const headerView = new HeaderView('hidden');
-// headerView.display('John Palansky');
-// headerView.display();
+const headerView = new HeaderView('hidden');
 
 class TweetFeedView {
   constructor(containerId) {
@@ -562,6 +560,7 @@ class TweetFeedView {
 
   display(params) {
     const wrapperForTrotterList = document.querySelector(`#${this.containerId}`);
+    const newContainer = document.createElement('div');
     newElem.tws.forEach((elem) => {
       const time = () => {
         const day = elem.createAt.getDate();
@@ -603,7 +602,7 @@ class TweetFeedView {
         }
         return result;
       }
-      wrapperForTrotterList.insertAdjacentHTML(
+      newContainer.insertAdjacentHTML(
         'beforeend',
         `<div class="mainBlockTrotteListTrotter">
                 <div class="container">
@@ -641,13 +640,20 @@ class TweetFeedView {
                 </div>
              </div>`,
       );
+      newContainer.classList.add(params);
+      wrapperForTrotterList.append(newContainer);
     });
-    wrapperForTrotterList.classList.add(params);
+  }
+
+  refresh(give) {
+    const container = document.querySelector('.newLists');
+    container.remove();
+    this.display(give);
   }
 }
 
-// const newList = new TweetFeedView('trotterList');
-// newList.display('allTrotts');
+const newList = new TweetFeedView('trotterList');
+newList.display('newLists');
 
 class TweetView {
   constructor(containerId) {
@@ -659,7 +665,7 @@ class TweetView {
   }
 
   display(params) {
-    const mainTrotter = document.querySelector(`.${this.id}`);
+    const mainTrotter = document.querySelector(`#${this.id}`);
     const currentTrott = newElem.get(params);
     function hashtags(whatNeed, input) {
       const hashtag = [];
@@ -781,5 +787,23 @@ class TweetView {
   }
 }
 
-const newTroter = new TweetView('mainBlockTrotteListTrotter');
-newTroter.display('2');
+// const newTroter = new TweetView('mainblocktoAddTrot');
+// newTroter.display('2');
+
+function setCurrentUSer(user) {
+  newElem.user = user;
+  return headerView.display(newElem.user);
+}
+
+// test setCurrentUser method
+// setCurrentUSer('Петр Петрович');
+// console.log(newElem.user);
+
+function addTweet(text) {
+  newElem.add(text);
+  newList.refresh('blabla');
+}
+
+addTweet('Создаю новый твит с перерисовкой111');
+addTweet('Создаю новый твит с перерисовкой');
+addTweet('Создаю новый твит с перерисовкой aaaaaaaaaaaaaa');

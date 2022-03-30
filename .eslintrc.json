@@ -15,7 +15,8 @@
         "max-classes-per-file": [
             "error",
             { "ignoreExpressions": true, "max": 10 }
-        ]
+        ],
+        "no-unused-vars": "off"
     }
 
 }
