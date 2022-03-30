@@ -547,9 +547,9 @@ class HeaderView {
   }
 }
 
-const headerView = new HeaderView('hidden');
-headerView.display('John Palansky');
-headerView.display();
+// const headerView = new HeaderView('hidden');
+// headerView.display('John Palansky');
+// headerView.display();
 
 class TweetFeedView {
   constructor(containerId) {
@@ -646,5 +646,140 @@ class TweetFeedView {
   }
 }
 
-const newList = new TweetFeedView('trotterList');
-newList.display('allTrotts');
+// const newList = new TweetFeedView('trotterList');
+// newList.display('allTrotts');
+
+class TweetView {
+  constructor(containerId) {
+    this._containerId = containerId;
+  }
+
+  get id() {
+    return this._containerId;
+  }
+
+  display(params) {
+    const mainTrotter = document.querySelector(`.${this.id}`);
+    const currentTrott = newElem.get(params);
+    function hashtags(whatNeed, input) {
+      const hashtag = [];
+      const withoutHashtags = [];
+      input.text.split('#').forEach((item, index) => {
+        if (index > 0) {
+          hashtag.push(`#${item}`);
+        } else if (index === 0) {
+          withoutHashtags.push(item);
+        }
+      });
+      let result;
+      if (whatNeed === 'hashtags') {
+        result = hashtag.join('');
+      } else if (whatNeed === 'text') {
+        result = withoutHashtags;
+      } else {
+        result = '';
+      }
+      return result;
+    }
+
+    const time = (t) => {
+      const day = t.createAt.getDate();
+      const month = t.createAt.getMonth();
+      let fMonth;
+      switch (month) {
+        case 0: fMonth = 'января'; break;
+        case 1: fMonth = 'февраля'; break;
+        case 2: fMonth = 'марта'; break;
+        case 3: fMonth = 'апреля'; break;
+        case 4: fMonth = 'мая'; break;
+        case 5: fMonth = 'июня'; break;
+        case 6: fMonth = 'июля'; break;
+        case 7: fMonth = 'августа'; break;
+        case 8: fMonth = 'сентября'; break;
+        case 9: fMonth = 'октября'; break;
+        case 10: fMonth = 'ноября'; break;
+        case 11: fMonth = 'декабря'; break;
+        default: break;
+      }
+      return (`${day} ${fMonth}`);
+    };
+
+    mainTrotter.insertAdjacentHTML(
+      'afterbegin',
+      `<div class="container">
+        <div class="wrapperUserPhoto">
+            <img src="./assets/UserFoto.svg" alt="user photo">
+        </div>
+            <div class="trotter">
+                <div class="userInfo">
+                    <h3>${currentTrott.author}</h3>
+                    <h4>@${currentTrott.author}</h4>
+                    <h4>${time(currentTrott)}</h4>
+                    <button class="correctTrotter">...</button>
+                    <div class="correctTrotterBlock">
+                        <ul>
+                            <li>
+                                <img src="./assets/editTrotterIcon.svg" alt="edit trotter">
+                                <p>Edit</p>
+                            </li>
+                            <li>
+                                <img src="./assets/deleteTrotterIcon.svg" alt="delete trotter">
+                                <p>Delete</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="trotterText">${hashtags('text', currentTrott)} <span>${hashtags('hashtags', currentTrott)}</span></p>
+                <div class="response">
+                    <ul>
+                        <li>${currentTrott.comments.length}</li>
+                        <li>${Math.round(Math.random() * 100)}</li>
+                        <li>${Math.round(Math.random() * 100)}</li>
+                    </ul>
+                </div>
+            </div>
+      </div>`,
+      currentTrott.comments.forEach((elem) => {
+        mainTrotter.insertAdjacentHTML(
+          'afterbegin',
+          `<div class="container">
+            <div class="wrapperUserPhoto">
+                <img src="./assets/userImgCommentstwo.svg" alt="user photo">
+            </div>
+            <div class="trotter">
+                <div class="userInfo">
+                    <h3>${elem.author}</h3>
+                    <h4>@${elem.author}</h4>
+                    <h4>${time(elem)}</h4>
+                    <div class="correctTrotterBlock">
+                        <ul>
+                            <li>
+                                <img src="./assets/editTrotterIcon.svg" alt="edit trotter">
+                                <p>Edit</p>
+                            </li>
+                            <li>
+                                <img src="./assets/deleteTrotterIcon.svg" alt="delete trotter">
+                                <p>Delete</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="reTrott">Reply to <span>@${hashtags('hashtags', currentTrott)}</span></p>
+                <p class="trotterText">${elem.text}</p>
+                <div class="response">
+                    <ul>
+                        <li style="display: none"></li>
+                        <li>${Math.round(Math.random() * 10)}</li>
+                        <li>${Math.round(Math.random() * 10)}</li>
+                    </ul>
+                </div>
+            </div>
+          </div>`,
+        );
+      }),
+    );
+  }
+}
+
+const newTroter = new TweetView('mainBlockTrotteListTrotter');
+newTroter.display('2');
