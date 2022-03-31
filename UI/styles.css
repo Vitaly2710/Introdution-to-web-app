@@ -576,6 +576,19 @@ footer {
 }
 
 
+.humanSearch {
+    display: block;
+    border: none;
+    margin-top: 2%;
+    max-width: 20rem;
+}
+
+.hashtagsSearch {
+    display: block;
+    border: none;
+    margin-top: 2%;
+}
+
 
 
 

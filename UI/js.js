@@ -871,3 +871,34 @@ function showTweet(id) {
 
 // showTweet('12');
 // showTweet('1');
+
+class FilterView {
+  constructor(containerId) {
+    this._id = containerId;
+  }
+
+  get id() {
+    return this._id;
+  }
+
+  dispaly(param) {
+    const serchContainer = document.querySelector(`#${this.id}`);
+    const filterElement = document.createElement('select');
+    newElem.tws.forEach((elem, index) => {
+      const itemIsSearch = elem[param];
+      filterElement?.insertAdjacentHTML(
+        'afterbegin',
+        `<option value="value${index}">${itemIsSearch}</option>`,
+      );
+    });
+    // console.log()
+    serchContainer?.append(filterElement);
+    filterElement.classList.add('humanSearch');
+    serchContainer.replaceChild(filterElement, serchContainer.childNodes[1]);
+  }
+}
+
+const filterByAutor = new FilterView('humanSearch');
+filterByAutor.dispaly('author');
+const filterByHashtag = new FilterView('hashtagsSearch');
+filterByHashtag.dispaly('text');
