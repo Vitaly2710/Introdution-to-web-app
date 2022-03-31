@@ -138,6 +138,7 @@ class TweetCollection {
     }
 
     filterTweets = filterTweets.splice(skip, top);
+    this._tws = filterTweets;
     return filterTweets;
   }
 
@@ -388,6 +389,7 @@ newElem.addAll([
       id: '666',
       text: 'Любовь иногда очень зла',
       createAt: new Date('2022-01-23T11:11:11'),
+      author: 'Пол Уокер',
     }],
   },
   {
@@ -682,7 +684,9 @@ class TweetView {
 
   display(params) {
     const mainTrotter = document.querySelector(`#${this.id}`);
+    const newContainer = document.createElement('div');
     const currentTrott = newElem.get(params);
+    const currentUser = document.querySelector('#userName')?.innerHTML;
     function hashtags(whatNeed, input) {
       const hashtag = [];
       const withoutHashtags = [];
@@ -725,7 +729,13 @@ class TweetView {
       }
       return (`${day} ${fMonth}`);
     };
-
+    function editFunction(item) {
+      let tweetOwner;
+      if (item.author !== newElem.user || item.author !== currentUser) {
+        tweetOwner = 'none';
+      }
+      return tweetOwner;
+    }
     mainTrotter?.insertAdjacentHTML(
       'afterbegin',
       `<div class="container">
@@ -737,7 +747,7 @@ class TweetView {
                     <h3>${currentTrott.author}</h3>
                     <h4>@${currentTrott.author}</h4>
                     <h4>${time(currentTrott)}</h4>
-                    <button class="correctTrotter">...</button>
+                    <button class="correctTrotter" style="display: ${editFunction(currentTrott)}">...</button>
                     <div class="correctTrotterBlock">
                         <ul>
                             <li>
@@ -762,7 +772,7 @@ class TweetView {
             </div>
       </div>`,
       currentTrott.comments.forEach((elem) => {
-        mainTrotter.insertAdjacentHTML(
+        newContainer.insertAdjacentHTML(
           'afterbegin',
           `<div class="container">
             <div class="wrapperUserPhoto">
@@ -800,11 +810,12 @@ class TweetView {
         );
       }),
     );
+    mainTrotter.append(newContainer);
+    mainTrotter?.replaceChild(newContainer, mainTrotter.childNodes[1]);
   }
 }
 
-const newTroter = new TweetView('mainblocktoAddTrot');
-newTroter.display('6');
+const selectTweet = new TweetView('mainblocktoAddTrot');
 
 function setCurrentUSer(user) {
   newElem.user = user;
@@ -833,3 +844,30 @@ function editTweet(id, text) {
 // test edit method
 // it works only if to uncomment 816 string.Because names should match.
 // editTweet('12', 'Edited tweet text');
+
+function removeTweet(id) {
+  console.log(newElem.remove(id));
+  newElem.remove(id);
+  newList.display();
+}
+
+// test removeTweet method. it works only if to uncomment 816 string.Because names should match.
+// removeTweet('12');
+// removeTweet('11');
+
+function getFeed(skip, top, filterConfig) {
+  newElem.getPage(skip, top, filterConfig);
+  newList.display();
+}
+
+// test getFeed method
+// getFeed(0, 2);
+// getFeed(0, 10, { dateTo: new Date('2022-02-01T12:12:12') });
+// getFeed();
+
+function showTweet(id) {
+  selectTweet.display(id);
+}
+
+// showTweet('12');
+// showTweet('1');
