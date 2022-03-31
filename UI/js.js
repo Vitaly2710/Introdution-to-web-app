@@ -92,7 +92,7 @@ class Comment {
 
 class TweetCollection {
   constructor(tws = []) {
-    this._user = 'Иван Иванов';
+    this._user = 'User';
     this._tws = tws;
   }
 
@@ -533,21 +533,33 @@ class HeaderView {
     return this._containerId;
   }
 
-  display(params = null) {
-    if (params !== null) {
-      const userInHead = document.querySelector(`.${this.id}`);
-      userInHead.classList.toggle('headerUserBlock');
-      const buttonLogIn = document.querySelector('.logInButton');
-      buttonLogIn.classList.toggle(`${this.id}`);
-      const changeNAme = document.querySelector('#userName');
-      changeNAme.innerHTML = `${params}`;
+  display(userName = null) {
+    const userInHead = document.querySelector(`.${this.id}`);
+    const buttonLogIn = document.querySelector('.logInButton');
+    const newContainer = document.createElement('div');
+    if (userName !== null && userName && newElem.user === userName) {
+      newContainer.classList.add('headerUserBlock');
+      newContainer.insertAdjacentHTML(
+        'afterbegin',
+        `<img src="./assets/UserFoto.svg" alt="userFoto"/>
+            <h4 id="userName">${userName}</h4>
+            <a class="buttonLoginOut">
+                <img src="./assets/buttonLogOut.svg" alt="logOut">
+            </a>`,
+      );
+      userInHead.append(newContainer);
+      userInHead.replaceChild(newContainer, userInHead.childNodes[0]);
+      buttonLogIn.classList.add('hidden');
     } else {
       alert('Необходимо ввойти');
+      buttonLogIn.classList.remove('hidden');
+      userInHead.append(buttonLogIn);
+      userInHead.replaceChild(buttonLogIn, userInHead.childNodes[0]);
     }
   }
 }
-
-const headerView = new HeaderView('hidden');
+const headerView = new HeaderView('wrapperForHeaderButton');
+// headerView.display('User');
 
 class TweetFeedView {
   constructor(containerId) {
@@ -561,6 +573,7 @@ class TweetFeedView {
   display(params) {
     const wrapperForTrotterList = document.querySelector(`#${this.containerId}`);
     const newContainer = document.createElement('div');
+    const currentUser = document.querySelector('#userName')?.innerHTML;
     newElem.tws.forEach((elem) => {
       const time = () => {
         const day = elem.createAt.getDate();
@@ -583,6 +596,11 @@ class TweetFeedView {
         }
         return (`${day} ${fMonth}`);
       };
+
+      let tweetOwner;
+      if (elem.author !== newElem.user || elem.author !== currentUser) {
+        tweetOwner = 'none';
+      }
 
       function hashtags(whatNeed) {
         const hashtag = [];
@@ -614,7 +632,7 @@ class TweetFeedView {
                             <h3>${elem.author}</h3>
                             <h4>@${elem.author}</h4>
                             <h4>${time()}</h4>
-                            <button class=correctTrotter>...</button>
+                            <button class=correctTrotter style="display:${tweetOwner}">...</button>
                             <div class="correctTrotterBlock">
                                 <ul>
                                     <li>
@@ -641,14 +659,12 @@ class TweetFeedView {
              </div>`,
       );
       newContainer.classList.add(params);
-      wrapperForTrotterList.append(newContainer);
+      if (wrapperForTrotterList?.childNodes[0]) {
+        wrapperForTrotterList?.replaceChild(newContainer, wrapperForTrotterList.childNodes[0]);
+        return;
+      }
+      wrapperForTrotterList?.append(newContainer);
     });
-  }
-
-  refresh(give) {
-    const container = document.querySelector('.newLists');
-    container.remove();
-    this.display(give);
   }
 }
 
@@ -710,7 +726,7 @@ class TweetView {
       return (`${day} ${fMonth}`);
     };
 
-    mainTrotter.insertAdjacentHTML(
+    mainTrotter?.insertAdjacentHTML(
       'afterbegin',
       `<div class="container">
         <div class="wrapperUserPhoto">
@@ -787,23 +803,33 @@ class TweetView {
   }
 }
 
-// const newTroter = new TweetView('mainblocktoAddTrot');
-// newTroter.display('2');
+const newTroter = new TweetView('mainblocktoAddTrot');
+newTroter.display('6');
 
 function setCurrentUSer(user) {
   newElem.user = user;
-  return headerView.display(newElem.user);
+  headerView.display(newElem.user);
+  newList.display();
 }
 
 // test setCurrentUser method
-// setCurrentUSer('Петр Петрович');
-// console.log(newElem.user);
+// setCurrentUSer('джим Керри');
+// setCurrentUSer('John Pol');
+// setCurrentUSer('John');
 
 function addTweet(text) {
   newElem.add(text);
-  newList.refresh('blabla');
+  newList.display();
+}
+// test addTweet method
+// addTweet('Hello world');
+// addTweet();
+
+function editTweet(id, text) {
+  newElem.edit(id, text);
+  newList.display();
 }
 
-addTweet('Создаю новый твит с перерисовкой111');
-addTweet('Создаю новый твит с перерисовкой');
-addTweet('Создаю новый твит с перерисовкой aaaaaaaaaaaaaa');
+// test edit method
+// it works only if to uncomment 816 string.Because names should match.
+// editTweet('12', 'Edited tweet text');
