@@ -26,6 +26,7 @@ body { font-size: 1.8rem; }
     max-width: 1512px;
     margin: 0 auto;
     background: var(--white-color);
+    height: 100vh;
 }
 
 header {
@@ -120,10 +121,12 @@ header {
 .mainBlock {
     display: flex;
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+    height: 100%;
 }
 
 .mainBlockTrotteList {
     width: 75%;
+    overflow: auto;
 }
 
 .mainBlockTrotteListWrapper {
@@ -536,6 +539,7 @@ footer {
     max-width: 1512px;
     margin: 0 auto;
     background: var(--white-color);
+    height: 100vh;
 }
 
 .backInMain {
@@ -587,6 +591,14 @@ footer {
     display: block;
     border: none;
     margin-top: 2%;
+}
+
+.mainBlock .styleForUndefined {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    font-family: var(--headers-text-style);
+    color: black;
+    text-align: center;
 }
 
 
