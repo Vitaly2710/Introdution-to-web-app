@@ -20,6 +20,8 @@ body { font-size: 1.8rem; }
     --headers-text-style:'Montserrat', Bold, sans-serif;
     --coomon-text-style:'Montserrat', Regular, sans-serif;
     --button-text-style:'Montserrat', Semiold, sans-serif;
+    --label-text-color:#818181;
+    --input-form-hover:#D99230
 }
 
 .mainPageContainer {
@@ -601,6 +603,103 @@ footer {
     text-align: center;
 }
 
+.containerLogin {
+    max-width: 1512px;
+    margin: 1% auto;
+    display: grid;
+    grid-template-columns: 32% 68%;
+    box-shadow: 10px 5px 40px 12px rgba(0, 0, 0, 0.19);
+    border-radius: 2rem;
+}
+
+.wrapperloginBackground {
+    background-image: url('./assets/LogInBackend.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-top-right-radius: 2%;
+    border-bottom-right-radius: 2%;
+}
+
+.wrapperLoginForm {
+    padding: 20% 22% 68% 22%;
+}
+
+.wrapperForLogo {
+    width: 41%;
+    margin: 0 auto;
+}
+
+.headingInLogin {
+    text-align: center;
+    margin-top: 9%;
+    font-family: var(--headers-text-style);
+    font-size: 4.7rem;
+}
+
+.formInLoginPage {
+    margin-top: 23%;
+}
+
+.formInLoginPage label {
+    color: var(--label-text-color);
+    font-family: var(--headers-text-style);
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.formInLoginPage input {
+    display: block;
+    margin-top: 6%;
+    border: none;
+    border-bottom: 1px solid rgba(129, 129, 129, 0.5);
+    margin-bottom: 6%;
+    width: 100%;
+    padding-bottom: 3%;
+}
+
+::-webkit-input-placeholder {
+    color: rgba(129, 129, 129, 0.5);
+    font-family: var(--coomon-text-style);
+    font-size: 1.7rem;
+}
+
+.buttonLOgIn {
+    width: 100%;
+    margin-top: 10%;
+    background-color: var(--primary-color);
+    color: #FFFFFF;
+    padding: 3% 10% 3% 10%;
+    border: none;
+    border-radius: 2rem;
+    font-family: var(--button-text-style);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.wrapperLoginForm a {
+    display: block;
+    text-align: center;
+    margin-top: 12%;
+    text-decoration: none;
+    font-family: var(--coomon-text-style);
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}
+
+.wrapperLoginForm a:visited {
+    color: var(--secondary-color);
+}
+
+.formInLoginPage input:focus {
+    outline: none !important;
+    border:1px solid var(--input-form-hover);
+    border-radius: 0.3rem;
+}
+
+.buttonLOgIn:hover {
+    background-color: var(--secondary-color);
+}
 
 
 
