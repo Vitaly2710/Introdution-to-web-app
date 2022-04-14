@@ -644,8 +644,19 @@ footer {
     font-size: 4.7rem;
 }
 
+.formInRegPage {
+    margin-top: 23%;
+}
+
 .formInLoginPage {
     margin-top: 23%;
+}
+
+.formInRegPage label {
+    color: var(--label-text-color);
+    font-family: var(--headers-text-style);
+    font-size: 1.8rem;
+    font-weight: 700;
 }
 
 .formInLoginPage label {
@@ -653,6 +664,16 @@ footer {
     font-family: var(--headers-text-style);
     font-size: 1.8rem;
     font-weight: 700;
+}
+
+.formInRegPage input {
+    display: block;
+    margin-top: 6%;
+    border: none;
+    border-bottom: 1px solid rgba(129, 129, 129, 0.5);
+    margin-bottom: 6%;
+    width: 100%;
+    padding-bottom: 3%;
 }
 
 .formInLoginPage input {
@@ -699,6 +720,12 @@ footer {
 }
 
 .formInLoginPage input:focus {
+    outline: none !important;
+    border:0.2rem solid var(--input-form-hover);
+    border-radius: 0.3rem;
+}
+
+.formInRegPage input:focus {
     outline: none !important;
     border:0.2rem solid var(--input-form-hover);
     border-radius: 0.3rem;

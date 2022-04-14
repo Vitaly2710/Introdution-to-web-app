@@ -16,24 +16,22 @@
         </div>
         <div class="wrapperForRegistrationForm">
             <h2 class="createAc">Создание аккаунта</h2>
-            <form class="formInLoginPage">
-                <label>
-                    Логин
-                    <input placeholder="введите ваш логин">
-                </label>
-                <label>
-                    Пароль
-                    <input placeholder="введите ваш пароль">
-                </label>
-                <label>
-                    Подтверждение пароля
-                    <input placeholder="введите ваш пароль повторно">
-                </label>
+            <form class="formInRegPage">
+                <label for="loginInReg">Логин</label>
+                <input placeholder="введите ваш логин" id="loginInReg">
+                <label for="passwordInReg">Пароль</label>
+                <input placeholder="введите ваш пароль" id="passwordInReg" type="password">
+                <label for="repeatPass">Подтверждение пароля</label>
+                <input placeholder="введите ваш пароль повторно" id="repeatPass" type="password">
+                <button class="registrationButton" type="submit">
+                    Зарегистрироваться
+                </button>
             </form>
-            <button class="registrationButton">
-                Зарегистрироваться
-            </button>
+
         </div>
     </section>
+<script src="js.js">
+
+</script>
 </body>
 </html>

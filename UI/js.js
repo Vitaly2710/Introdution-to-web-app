@@ -526,31 +526,6 @@ class FilterView {
   }
 }
 
-// const filterByAutor = new FilterView('humanSearch');
-// filterByAutor.display('author');
-// const filterByHashtag = new FilterView('hashtagsSearch');
-// filterByHashtag.display('text');
-
-// const tweets = document.querySelector('.newLists');
-
-// tweets.addEventListener('click', (event) => {
-//   const ev = event.target;
-//   ev.closest('.mainBlockTrotteListTrotter').remove();
-// });
-
-// const refactorTweet = document.querySelector('.correctTrotter');
-//
-// const t = document.querySelector('.humanSearch');
-//
-// t.addEventListener('change', function (e) {
-//   console.log(this.value);
-// });////////////////////////////////////////////////////////////////////////////////////////////////
-
-/* refactorTweet.addEventListener('click', (e) => {
-  const currentTweeter = e.target.closest('.mainBlockTrotteListTrotter');
-  // (currentTweeter.getAttribute('id'));
-}); */
-
 class TweetsController {
   constructor() {
     this.newAllCollectionOfTweet = new TweetCollection();
@@ -858,6 +833,9 @@ allTweetControl.filter.display('author', allTweetControl.getTws());
 allTweetControl.filter.display('text', allTweetControl.getTws());
 allTweetControl.showTweet('1');
 allTweetControl.addTweet('hello world');
+if (localStorage.getItem('current User')) {
+  allTweetControl.setCurrentUSer(localStorage.getItem('current User'));
+}
 
 const takeAuthorFiltration = document.querySelector('.authorSearch');
 const takeHashtagFiltration = document.querySelector('.hashSearch');
@@ -902,8 +880,6 @@ function addTweets() {
   return allTweetControl.getFeed(0, a);
 }
 
-localStorage.clear();
-
 class UserController {
   constructor() {
     this._users = [{ иван: '123' }, { пётр: '321' }];
@@ -914,12 +890,12 @@ class UserController {
     localStorage.setItem('users', JSON.stringify(this._users));
   }
 
-  getUserInStorage() {
+  static getUserInStorage() {
     return localStorage.getItem('users');
   }
 
-  checkLogIn(login, password) {
-    const users = JSON.parse(this.getUserInStorage());
+  static checkLogIn(login, password) {
+    const users = JSON.parse(UserController.getUserInStorage());
     let check = false;
     users.forEach((element) => {
       const key = Object.keys(element)[0];
@@ -927,22 +903,40 @@ class UserController {
       if (key === login) {
         if (value === password) {
           check = true;
-          localStorage.setItem('current User', `{${login}}`);
-          alert('вход выполнен успешно');
           allTweetControl.setCurrentUSer(login);
+          return localStorage.setItem('current User', `${login}`);
         }
       }
+      return check;
     });
 
     return check;
   }
 
-  logOut() {
+  static logOut() {
+    alert('выполнен выход');
+    allTweetControl.headerView.display(null);
     return localStorage.removeItem('current User');
   }
 
-  registration(login, password) {
-    const users = JSON.parse(this.getUserInStorage());
+  static registration(login, password) {
+    const users = JSON.parse(UserController.getUserInStorage());
+    const existen = users.find((elem) => {
+      const key = Object.keys(elem)[0];
+      if (key === login) {
+        alert('такой логин уже существует');
+      }
+      return key;
+    });
+    if (existen === undefined) {
+      const newUser = {
+        [login]: password,
+      };
+      users.push(newUser);
+      localStorage.removeItem('users');
+      localStorage.setItem('users', JSON.stringify(users));
+      alert('регистрация произошла успешно');
+    }
   }
 }
 const usControll = new UserController();
@@ -952,16 +946,29 @@ const password = document.querySelector('#password');
 const form = document.querySelector('.formInLoginPage');
 form?.addEventListener('submit', (e) => {
   e.preventDefault();
-  if (usControll.checkLogIn(login.value, password.value)) {
-    return usControll.checkLogIn(login.value, password.value);
-  } if (!usControll.checkLogIn(login.value, password.value)) {
+  if (UserController.checkLogIn(login.value, password.value)) {
+    alert('вход выполнен успешно');
+    return UserController.checkLogIn(login.value, password.value);
+  } if (!UserController.checkLogIn(login.value, password.value)) {
     alert('не верный логин или пароль');
   }
+  return e.preventDefault();
 });
 
-// console.log(usControll.checkLogIn('пётр', '321'));
-// console.log(usControll.checkLogIn('п`тр', '321'));
-// usControll.registration();
+const logOut = document.querySelector('.buttonLoginOut');
+logOut?.addEventListener('click', UserController.logOut);
+
+const loginInReg = document.querySelector('#loginInReg');
+const passwordInReg = document.querySelector('#passwordInReg');
+const repeatPass = document.querySelector('#repeatPass');
+const regForm = document.querySelector('.formInRegPage');
+regForm?.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (passwordInReg.value === repeatPass.value) {
+    UserController.registration(loginInReg.value, passwordInReg.value);
+  } else alert('пароли не совпадают');
+});
+
 /* All
 
  test create new element with class Tweet
