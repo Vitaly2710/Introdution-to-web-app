@@ -216,9 +216,394 @@ class TweetCollection {
   }
 }
 
-// create new element
-const newAllCollectionOfTweet = new TweetCollection();
-newAllCollectionOfTweet.addAll([
+const t = new TweetCollection();
+
+class HeaderView {
+  constructor(id) {
+    this._containerId = id;
+  }
+
+  get id() {
+    return this._containerId;
+  }
+
+  display(userName = null) {
+    const userInHead = document.querySelector(`.${this.id}`);
+    const buttonLogIn = document.querySelector('.logInButton');
+    const newContainer = document.createElement('div');
+    if (userName !== null && userName && allTweetControl.newAllCollectionOfTweet.user === userName) {
+      newContainer.classList.add('headerUserBlock');
+      newContainer.insertAdjacentHTML(
+        'afterbegin',
+        `<img src="./assets/UserFoto.svg" alt="userFoto"/>
+            <h4 id="userName">${userName}</h4>
+            <a class="buttonLoginOut">
+                <img src="./assets/buttonLogOut.svg" alt="logOut">
+            </a>`,
+      );
+      userInHead?.append(newContainer);
+      userInHead?.replaceChild(newContainer, userInHead.childNodes[0]);
+      buttonLogIn?.classList.add('hidden');
+    } else {
+      alert('Необходимо ввойти');
+      buttonLogIn.classList.remove('hidden');
+      userInHead.append(buttonLogIn);
+      userInHead.replaceChild(buttonLogIn, userInHead.childNodes[0]);
+    }
+  }
+}
+
+class TweetFeedView {
+  constructor(containerId) {
+    this._containerId = containerId;
+  }
+
+  get containerId() {
+    return this._containerId;
+  }
+
+  display(tws) {
+    const wrapperForTrotterList = document.querySelector(`#${this.containerId}`);
+    const newContainer = document.createElement('div');
+    const currentUser = document.querySelector('#userName')?.innerHTML;
+    if (tws?.length === 0) {
+      const trottersUndefined = document.createElement('h2');
+      trottersUndefined.innerHTML = 'Ups, trotters is undefined';
+      trottersUndefined.classList.add('styleForUndefined');
+      wrapperForTrotterList?.appendChild(trottersUndefined);
+      wrapperForTrotterList?.replaceChild(trottersUndefined, wrapperForTrotterList.childNodes[0]);
+      const seeMore = document.querySelector('.moreTrotter');
+      seeMore?.classList.add('hidden');
+    } else {
+      tws?.forEach((elem) => {
+        let tweetOwner;
+        if (elem.author !== allTweetControl.newAllCollectionOfTweet.user || elem.author !== currentUser) {
+          tweetOwner = 'none';
+        }
+
+        function hashtags(whatNeed) {
+          const hashtag = [];
+          const withoutHashtags = [];
+          elem.text.split('#').forEach((item, index) => {
+            if (index > 0) {
+              hashtag.push(`#${item}`);
+            } else if (index === 0) {
+              withoutHashtags.push(item);
+            }
+          });
+          let result;
+          if (whatNeed === 'hashtags') {
+            result = hashtag.join('');
+          } else if (whatNeed === 'text') {
+            result = withoutHashtags;
+          }
+          return result;
+        }
+        newContainer?.insertAdjacentHTML(
+          'beforeend',
+          `<div class="mainBlockTrotteListTrotter" id=${elem.id}>
+                <div class="container">
+                    <div class="wrapperUserPhoto">
+                        <img src="./assets/UserFoto.svg" alt="user photo">
+                    </div>
+                    <div class="trotter">
+                        <div class="userInfo">
+                            <h3>${elem.author}</h3>
+                            <h4>@${elem.author}</h4>
+                            <h4>${Tweet.dateLabel(elem)}</h4>
+                            <button class=correctTrotter style="display:${tweetOwner}">...</button>
+                            <div class="correctTrotterBlock">
+                                <ul>
+                                    <li>
+                                        <img src=".assetseditTrotterIcon.svg" alt="edit trotter">
+                                        <p>Edit</p>
+                                    </li>
+                                    <li>
+                                        <img src=".assetsdeleteTrotterIcon.svg" alt="delete trotter">
+                                        <p>Delete</p>
+                                    </li>
+                                </ul>>
+                            </div>
+                        </div>
+                        <p class=trotterText>${hashtags('text')}<span>${hashtags('hashtags')}</span></p>
+                        <div class="response">
+                            <ul>
+                                <li>${elem.comments.length}</li>
+                                <li>${Math.round(Math.random() * 100)}</li>
+                                <li>${Math.round(Math.random() * 100)}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+             </div>`,
+        );
+        if (wrapperForTrotterList?.childNodes[0]) {
+          wrapperForTrotterList?.replaceChild(newContainer, wrapperForTrotterList.childNodes[0]);
+          return;
+        }
+        wrapperForTrotterList?.append(newContainer);
+      });
+    }
+  }
+}
+
+class TweetView {
+  constructor(containerId) {
+    this._containerId = containerId;
+  }
+
+  get id() {
+    return this._containerId;
+  }
+
+  display(curTweet) {
+    const mainTrotter = document.querySelector(`#${this.id}`);
+    const newContainer = document.createElement('div');
+    const currentTrott = allTweetControl.newAllCollectionOfTweet.get(curTweet);
+    const currentUser = document.querySelector('#userName')?.innerHTML;
+
+    function editFunction(item) {
+      let tweetOwner;
+      if (item.author !== allTweetControl.newAllCollectionOfTweet.user || item.author !== currentUser) {
+        tweetOwner = 'none';
+      }
+      return tweetOwner;
+    }
+
+    function hashtags(whatNeed, input) {
+      const hashtag = [];
+      const withoutHashtags = [];
+      input.text.split('#').forEach((item, index) => {
+        if (index > 0) {
+          hashtag.push(`#${item}`);
+        } else if (index === 0) {
+          withoutHashtags.push(item);
+        }
+      });
+      let result;
+      if (whatNeed === 'hashtags') {
+        result = hashtag.join('');
+      } else if (whatNeed === 'text') {
+        result = withoutHashtags;
+      } else {
+        result = '';
+      }
+      return result;
+    }
+
+    if (allTweetControl.newAllCollectionOfTweet.tws.length === 0 || curTweet === null) {
+      const trottersUndefined = document.createElement('h2');
+      trottersUndefined.innerHTML = 'Ups, trotters is undefined';
+      trottersUndefined.classList.add('styleForUndefined');
+      mainTrotter?.append(trottersUndefined);
+    } else {
+      mainTrotter?.insertAdjacentHTML(
+        'afterbegin',
+        `<div class="container">
+        <div class="wrapperUserPhoto">
+            <img src="./assets/UserFoto.svg" alt="user photo">
+        </div>
+            <div class="trotter">
+                <div class="userInfo">
+                    <h3>${currentTrott?.author}</h3>
+                    <h4>@${currentTrott?.author}</h4>
+                    <h4>${Tweet.dateLabel(currentTrott)}</h4>
+                    <button class="correctTrotter" style="display: ${editFunction(currentTrott)}">...</button>
+                    <div class="correctTrotterBlock">
+                        <ul>
+                            <li>
+                                <img src="./assets/editTrotterIcon.svg" alt="edit trotter">
+                                <p>Edit</p>
+                            </li>
+                            <li>
+                                <img src="./assets/deleteTrotterIcon.svg" alt="delete trotter">
+                                <p>Delete</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="trotterText">${hashtags('text', currentTrott)} <span>${hashtags('hashtags', currentTrott)}</span></p>
+                <div class="response">
+                    <ul>
+                        <li>${currentTrott.comments.length}</li>
+                        <li>${Math.round(Math.random() * 100)}</li>
+                        <li>${Math.round(Math.random() * 100)}</li>
+                    </ul>
+                </div>
+            </div>
+      </div>`,
+        currentTrott.comments.forEach((elem) => {
+          newContainer.insertAdjacentHTML(
+            'afterbegin',
+            `<div class="container" id=${elem.id}>
+            <div class="wrapperUserPhoto">
+                <img src="./assets/userImgCommentstwo.svg" alt="user photo">
+            </div>
+            <div class="trotter">
+                <div class="userInfo">
+                    <h3>${elem.author}</h3>
+                    <h4>@${elem.author}</h4>
+                    <h4>${Tweet.dateLabel(elem)}</h4>
+                    <div class="correctTrotterBlock">
+                        <ul>
+                            <li>
+                                <img src="./assets/editTrotterIcon.svg" alt="edit trotter">
+                                <p>Edit</p>
+                            </li>
+                            <li>
+                                <img src="./assets/deleteTrotterIcon.svg" alt="delete trotter">
+                                <p>Delete</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="reTrott">Reply to <span>@${hashtags('hashtags', currentTrott)}</span></p>
+                <p class="trotterText">${elem.text}</p>
+                <div class="response">
+                    <ul>
+                        <li style="display: none"></li>
+                        <li>${Math.round(Math.random() * 10)}</li>
+                        <li>${Math.round(Math.random() * 10)}</li>
+                    </ul>
+                </div>
+            </div>
+          </div>`,
+          );
+        }),
+      );
+      mainTrotter?.append(newContainer);
+      mainTrotter?.replaceChild(newContainer, mainTrotter.childNodes[1]);
+    }
+  }
+}
+
+class FilterView {
+  constructor(containerId) {
+    this._id = containerId;
+  }
+
+  get id() {
+    return this._id;
+  }
+
+  display(param, tweets) {
+    const serchContainer = document.querySelectorAll(`.${this.id}`);
+    const filterElement = document.createElement('select');
+    if (param === 'author') {
+      tweets.forEach((elem, index) => {
+        const itemIsSearch = elem[param];
+        filterElement?.insertAdjacentHTML(
+          'afterbegin',
+          `<option value="${elem.author}">${itemIsSearch}</option>`,
+        );
+      });
+      filterElement.classList.add('authorSearch');
+      serchContainer[0]?.append(filterElement);
+    } else if (param === 'text') {
+      const hashtags = [];
+      tweets.forEach((elem) => {
+        const text = elem[param].split(' ');
+        text.forEach((e) => {
+          const smallHash = e.split('');
+          if (smallHash.some((one) => one === '#')) {
+            const r = smallHash.join('');
+            hashtags.push(r);
+          }
+        });
+      });
+      hashtags.forEach((elem, index) => {
+        const elemWithoutHash = elem.split('#')[1];
+        filterElement?.insertAdjacentHTML(
+          'afterbegin',
+          `<option value="${elemWithoutHash}">${elemWithoutHash}</option>`,
+        );
+      });
+      filterElement.classList.add('hashSearch');
+      serchContainer[1]?.append(filterElement);
+      const select = document.querySelector('.hashSearch');
+    }
+    // serchContainer?.replaceChild(filterElement, serchContainer.childNodes[0]);
+  }
+}
+
+// const filterByAutor = new FilterView('humanSearch');
+// filterByAutor.display('author');
+// const filterByHashtag = new FilterView('hashtagsSearch');
+// filterByHashtag.display('text');
+
+// const tweets = document.querySelector('.newLists');
+
+// tweets.addEventListener('click', (event) => {
+//   const ev = event.target;
+//   ev.closest('.mainBlockTrotteListTrotter').remove();
+// });
+
+// const refactorTweet = document.querySelector('.correctTrotter');
+//
+// const t = document.querySelector('.humanSearch');
+//
+// t.addEventListener('change', function (e) {
+//   console.log(this.value);
+// });////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* refactorTweet.addEventListener('click', (e) => {
+  const currentTweeter = e.target.closest('.mainBlockTrotteListTrotter');
+  // (currentTweeter.getAttribute('id'));
+}); */
+
+class TweetsController {
+  constructor() {
+    this.newAllCollectionOfTweet = new TweetCollection();
+    this.newList = new TweetFeedView('trotterList');
+    this.headerView = new HeaderView('wrapperForHeaderButton');
+    this.selectTweet = new TweetView('mainblocktoAddTrot');
+    this.filter = new FilterView('humanSearch');
+  }
+
+  getTws() {
+    return this.newAllCollectionOfTweet.tws;
+  }
+
+  setCurrentUSer(user) {
+    this.newAllCollectionOfTweet.user = user;
+    this.headerView.display(this.newAllCollectionOfTweet.user);
+    this.newList.display(this.newAllCollectionOfTweet.tws);
+  }
+
+  addTweet(text) {
+    if (this.newAllCollectionOfTweet.add(text)) {
+      this.newList.display(this.newAllCollectionOfTweet.tws);
+    } else console.log('Валидация не пройдена');
+  }
+
+  editTweet(id, text) {
+    if (this.newAllCollectionOfTweet.edit(id, text)) {
+      this.newList.display(this.newAllCollectionOfTweet.tws);
+    } else console.log('Нет прав на редактирование твита');
+  }
+
+  removeTweet(id) {
+    if (this.newAllCollectionOfTweet.remove(id)) {
+      this.newAllCollectionOfTweet.remove(id);
+      this.newList.display(this.newAllCollectionOfTweet.tws);
+    } else console.log('Нет прав на удаление твита');
+  }
+
+  getFeed(skip, top, filterConfig) {
+    if (this.newAllCollectionOfTweet.getPage(skip, top, filterConfig)) {
+      this.newList.display(this.newAllCollectionOfTweet.tws);
+    }
+  }
+
+  showTweet(id) {
+    if (this.newAllCollectionOfTweet.get(id)) {
+      this.selectTweet.display(id);
+    } else this.selectTweet.display(null);
+  }
+}
+
+const allTweetControl = new TweetsController();
+allTweetControl.newAllCollectionOfTweet.addAll([
   {
     id: '1',
     text: 'Привет! #js #datamola #hi',
@@ -469,363 +854,114 @@ newAllCollectionOfTweet.addAll([
     comments: [],
   },
 ]);
+allTweetControl.filter.display('author', allTweetControl.getTws());
+allTweetControl.filter.display('text', allTweetControl.getTws());
+allTweetControl.showTweet('1');
+allTweetControl.addTweet('hello world');
 
-class HeaderView {
-  constructor(id) {
-    this._containerId = id;
-  }
+const takeAuthorFiltration = document.querySelector('.authorSearch');
+const takeHashtagFiltration = document.querySelector('.hashSearch');
+const dateFromFiltration = document.querySelector('.dateFrom');
+const dateToFiltration = document.querySelector('.dateTo');
 
-  get id() {
-    return this._containerId;
-  }
+takeAuthorFiltration?.addEventListener('change', filtrationAuthor);
+takeHashtagFiltration?.addEventListener('change', filtrationHashtag);
+dateFromFiltration?.addEventListener('change', filtrationDateFrom);
+dateToFiltration?.addEventListener('change', filtrationDateTo);
 
-  display(userName = null) {
-    const userInHead = document.querySelector(`.${this.id}`);
-    const buttonLogIn = document.querySelector('.logInButton');
-    const newContainer = document.createElement('div');
-    if (userName !== null && userName && newAllCollectionOfTweet.user === userName) {
-      newContainer.classList.add('headerUserBlock');
-      newContainer.insertAdjacentHTML(
-        'afterbegin',
-        `<img src="./assets/UserFoto.svg" alt="userFoto"/>
-            <h4 id="userName">${userName}</h4>
-            <a class="buttonLoginOut">
-                <img src="./assets/buttonLogOut.svg" alt="logOut">
-            </a>`,
-      );
-      userInHead.append(newContainer);
-      userInHead.replaceChild(newContainer, userInHead.childNodes[0]);
-      buttonLogIn.classList.add('hidden');
-    } else {
-      alert('Необходимо ввойти');
-      buttonLogIn.classList.remove('hidden');
-      userInHead.append(buttonLogIn);
-      userInHead.replaceChild(buttonLogIn, userInHead.childNodes[0]);
-    }
-  }
-}
-const headerView = new HeaderView('wrapperForHeaderButton');
-
-class TweetFeedView {
-  constructor(containerId) {
-    this._containerId = containerId;
-  }
-
-  get containerId() {
-    return this._containerId;
-  }
-
-  display(params) {
-    const wrapperForTrotterList = document.querySelector(`#${this.containerId}`);
-    const newContainer = document.createElement('div');
-    const currentUser = document.querySelector('#userName')?.innerHTML;
-    if (newAllCollectionOfTweet.tws.length === 0) {
-      const trottersUndefined = document.createElement('h2');
-      trottersUndefined.innerHTML = 'Ups, trotters is undefined';
-      trottersUndefined.classList.add('styleForUndefined');
-      wrapperForTrotterList?.appendChild(trottersUndefined);
-      wrapperForTrotterList?.replaceChild(trottersUndefined, wrapperForTrotterList.childNodes[0]);
-      const seeMore = document.querySelector('.moreTrotter');
-      seeMore?.classList.add('hidden');
-    } else {
-      newAllCollectionOfTweet.tws.forEach((elem) => {
-        let tweetOwner;
-        if (elem.author !== newAllCollectionOfTweet.user || elem.author !== currentUser) {
-          tweetOwner = 'none';
-        }
-
-        function hashtags(whatNeed) {
-          const hashtag = [];
-          const withoutHashtags = [];
-          elem.text.split('#').forEach((item, index) => {
-            if (index > 0) {
-              hashtag.push(`#${item}`);
-            } else if (index === 0) {
-              withoutHashtags.push(item);
-            }
-          });
-          let result;
-          if (whatNeed === 'hashtags') {
-            result = hashtag.join('');
-          } else if (whatNeed === 'text') {
-            result = withoutHashtags;
-          }
-          return result;
-        }
-        newContainer.insertAdjacentHTML(
-          'beforeend',
-          `<div class="mainBlockTrotteListTrotter">
-                <div class="container">
-                    <div class="wrapperUserPhoto">
-                        <img src="./assets/UserFoto.svg" alt="user photo">
-                    </div>
-                    <div class="trotter">
-                        <div class="userInfo">
-                            <h3>${elem.author}</h3>
-                            <h4>@${elem.author}</h4>
-                            <h4>${Tweet.dateLabel(elem)}</h4>
-                            <button class=correctTrotter style="display:${tweetOwner}">...</button>
-                            <div class="correctTrotterBlock">
-                                <ul>
-                                    <li>
-                                        <img src=".assetseditTrotterIcon.svg" alt="edit trotter">
-                                        <p>Edit</p>
-                                    </li>
-                                    <li>
-                                        <img src=".assetsdeleteTrotterIcon.svg" alt="delete trotter">
-                                        <p>Delete</p>
-                                    </li>
-                                </ul>>
-                            </div>
-                        </div>
-                        <p class=trotterText>${hashtags('text')}<span>${hashtags('hashtags')}</span></p>
-                        <div class="response">
-                            <ul>
-                                <li>${elem.comments.length}</li>
-                                <li>${Math.round(Math.random() * 100)}</li>
-                                <li>${Math.round(Math.random() * 100)}</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-             </div>`,
-        );
-        newContainer.classList.add(params);
-        if (wrapperForTrotterList?.childNodes[0]) {
-          wrapperForTrotterList?.replaceChild(newContainer, wrapperForTrotterList.childNodes[0]);
-          return;
-        }
-        wrapperForTrotterList?.append(newContainer);
-      });
-    }
-  }
+function filtrationAuthor() {
+  return allTweetControl.getFeed(0, 10, { author: this.value });
 }
 
-const newList = new TweetFeedView('trotterList');
-newList.display('newLists');
+function filtrationHashtag() {
+  return allTweetControl.getFeed(0, 10, { hashtags: this.value });
+}
 
-class TweetView {
-  constructor(containerId) {
-    this._containerId = containerId;
+function filtrationDateFrom() {
+  return allTweetControl.getFeed(0, 10, { dateFrom: new Date(this.value) });
+}
+
+function filtrationDateTo() {
+  return allTweetControl.getFeed(0, 10, { dateTo: new Date(this.value) });
+}
+
+const moreTweets = document.querySelector('.moreTrotter');
+moreTweets?.addEventListener('click', addTweets);
+
+function pagination() {
+  let amount = 0;
+  return function () {
+    amount += 10;
+    return amount;
+  };
+}
+const closure = pagination();
+function addTweets() {
+  const a = closure();
+  console.log(a);
+  return allTweetControl.getFeed(0, a);
+}
+
+localStorage.clear();
+
+class UserController {
+  constructor() {
+    this._users = [{ иван: '123' }, { пётр: '321' }];
+    this.usersInStorage = this.setUserInStore();
   }
 
-  get id() {
-    return this._containerId;
+  setUserInStore() {
+    localStorage.setItem('users', JSON.stringify(this._users));
   }
 
-  display(params) {
-    const mainTrotter = document.querySelector(`#${this.id}`);
-    const newContainer = document.createElement('div');
-    const currentTrott = newAllCollectionOfTweet.get(params);
-    const currentUser = document.querySelector('#userName')?.innerHTML;
+  getUserInStorage() {
+    return localStorage.getItem('users');
+  }
 
-    function editFunction(item) {
-      let tweetOwner;
-      if (item.author !== newAllCollectionOfTweet.user || item.author !== currentUser) {
-        tweetOwner = 'none';
+  checkLogIn(login, password) {
+    const users = JSON.parse(this.getUserInStorage());
+    let check = false;
+    users.forEach((element) => {
+      const key = Object.keys(element)[0];
+      const value = Object.values(element)[0];
+      if (key === login) {
+        if (value === password) {
+          check = true;
+          localStorage.setItem('current User', `{${login}}`);
+          alert('вход выполнен успешно');
+          allTweetControl.setCurrentUSer(login);
+        }
       }
-      return tweetOwner;
-    }
+    });
 
-    function hashtags(whatNeed, input) {
-      const hashtag = [];
-      const withoutHashtags = [];
-      input.text.split('#').forEach((item, index) => {
-        if (index > 0) {
-          hashtag.push(`#${item}`);
-        } else if (index === 0) {
-          withoutHashtags.push(item);
-        }
-      });
-      let result;
-      if (whatNeed === 'hashtags') {
-        result = hashtag.join('');
-      } else if (whatNeed === 'text') {
-        result = withoutHashtags;
-      } else {
-        result = '';
-      }
-      return result;
-    }
-
-    if (newAllCollectionOfTweet.tws.length === 0 || params === null) {
-      const trottersUndefined = document.createElement('h2');
-      trottersUndefined.innerHTML = 'Ups, trotters is undefined';
-      trottersUndefined.classList.add('styleForUndefined');
-      mainTrotter?.append(trottersUndefined);
-    } else {
-      mainTrotter?.insertAdjacentHTML(
-        'afterbegin',
-        `<div class="container">
-        <div class="wrapperUserPhoto">
-            <img src="./assets/UserFoto.svg" alt="user photo">
-        </div>
-            <div class="trotter">
-                <div class="userInfo">
-                    <h3>${currentTrott?.author}</h3>
-                    <h4>@${currentTrott?.author}</h4>
-                    <h4>${Tweet.dateLabel(currentTrott)}</h4>
-                    <button class="correctTrotter" style="display: ${editFunction(currentTrott)}">...</button>
-                    <div class="correctTrotterBlock">
-                        <ul>
-                            <li>
-                                <img src="./assets/editTrotterIcon.svg" alt="edit trotter">
-                                <p>Edit</p>
-                            </li>
-                            <li>
-                                <img src="./assets/deleteTrotterIcon.svg" alt="delete trotter">
-                                <p>Delete</p>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <p class="trotterText">${hashtags('text', currentTrott)} <span>${hashtags('hashtags', currentTrott)}</span></p>
-                <div class="response">
-                    <ul>
-                        <li>${currentTrott.comments.length}</li>
-                        <li>${Math.round(Math.random() * 100)}</li>
-                        <li>${Math.round(Math.random() * 100)}</li>
-                    </ul>
-                </div>
-            </div>
-      </div>`,
-        currentTrott.comments.forEach((elem) => {
-          console.log(elem);
-          newContainer.insertAdjacentHTML(
-            'afterbegin',
-            `<div class="container">
-            <div class="wrapperUserPhoto">
-                <img src="./assets/userImgCommentstwo.svg" alt="user photo">
-            </div>
-            <div class="trotter">
-                <div class="userInfo">
-                    <h3>${elem.author}</h3>
-                    <h4>@${elem.author}</h4>
-                    <h4>${Tweet.dateLabel(elem)}</h4>
-                    <div class="correctTrotterBlock">
-                        <ul>
-                            <li>
-                                <img src="./assets/editTrotterIcon.svg" alt="edit trotter">
-                                <p>Edit</p>
-                            </li>
-                            <li>
-                                <img src="./assets/deleteTrotterIcon.svg" alt="delete trotter">
-                                <p>Delete</p>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <p class="reTrott">Reply to <span>@${hashtags('hashtags', currentTrott)}</span></p>
-                <p class="trotterText">${elem.text}</p>
-                <div class="response">
-                    <ul>
-                        <li style="display: none"></li>
-                        <li>${Math.round(Math.random() * 10)}</li>
-                        <li>${Math.round(Math.random() * 10)}</li>
-                    </ul>
-                </div>
-            </div>
-          </div>`,
-          );
-        }),
-      );
-      mainTrotter?.append(newContainer);
-      mainTrotter?.replaceChild(newContainer, mainTrotter.childNodes[1]);
-    }
-  }
-}
-
-const selectTweet = new TweetView('mainblocktoAddTrot');
-
-function setCurrentUSer(user) {
-  newAllCollectionOfTweet.user = user;
-  headerView.display(newAllCollectionOfTweet.user);
-  newList.display();
-}
-
-function addTweet(text) {
-  if (newAllCollectionOfTweet.add(text)) {
-    newList.display();
-  } else console.log('Валидация не пройдена');
-}
-
-function editTweet(id, text) {
-  if (newAllCollectionOfTweet.edit(id, text)) {
-    newList.display();
-  } else console.log('Нет прав на редактирование твита');
-}
-
-function removeTweet(id) {
-  if (newAllCollectionOfTweet.remove(id)) {
-    newAllCollectionOfTweet.remove(id);
-    newList.display();
-  } else console.log('Нет прав на удаление твита');
-}
-
-function getFeed(skip, top, filterConfig) {
-  if (newAllCollectionOfTweet.getPage(skip, top, filterConfig)) {
-    newList.display();
-  }
-}
-
-function showTweet(id) {
-  if (newAllCollectionOfTweet.get(id)) {
-    selectTweet.display(id);
-  } else selectTweet.display(null);
-}
-
-showTweet('12');
-
-class FilterView {
-  constructor(containerId) {
-    this._id = containerId;
+    return check;
   }
 
-  get id() {
-    return this._id;
+  logOut() {
+    return localStorage.removeItem('current User');
   }
 
-  display(param) {
-    const serchContainer = document.querySelector(`#${this.id}`);
-    const filterElement = document.createElement('select');
-    if (param === 'author') {
-      newAllCollectionOfTweet.tws.forEach((elem, index) => {
-        const itemIsSearch = elem[param];
-        filterElement?.insertAdjacentHTML(
-          'afterbegin',
-          `<option value="value${index}">${itemIsSearch}</option>`,
-        );
-      });
-    } else if (param === 'text') {
-      const hashtags = [];
-      newAllCollectionOfTweet.tws.forEach((elem) => {
-        const text = elem[param].split(' ');
-        text.forEach((e) => {
-          const smallHash = e.split('');
-          if (smallHash.some((one) => one === '#')) {
-            const r = smallHash.join('');
-            hashtags.push(r);
-          }
-        });
-      });
-      hashtags.forEach((elem, index) => {
-        filterElement?.insertAdjacentHTML(
-          'afterbegin',
-          `<option value="value${index}">${elem}</option>`,
-        );
-      });
-    }
-    serchContainer?.append(filterElement);
-    filterElement.classList.add('humanSearch');
-    serchContainer.replaceChild(filterElement, serchContainer.childNodes[1]);
+  registration(login, password) {
+    const users = JSON.parse(this.getUserInStorage());
   }
 }
+const usControll = new UserController();
 
-const filterByAutor = new FilterView('humanSearch');
-filterByAutor.display('author');
-const filterByHashtag = new FilterView('hashtagsSearch');
-filterByHashtag.display('text');
+const login = document.querySelector('#myLogin');
+const password = document.querySelector('#password');
+const form = document.querySelector('.formInLoginPage');
+form?.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (usControll.checkLogIn(login.value, password.value)) {
+    return usControll.checkLogIn(login.value, password.value);
+  } if (!usControll.checkLogIn(login.value, password.value)) {
+    alert('не верный логин или пароль');
+  }
+});
 
+// console.log(usControll.checkLogIn('пётр', '321'));
+// console.log(usControll.checkLogIn('п`тр', '321'));
+// usControll.registration();
 /* All
 
  test create new element with class Tweet
