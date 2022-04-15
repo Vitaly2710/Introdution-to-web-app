@@ -159,6 +159,28 @@ header {
     align-items: center;
 }
 
+.addComment {
+    display: flex;
+    align-items: center;
+}
+
+.addComment img {
+    width: 8%;
+    border-radius: 50%;
+    display: block;
+}
+
+.addComment input {
+    display: block;
+    margin-left: 2.3%;
+    border: none;
+    height: 3%;
+    font-family: var(--coomon-text-style);
+    font-size: 1.8rem;
+    line-height: 22px;
+    width: 100%;
+}
+
 .photoInput img {
     width: 8%;
     border-radius: 50%;

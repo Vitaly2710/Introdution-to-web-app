@@ -363,12 +363,14 @@ class TweetView {
     const newContainer = document.createElement('div');
     const currentTrott = allTweetControl.newAllCollectionOfTweet.get(curTweet);
     const currentUser = document.querySelector('#userName')?.innerHTML;
+    newContainer.classList.add('trotterList');
 
     function editFunction(item) {
       let tweetOwner;
-      if (item.author !== allTweetControl.newAllCollectionOfTweet.user || item.author !== currentUser) {
-        tweetOwner = 'none';
-      }
+      console.log(item.author, currentUser);
+      if (item.author !== currentUser) {
+        tweetOwner = 'unvisibleBlock';
+      } else { tweetOwner = 'correctTrotter'; }
       return tweetOwner;
     }
 
@@ -401,7 +403,7 @@ class TweetView {
     } else {
       mainTrotter?.insertAdjacentHTML(
         'afterbegin',
-        `<div class="container">
+        `<div class="container" id="${currentTrott.id}">
         <div class="wrapperUserPhoto">
             <img src="./assets/UserFoto.svg" alt="user photo">
         </div>
@@ -410,19 +412,21 @@ class TweetView {
                     <h3>${currentTrott?.author}</h3>
                     <h4>@${currentTrott?.author}</h4>
                     <h4>${Tweet.dateLabel(currentTrott)}</h4>
-                    <button class="correctTrotter" >...</button>
-                    <div class="correctTrotterBlock">
-                        <ul>
-                            <li>
-                                <img src="./assets/editTrotterIcon.svg" alt="edit trotter">
-                                <p>Edit</p>
-                            </li>
-                            <li>
-                                <img src="./assets/deleteTrotterIcon.svg" alt="delete trotter">
-                                <p>Delete</p>
-                            </li>
-                        </ul>
-                    </div>
+                    <button class="correctTrotter" ></button>
+                    <button class="correctTrotter">
+                              <div class="correctTrotterBlock">
+                                  <ul>
+                                      <li> 
+                                          <img src="./assets/editTrotterIcon.svg" alt="edit trotter">
+                                          <p class="editCurrentTweet">Edit</p>
+                                      </li>
+                                      <li>
+                                          <img src="./assets/deleteTrotterIcon.svg" alt="delete trotter">
+                                          <p class="deleteCurrentTweet">Delete</p>
+                                      </li>
+                                  </ul>
+                              </div>
+                            </button>
                 </div>
                 <p class="trotterText">${hashtags('text', currentTrott)} <span>${hashtags('hashtags', currentTrott)}</span></p>
                 <div class="response">
@@ -446,18 +450,6 @@ class TweetView {
                     <h3>${elem.author}</h3>
                     <h4>@${elem.author}</h4>
                     <h4>${Tweet.dateLabel(elem)}</h4>
-                    <div class="correctTrotterBlock">
-                        <ul>
-                            <li>
-                                <img src="./assets/editTrotterIcon.svg" alt="edit trotter">
-                                <p>Edit</p>
-                            </li>
-                            <li>
-                                <img src="./assets/deleteTrotterIcon.svg" alt="delete trotter">
-                                <p>Delete</p>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
                 <p class="reTrott">Reply to <span>@${hashtags('hashtags', currentTrott)}</span></p>
                 <p class="trotterText">${elem.text}</p>
@@ -551,6 +543,12 @@ class TweetsController {
     if (this.newAllCollectionOfTweet.add(text)) {
       this.newList.display(this.newAllCollectionOfTweet.tws);
     } else console.log('Валидация не пройдена');
+  }
+
+  addTweetComment(id, text) {
+    if (this.newAllCollectionOfTweet.addComment(id, text)) {
+      this.selectTweet.display(id);
+    } else this.selectTweet.display(null);
   }
 
   editTweet(id, text) {
@@ -833,13 +831,14 @@ allTweetControl.newAllCollectionOfTweet.addAll([
 ]);
 allTweetControl.filter.display('author', allTweetControl.getTws());
 allTweetControl.filter.display('text', allTweetControl.getTws());
-allTweetControl.showTweet('1');
+
 allTweetControl.addTweet('hello world');
 if (localStorage.getItem('current User')) {
   allTweetControl.setCurrentUSer(localStorage.getItem('current User'));
 }
 
 allTweetControl.addTweet('heelllooo');
+allTweetControl.showTweet('2');
 
 const takeAuthorFiltration = document.querySelector('.authorSearch');
 const takeHashtagFiltration = document.querySelector('.hashSearch');
@@ -976,6 +975,7 @@ regForm?.addEventListener('submit', (e) => {
 const correctTrotter = document.querySelector('#trotterList');
 correctTrotter?.addEventListener('click', (e) => {
   const currentTweet = e.target.closest('.mainBlockTrotteListTrotter').getAttribute('id');
+  console.log(e.target);
   if (e.target.classList.contains('correctTrotter')) {
     const editMenu = e.target.children;
     editMenu[0].classList.toggle('visibleBlock');
@@ -993,10 +993,23 @@ const formForAddNewTweet = document.querySelector('.photoInput');
 const addNewTweetInList = document.querySelector('.addNewTweetInList');
 formForAddNewTweet?.addEventListener('submit', (e) => {
   e.preventDefault();
-  allTweetControl.addTweet(addNewTweetInList.value);
-  addNewTweetInList.value = '';
+  if (addNewTweetInList.value !== '') {
+    allTweetControl.addTweet(addNewTweetInList.value);
+    addNewTweetInList.value = '';
+  } else alert('введите хоть что-нибудь');
 });
 
+const formForAddNewComment = document.querySelector('.addComment');
+const valueToAddInComment = document.querySelector('.valueToAddInComment');
+formForAddNewComment?.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (valueToAddInComment.value !== '') {
+    const tweetw = document.querySelector('.container');
+    const idTweet = tweetw.getAttribute('id');
+    allTweetControl.addTweetComment(idTweet, valueToAddInComment.value);
+    valueToAddInComment.value = '';
+  } else alert('введите хоть что-нибудь');
+});
 /* All
 
  test create new element with class Tweet
