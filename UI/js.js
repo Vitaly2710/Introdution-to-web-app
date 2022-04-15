@@ -278,8 +278,8 @@ class TweetFeedView {
       tws?.forEach((elem) => {
         let tweetOwner;
         if (elem.author !== allTweetControl.newAllCollectionOfTweet.user || elem.author !== currentUser) {
-          tweetOwner = 'none';
-        }
+          tweetOwner = 'unvisibleBlock';
+        } else { tweetOwner = 'correctTrotter'; }
 
         function hashtags(whatNeed) {
           const hashtag = [];
@@ -311,19 +311,21 @@ class TweetFeedView {
                             <h3>${elem.author}</h3>
                             <h4>@${elem.author}</h4>
                             <h4>${Tweet.dateLabel(elem)}</h4>
-                            <button class=correctTrotter style="display:${tweetOwner}">...</button>
-                            <div class="correctTrotterBlock">
-                                <ul>
-                                    <li>
-                                        <img src=".assetseditTrotterIcon.svg" alt="edit trotter">
-                                        <p>Edit</p>
-                                    </li>
-                                    <li>
-                                        <img src=".assetsdeleteTrotterIcon.svg" alt="delete trotter">
-                                        <p>Delete</p>
-                                    </li>
-                                </ul>>
-                            </div>
+                            <button class="${tweetOwner}">...
+                              <div class="correctTrotterBlock">
+                                  <ul>
+                                      <li> 
+                                          <img src="./assets/editTrotterIcon.svg" alt="edit trotter">
+                                          <p class="editCurrentTweet">Edit</p>
+                                      </li>
+                                      <li>
+                                          <img src="./assets/deleteTrotterIcon.svg" alt="delete trotter">
+                                          <p class="deleteCurrentTweet">Delete</p>
+                                      </li>
+                                  </ul>
+                              </div>
+                            </button>
+
                         </div>
                         <p class=trotterText>${hashtags('text')}<span>${hashtags('hashtags')}</span></p>
                         <div class="response">
@@ -408,7 +410,7 @@ class TweetView {
                     <h3>${currentTrott?.author}</h3>
                     <h4>@${currentTrott?.author}</h4>
                     <h4>${Tweet.dateLabel(currentTrott)}</h4>
-                    <button class="correctTrotter" style="display: ${editFunction(currentTrott)}">...</button>
+                    <button class="correctTrotter" >...</button>
                     <div class="correctTrotterBlock">
                         <ul>
                             <li>
@@ -882,7 +884,7 @@ function addTweets() {
 
 class UserController {
   constructor() {
-    this._users = [{ иван: '123' }, { пётр: '321' }];
+    this._users = [{ иван: '123' }, { пётр: '321' }, { 'Сергей Есенин': '12345' }, { 'Чарльз Буковски': '12345' }];
     this.usersInStorage = this.setUserInStore();
   }
 
@@ -899,6 +901,8 @@ class UserController {
     let check = false;
     users.forEach((element) => {
       const key = Object.keys(element)[0];
+      console.log(login);
+      console.log(key);
       const value = Object.values(element)[0];
       if (key === login) {
         if (value === password) {
@@ -967,6 +971,23 @@ regForm?.addEventListener('submit', (e) => {
   if (passwordInReg.value === repeatPass.value) {
     UserController.registration(loginInReg.value, passwordInReg.value);
   } else alert('пароли не совпадают');
+});
+
+const correctTrotter = document.querySelector('#trotterList');
+const correctTrotterWindow = document.querySelector('.correctTrotterBlock');
+correctTrotter?.addEventListener('click', (e) => {
+  const currentTweet = e.target.closest('.mainBlockTrotteListTrotter').getAttribute('id');
+  if (e.target.classList.contains('correctTrotter')) {
+    const editMenu = e.target.children;
+    editMenu[0].classList.toggle('visibleBlock');
+  }
+  if (e.target.classList.contains('deleteCurrentTweet')) {
+    allTweetControl.removeTweet(currentTweet);
+  }
+  if (e.target.classList.contains('editCurrentTweet')) {
+    const changeText = prompt('Введите новый текст твита');
+    allTweetControl.editTweet(currentTweet, changeText);
+  }
 });
 
 /* All
