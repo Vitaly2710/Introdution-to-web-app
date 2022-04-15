@@ -516,7 +516,6 @@ class FilterView {
       serchContainer[1]?.append(filterElement);
       const select = document.querySelector('.hashSearch');
     }
-    // serchContainer?.replaceChild(filterElement, serchContainer.childNodes[0]);
   }
 }
 
@@ -527,6 +526,282 @@ class TweetsController {
     this.headerView = new HeaderView('wrapperForHeaderButton');
     this.selectTweet = new TweetView('mainblocktoAddTrot');
     this.filter = new FilterView('humanSearch');
+    this.restore();
+  }
+
+  restore() {
+    if (localStorage.getItem('allTws')) {
+      const allTws = JSON.parse(localStorage.getItem('allTws'));
+      this.newAllCollectionOfTweet.addAll(allTws);
+    } else {
+      this.newAllCollectionOfTweet.addAll([
+        {
+          id: '1',
+          text: 'Привет! #js #datamola #hi',
+          createAt: new Date('2022-02-09T23:00:00'),
+          author: 'Иван Иванов',
+          comments: [],
+        },
+        {
+          id: '2',
+          text: 'Какие дела?',
+          createAt: new Date('2022-02-09T23:00:01'),
+          author: 'Петров Петр',
+          comments: [{
+            id: '912',
+            text: 'Хорошо, а у тебя?',
+            createAt: new Date('2022-02-09T23:00:05'),
+            author: 'Иван ИВанов',
+          }],
+        },
+        {
+          id: '3',
+          text: 'Как тебе погода? #погода #погода #погода #погода',
+          createAt: new Date('2022-02-10T11:03:00'),
+          author: 'Семен Семенов',
+          comments: [{
+            id: '1002',
+            text: 'Мне нравится, но могла быть теплее',
+            createAt: new Date('2022-03-12:06:00'),
+            author: 'Иван Петров',
+          }],
+        },
+        {
+          id: '4',
+          text: 'Ну где же 3-е сентября #сентябрь #datamola',
+          createAt: new Date('2022-02-10T12:01:45'),
+          author: 'Михаил Петров',
+          comments: [{
+            id: '143343',
+            text: 'Нужно потерпеть',
+            createAt: new Date('2022-03-11T12:22:22'),
+            author: 'Григорий Лепс',
+          }],
+        },
+        {
+          id: '5',
+          text: 'Поехали #поехали #datamola',
+          createAt: new Date('1961-03-12T12:00:00'),
+          author: 'Юрий Гагарин',
+          comments: [{
+            id: '1212',
+            text: 'Ну наконец!!!',
+            createAt: new Date('1961-03-12T13:00:01'),
+            author: 'Сергей Королев',
+          },
+          {
+            id: '1414',
+            text: 'Ура',
+            createAt: new Date('1961-03-12T14:02:01'),
+            author: 'Леонид Брежнев',
+          }],
+        },
+        {
+          id: '6',
+          text: 'Если у тебя получилось обмануть человека, это не значит, что он дурак, это значит, что тебе доверяли больше, чем ты этого заслуживаешь. #обман #datamola',
+          createAt: new Date('2022-02-22T09:45:03'),
+          author: 'Чарльз Буковски',
+          comments: [{
+            id: '1616',
+            text: 'Хорошо сказано',
+            createAt: new Date('2022-02-22T10:01:11'),
+            author: 'Джон Буковски',
+          }],
+        },
+        {
+          id: '7',
+          text: 'Настоящий друг — это человек, который выскажет тебе в глаза все, что о тебе думает, а всем скажет, что ты — замечательный человек. #друг',
+          createAt: new Date('2022-01-12T15:03:11'),
+          author: 'Омар Хайям',
+          comments: [],
+        },
+        {
+          id: '8',
+          text: 'Мы в жизни любим только раз, а после ищем лишь похожих.',
+          createAt: new Date('2022-02-22T16:00:11'),
+          author: 'Сергей Есенин',
+          comments: [{
+            id: '100009',
+            text: 'Очень глубоко',
+            createAt: new Date('2022-02-22T16:56:11'),
+            author: 'Имя Фамилия',
+          }],
+        },
+        {
+          id: '9',
+          text: 'Не тот велик, кто никогда не падал, а тот велик — кто падал и вставал! #борись',
+          createAt: new Date('2022-02-01T15:00:00'),
+          author: 'Конфуций',
+          comments: [{
+            id: '9191',
+            text: 'Сила и труд все перетрут',
+            createAt: new Date('2022-02-12T12:22:17'),
+            author: 'Даль',
+          },
+          {
+            id: '9898',
+            text: 'Понедельник начинается в субботу',
+            createAt: new Date('2022-02-21T19:00:00'),
+            author: 'Трудолюбивый Человек',
+          },
+          ],
+        },
+        {
+          id: '10',
+          text: 'Победи себя и выиграешь тысячи битв #самссобой',
+          createAt: new Date('2022-02-12T22:00:01'),
+          author: 'Будда',
+          comments: [{
+            id: '4545',
+            text: 'Это самая главная победа',
+            createAt: new Date('2022-02-13T10:10:10'),
+            author: 'Cын Будды',
+          }],
+        },
+        {
+          id: '11',
+          text: 'Прежде чем диагностировать у себя депрессию и заниженную самооценку, убедитесь, что вы не окружены идиотами. #оглянись',
+          createAt: new Date('2022-02-05T03:00:11'),
+          author: 'Зигмунд Фрейд',
+          comments: [],
+        },
+        {
+          id: '12',
+          text: 'Если вы уходите и вас никто не зовёт обратно – вы идете в верном направлении. #всеправильно',
+          createAt: new Date('2022-02-17T10:17:11'),
+          author: 'джим Керри',
+          comments: [{
+            id: '987',
+            text: 'Иногда кажется, что я в тупике',
+            createAt: new Date('2022-01-22T15:04:22'),
+            author: 'Тупак Шакур',
+          }],
+        },
+        {
+          id: '12',
+          text: 'Если Вы нарушаете правила, Вас штрафуют; если Вы соблюдаете правила, Вас облагают налогами! #будьхорошим',
+          createAt: new Date('2022-01-21T14:34:25'),
+          author: 'Лоуренс Питер',
+          comments: [{
+            id: '412',
+            text: 'И как быть?',
+            createAt: new Date('2022-01-22T12:00:21'),
+            author: 'Злостный Нарушитель',
+          }],
+        },
+        {
+          id: '13',
+          text: 'Боишься — не делай, делаешь — не бойся, а сделал — не сожалей. #уверенность',
+          createAt: new Date('2022-01-12T14:03:29'),
+          author: 'Чингисхан',
+          comments: [{
+            id: '9996',
+            text: 'Дать уголовный кодекс почитать?',
+            createAt: new Date('2022-01-13T12:00:21'),
+            author: 'Неизвестный пользователь',
+          }],
+        },
+        {
+          id: '14',
+          text: 'Влюбиться можно в красоту, но полюбить – лишь только душу! #любовь',
+          createAt: new Date('2022-01-22T12:21:11'),
+          author: 'Уильям Шекспир',
+          comments: [{
+            id: '666',
+            text: 'Любовь иногда очень зла',
+            createAt: new Date('2022-01-23T11:11:11'),
+            author: 'Пол Уокер',
+          }],
+        },
+        {
+          id: '15',
+          text: 'Безнадёжно — это когда на крышку гроба падает земля. Остальное можно исправить. #не отчаивайся',
+          createAt: new Date('2022-01-12T12:12:12'),
+          author: 'Джейсон Стэтхэм',
+          comments: [],
+        },
+        {
+          id: '16',
+          text: 'Мечтай так, как будто будешь жить вечно. Живи так, как будто завтра умрешь. #живи',
+          createAt: new Date('2022-01-12T14:03:11'),
+          author: 'Виктор Цой',
+          comments: [{
+            id: '65443',
+            text: 'Цой жив!!!',
+            createAt: new Date('2022-01-14T10:10:01'),
+            author: 'Фан Клуб Цоя',
+          },
+          {
+            id: '1387',
+            text: 'Легко сказать',
+            createAt: new Date('2022-00-22T18:02:10'),
+            author: 'Федор Федоров',
+          },
+          ],
+        },
+        {
+          id: '17',
+          text: 'Человека делают счастливым три вещи: любовь, интересная работа и возможность путешествовать. #счастье',
+          createAt: new Date('2022-01-27T14:02:11'),
+          author: 'Иван Бунин',
+          comments: [],
+        },
+        {
+          id: '18',
+          text: 'Ни в коем случае нельзя отчитывать тех, кто старался изо всех сил, но совершил ошибку. #ошибки',
+          createAt: new Date('2022-01-11T12:11:10'),
+          author: 'Ричард Брэнсон',
+          comments: [{
+            id: '191817',
+            text: 'Со мной в детстве так и было!!',
+            createAt: new Date('2022-01-12T19:03:12'),
+            author: 'Сэм Брэнсон',
+          }],
+        },
+        {
+          id: '19',
+          text: 'Ошибки — это знаки препинания жизни, без которых, как и в тексте, не будет смысла. #смысл',
+          createAt: new Date('2022-01-06T18:00:09'),
+          author: 'Харуки Мураками',
+          comments: [],
+        },
+        {
+          id: '20',
+          text: 'Человек — это продукт своих собственных мыслей. О чем он думает, тем он и становится. #человек',
+          createAt: new Date('2022-01-23T01:12:11'),
+          author: 'Махатма Ганди',
+          comments: [{
+            id: '777',
+            text: 'Лучше и не скажешь',
+            createAt: new Date('2022-01-23T16:01:11'),
+            author: 'Антон Чехов',
+          }],
+        },
+        {
+          id: '21',
+          text: 'В падающем самолёте нет атеистов. #вера',
+          createAt: new Date('2022-02-08T12:21:12'),
+          author: 'Михаил Задорнов',
+          comments: [],
+        },
+      ]);
+      console.log('qqqq');
+    }
+  }
+
+  static save(tws) {
+    const jsonTws = JSON.stringify(tws);
+    if (localStorage.getItem('allTws')) {
+      localStorage.removeItem('allTws');
+      localStorage.setItem('allTws', jsonTws);
+    }
+    const users = [];
+    tws.forEach((elem) => {
+      users.push(elem.author);
+    });
+    const jsonUsers = JSON.stringify(users);
+    localStorage.setItem('tweetUSers', jsonUsers);
+    return localStorage.setItem('allTws', jsonTws);
   }
 
   getTws() {
@@ -537,23 +812,27 @@ class TweetsController {
     this.newAllCollectionOfTweet.user = user;
     this.headerView.display(this.newAllCollectionOfTweet.user);
     this.newList.display(this.newAllCollectionOfTweet.tws);
+    TweetsController.save(this.newAllCollectionOfTweet.tws);
   }
 
   addTweet(text) {
     if (this.newAllCollectionOfTweet.add(text)) {
       this.newList.display(this.newAllCollectionOfTweet.tws);
+      TweetsController.save(this.newAllCollectionOfTweet.tws);
     } else console.log('Валидация не пройдена');
   }
 
   addTweetComment(id, text) {
     if (this.newAllCollectionOfTweet.addComment(id, text)) {
       this.selectTweet.display(id);
+      TweetsController.save(this.newAllCollectionOfTweet.tws);
     } else this.selectTweet.display(null);
   }
 
   editTweet(id, text) {
     if (this.newAllCollectionOfTweet.edit(id, text)) {
       this.newList.display(this.newAllCollectionOfTweet.tws);
+      TweetsController.save(this.newAllCollectionOfTweet.tws);
     } else console.log('Нет прав на редактирование твита');
   }
 
@@ -561,12 +840,14 @@ class TweetsController {
     if (this.newAllCollectionOfTweet.remove(id)) {
       this.newAllCollectionOfTweet.remove(id);
       this.newList.display(this.newAllCollectionOfTweet.tws);
+      TweetsController.save(this.newAllCollectionOfTweet.tws);
     } else console.log('Нет прав на удаление твита');
   }
 
   getFeed(skip, top, filterConfig) {
     if (this.newAllCollectionOfTweet.getPage(skip, top, filterConfig)) {
       this.newList.display(this.newAllCollectionOfTweet.tws);
+      TweetsController.save(this.newAllCollectionOfTweet.tws);
     }
   }
 
@@ -578,257 +859,6 @@ class TweetsController {
 }
 
 const allTweetControl = new TweetsController();
-allTweetControl.newAllCollectionOfTweet.addAll([
-  {
-    id: '1',
-    text: 'Привет! #js #datamola #hi',
-    createAt: new Date('2022-02-09T23:00:00'),
-    author: 'Иван Иванов',
-    comments: [],
-  },
-  {
-    id: '2',
-    text: 'Какие дела?',
-    createAt: new Date('2022-02-09T23:00:01'),
-    author: 'Петров Петр',
-    comments: [{
-      id: '912',
-      text: 'Хорошо, а у тебя?',
-      createAt: new Date('2022-02-09T23:00:05'),
-      author: 'Иван ИВанов',
-    }],
-  },
-  {
-    id: '3',
-    text: 'Как тебе погода? #погода #погода #погода #погода',
-    createAt: new Date('2022-02-10T11:03:00'),
-    author: 'Семен Семенов',
-    comments: [{
-      id: '1002',
-      text: 'Мне нравится, но могла быть теплее',
-      createAt: new Date('2022-03-12:06:00'),
-      author: 'Иван Петров',
-    }],
-  },
-  {
-    id: '4',
-    text: 'Ну где же 3-е сентября #сентябрь #datamola',
-    createAt: new Date('2022-02-10T12:01:45'),
-    author: 'Михаил Петров',
-    comments: [{
-      id: '143343',
-      text: 'Нужно потерпеть',
-      createAt: new Date('2022-03-11T12:22:22'),
-      author: 'Григорий Лепс',
-    }],
-  },
-  {
-    id: '5',
-    text: 'Поехали #поехали #datamola',
-    createAt: new Date('1961-03-12T12:00:00'),
-    author: 'Юрий Гагарин',
-    comments: [{
-      id: '1212',
-      text: 'Ну наконец!!!',
-      createAt: new Date('1961-03-12T13:00:01'),
-      author: 'Сергей Королев',
-    },
-    {
-      id: '1414',
-      text: 'Ура',
-      createAt: new Date('1961-03-12T14:02:01'),
-      author: 'Леонид Брежнев',
-    }],
-  },
-  {
-    id: '6',
-    text: 'Если у тебя получилось обмануть человека, это не значит, что он дурак, это значит, что тебе доверяли больше, чем ты этого заслуживаешь. #обман #datamola',
-    createAt: new Date('2022-02-22T09:45:03'),
-    author: 'Чарльз Буковски',
-    comments: [{
-      id: '1616',
-      text: 'Хорошо сказано',
-      createAt: new Date('2022-02-22T10:01:11'),
-      author: 'Джон Буковски',
-    }],
-  },
-  {
-    id: '7',
-    text: 'Настоящий друг — это человек, который выскажет тебе в глаза все, что о тебе думает, а всем скажет, что ты — замечательный человек. #друг',
-    createAt: new Date('2022-01-12T15:03:11'),
-    author: 'Омар Хайям',
-    comments: [],
-  },
-  {
-    id: '8',
-    text: 'Мы в жизни любим только раз, а после ищем лишь похожих.',
-    createAt: new Date('2022-02-22T16:00:11'),
-    author: 'Сергей Есенин',
-    comments: [{
-      id: '100009',
-      text: 'Очень глубоко',
-      createAt: new Date('2022-02-22T16:56:11'),
-      author: 'Имя Фамилия',
-    }],
-  },
-  {
-    id: '9',
-    text: 'Не тот велик, кто никогда не падал, а тот велик — кто падал и вставал! #борись',
-    createAt: new Date('2022-02-01T15:00:00'),
-    author: 'Конфуций',
-    comments: [{
-      id: '9191',
-      text: 'Сила и труд все перетрут',
-      createAt: new Date('2022-02-12T12:22:17'),
-      author: 'Даль',
-    },
-    {
-      id: '9898',
-      text: 'Понедельник начинается в субботу',
-      createAt: new Date('2022-02-21T19:00:00'),
-      author: 'Трудолюбивый Человек',
-    },
-    ],
-  },
-  {
-    id: '10',
-    text: 'Победи себя и выиграешь тысячи битв #самссобой',
-    createAt: new Date('2022-02-12T22:00:01'),
-    author: 'Будда',
-    comments: [{
-      id: '4545',
-      text: 'Это самая главная победа',
-      createAt: new Date('2022-02-13T10:10:10'),
-      author: 'Cын Будды',
-    }],
-  },
-  {
-    id: '11',
-    text: 'Прежде чем диагностировать у себя депрессию и заниженную самооценку, убедитесь, что вы не окружены идиотами. #оглянись',
-    createAt: new Date('2022-02-05T03:00:11'),
-    author: 'Зигмунд Фрейд',
-    comments: [],
-  },
-  {
-    id: '12',
-    text: 'Если вы уходите и вас никто не зовёт обратно – вы идете в верном направлении. #всеправильно',
-    createAt: new Date('2022-02-17T10:17:11'),
-    author: 'джим Керри',
-    comments: [{
-      id: '987',
-      text: 'Иногда кажется, что я в тупике',
-      createAt: new Date('2022-01-22T15:04:22'),
-      author: 'Тупак Шакур',
-    }],
-  },
-  {
-    id: '12',
-    text: 'Если Вы нарушаете правила, Вас штрафуют; если Вы соблюдаете правила, Вас облагают налогами! #будьхорошим',
-    createAt: new Date('2022-01-21T14:34:25'),
-    author: 'Лоуренс Питер',
-    comments: [{
-      id: '412',
-      text: 'И как быть?',
-      createAt: new Date('2022-01-22T12:00:21'),
-      author: 'Злостный Нарушитель',
-    }],
-  },
-  {
-    id: '13',
-    text: 'Боишься — не делай, делаешь — не бойся, а сделал — не сожалей. #уверенность',
-    createAt: new Date('2022-01-12T14:03:29'),
-    author: 'Чингисхан',
-    comments: [{
-      id: '9996',
-      text: 'Дать уголовный кодекс почитать?',
-      createAt: new Date('2022-01-13T12:00:21'),
-      author: 'Неизвестный пользователь',
-    }],
-  },
-  {
-    id: '14',
-    text: 'Влюбиться можно в красоту, но полюбить – лишь только душу! #любовь',
-    createAt: new Date('2022-01-22T12:21:11'),
-    author: 'Уильям Шекспир',
-    comments: [{
-      id: '666',
-      text: 'Любовь иногда очень зла',
-      createAt: new Date('2022-01-23T11:11:11'),
-      author: 'Пол Уокер',
-    }],
-  },
-  {
-    id: '15',
-    text: 'Безнадёжно — это когда на крышку гроба падает земля. Остальное можно исправить. #не отчаивайся',
-    createAt: new Date('2022-01-12T12:12:12'),
-    author: 'Джейсон Стэтхэм',
-    comments: [],
-  },
-  {
-    id: '16',
-    text: 'Мечтай так, как будто будешь жить вечно. Живи так, как будто завтра умрешь. #живи',
-    createAt: new Date('2022-01-12T14:03:11'),
-    author: 'Виктор Цой',
-    comments: [{
-      id: '65443',
-      text: 'Цой жив!!!',
-      createAt: new Date('2022-01-14T10:10:01'),
-      author: 'Фан Клуб Цоя',
-    },
-    {
-      id: '1387',
-      text: 'Легко сказать',
-      createAt: new Date('2022-00-22T18:02:10'),
-      author: 'Федор Федоров',
-    },
-    ],
-  },
-  {
-    id: '17',
-    text: 'Человека делают счастливым три вещи: любовь, интересная работа и возможность путешествовать. #счастье',
-    createAt: new Date('2022-01-27T14:02:11'),
-    author: 'Иван Бунин',
-    comments: [],
-  },
-  {
-    id: '18',
-    text: 'Ни в коем случае нельзя отчитывать тех, кто старался изо всех сил, но совершил ошибку. #ошибки',
-    createAt: new Date('2022-01-11T12:11:10'),
-    author: 'Ричард Брэнсон',
-    comments: [{
-      id: '191817',
-      text: 'Со мной в детстве так и было!!',
-      createAt: new Date('2022-01-12T19:03:12'),
-      author: 'Сэм Брэнсон',
-    }],
-  },
-  {
-    id: '19',
-    text: 'Ошибки — это знаки препинания жизни, без которых, как и в тексте, не будет смысла. #смысл',
-    createAt: new Date('2022-01-06T18:00:09'),
-    author: 'Харуки Мураками',
-    comments: [],
-  },
-  {
-    id: '20',
-    text: 'Человек — это продукт своих собственных мыслей. О чем он думает, тем он и становится. #человек',
-    createAt: new Date('2022-01-23T01:12:11'),
-    author: 'Махатма Ганди',
-    comments: [{
-      id: '777',
-      text: 'Лучше и не скажешь',
-      createAt: new Date('2022-01-23T16:01:11'),
-      author: 'Антон Чехов',
-    }],
-  },
-  {
-    id: '21',
-    text: 'В падающем самолёте нет атеистов. #вера',
-    createAt: new Date('2022-02-08T12:21:12'),
-    author: 'Михаил Задорнов',
-    comments: [],
-  },
-]);
 allTweetControl.filter.display('author', allTweetControl.getTws());
 allTweetControl.filter.display('text', allTweetControl.getTws());
 
@@ -1010,6 +1040,7 @@ formForAddNewComment?.addEventListener('submit', (e) => {
     valueToAddInComment.value = '';
   } else alert('введите хоть что-нибудь');
 });
+
 /* All
 
  test create new element with class Tweet
