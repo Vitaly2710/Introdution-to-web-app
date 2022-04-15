@@ -180,10 +180,13 @@ header {
     display: flex;
     justify-content: space-between;
     margin-top: 2%;
+    width: 100%;
 }
 
 .inclosureAndInput .inclosure {
     margin-left: 10%;
+    width: 25%;
+    margin-bottom: 3%;
 }
 
 .inclosureAndInput .inclosure img {
@@ -191,7 +194,7 @@ header {
     margin-right: 6%;
 }
 
-.inclosureAndInput button {
+.buttonWhichAddNewTweetInList {
     border-radius: 30px;
     padding: 1% 3.7% 1% 3.7%;
     background-color: var(--primary-color);
@@ -201,9 +204,11 @@ header {
     width: 15%;
     font-family: var(--button-text-style) ;
     font-size: 1.6rem;
+    margin-left: 10%;
+    cursor: pointer;
 }
 
-.inclosureAndInput button:hover {
+.buttonWhichAddNewTweetInList:hover {
     background-color: var(--secondary-color);
 }
 

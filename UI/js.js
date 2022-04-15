@@ -839,6 +839,8 @@ if (localStorage.getItem('current User')) {
   allTweetControl.setCurrentUSer(localStorage.getItem('current User'));
 }
 
+allTweetControl.addTweet('heelllooo');
+
 const takeAuthorFiltration = document.querySelector('.authorSearch');
 const takeHashtagFiltration = document.querySelector('.hashSearch');
 const dateFromFiltration = document.querySelector('.dateFrom');
@@ -901,8 +903,6 @@ class UserController {
     let check = false;
     users.forEach((element) => {
       const key = Object.keys(element)[0];
-      console.log(login);
-      console.log(key);
       const value = Object.values(element)[0];
       if (key === login) {
         if (value === password) {
@@ -974,7 +974,6 @@ regForm?.addEventListener('submit', (e) => {
 });
 
 const correctTrotter = document.querySelector('#trotterList');
-const correctTrotterWindow = document.querySelector('.correctTrotterBlock');
 correctTrotter?.addEventListener('click', (e) => {
   const currentTweet = e.target.closest('.mainBlockTrotteListTrotter').getAttribute('id');
   if (e.target.classList.contains('correctTrotter')) {
@@ -988,6 +987,14 @@ correctTrotter?.addEventListener('click', (e) => {
     const changeText = prompt('Введите новый текст твита');
     allTweetControl.editTweet(currentTweet, changeText);
   }
+});
+
+const formForAddNewTweet = document.querySelector('.photoInput');
+const addNewTweetInList = document.querySelector('.addNewTweetInList');
+formForAddNewTweet?.addEventListener('submit', (e) => {
+  e.preventDefault();
+  allTweetControl.addTweet(addNewTweetInList.value);
+  addNewTweetInList.value = '';
 });
 
 /* All
