@@ -201,7 +201,7 @@ class TweetCollection {
   addAll(tws) {
     const notValid = [];
     tws.forEach((elem) => {
-      const newElem = new Tweet(elem.id, elem.text, elem.author, elem.comments, new Date(elem.createAt));
+      const newElem = new Tweet(elem._id, elem.text, elem._author, elem.comments, new Date(elem._createAt));
       if (Tweet.validate(newElem)) {
         this._tws.push(newElem);
       } else {
@@ -233,7 +233,6 @@ class HeaderView {
     const userInHead = document.querySelector(`.${this.id}`);
     const buttonLogIn = document.querySelector('.logInButton');
     const newContainer = document.createElement('div');
-    console.log(userName);
     if (userName !== null && userName !== 'null') {
       const userNameWithout = userName.replace(/"/g, '');
       newContainer.classList.add('headerUserBlock');
@@ -491,13 +490,16 @@ class FilterView {
     const serchContainer = document.querySelectorAll(`.${this.id}`);
     const filterElement = document.createElement('select');
     if (param === 'author') {
-      tweets.forEach((elem, index) => {
+      allTweetControl.newAllCollectionOfTweet.tws.forEach((elem, index) => {
         const itemIsSearch = elem[param];
         filterElement?.insertAdjacentHTML(
           'afterbegin',
           `<option value="${elem.author}">${itemIsSearch}</option>`,
         );
       });
+      if (serchContainer[0].childNodes) {
+        serchContainer[0].replaceChild(filterElement, serchContainer[0].childNodes[0]);
+      }
       filterElement.classList.add('authorSearch');
       serchContainer[0]?.append(filterElement);
     } else if (param === 'text') {
@@ -520,8 +522,11 @@ class FilterView {
         );
       });
       filterElement.classList.add('hashSearch');
+      if (serchContainer[1].childNodes) {
+        serchContainer[1].replaceChild(filterElement, serchContainer[1].childNodes[0]);
+        console.log('ssss');
+      }
       serchContainer[1]?.append(filterElement);
-      const select = document.querySelector('.hashSearch');
     }
   }
 }
@@ -537,21 +542,21 @@ class TweetsController {
   }
 
   restore() {
-    if (localStorage.getItem('allTws') === null) {
+    if (localStorage.getItem('allTws') === null || localStorage.getItem('allTws') === 'null') {
       console.log('work');
       const allTws = [
         {
-          id: '1',
+          _id: '1',
           text: 'Привет! #js #datamola #hi',
-          createAt: '2022-02-09T23:00:00',
-          author: 'Иван Иванов',
+          _createAt: '2022-02-09T23:00:00',
+          _author: 'Иван Иванов',
           comments: [],
         },
         {
-          id: '2',
+          _id: '2',
           text: 'Какие дела?',
-          createAt: new Date('2022-02-09T23:00:01'),
-          author: 'Петров Петр',
+          _createAt: new Date('2022-02-09T23:00:01'),
+          _author: 'Петров Петр',
           comments: [{
             id: '912',
             text: 'Хорошо, а у тебя?',
@@ -560,10 +565,10 @@ class TweetsController {
           }],
         },
         {
-          id: '3',
+          _id: '3',
           text: 'Как тебе погода? #погода #погода #погода #погода',
-          createAt: new Date('2022-02-10T11:03:00'),
-          author: 'Семен Семенов',
+          _createAt: new Date('2022-02-10T11:03:00'),
+          _author: 'Семен Семенов',
           comments: [{
             id: '1002',
             text: 'Мне нравится, но могла быть теплее',
@@ -572,10 +577,10 @@ class TweetsController {
           }],
         },
         {
-          id: '4',
+          _id: '4',
           text: 'Ну где же 3-е сентября #сентябрь #datamola',
-          createAt: new Date('2022-02-10T12:01:45'),
-          author: 'Михаил Петров',
+          _createAt: new Date('2022-02-10T12:01:45'),
+          _author: 'Михаил Петров',
           comments: [{
             id: '143343',
             text: 'Нужно потерпеть',
@@ -584,10 +589,10 @@ class TweetsController {
           }],
         },
         {
-          id: '5',
+          _id: '5',
           text: 'Поехали #поехали #datamola',
-          createAt: new Date('1961-03-12T12:00:00'),
-          author: 'Юрий Гагарин',
+          _createAt: new Date('1961-03-12T12:00:00'),
+          _author: 'Юрий Гагарин',
           comments: [{
             id: '1212',
             text: 'Ну наконец!!!',
@@ -595,17 +600,17 @@ class TweetsController {
             author: 'Сергей Королев',
           },
           {
-            id: '1414',
+            _id: '1414',
             text: 'Ура',
-            createAt: new Date('1961-03-12T14:02:01'),
-            author: 'Леонид Брежнев',
+            _createAt: new Date('1961-03-12T14:02:01'),
+            _author: 'Леонид Брежнев',
           }],
         },
         {
-          id: '6',
+          _id: '6',
           text: 'Если у тебя получилось обмануть человека, это не значит, что он дурак, это значит, что тебе доверяли больше, чем ты этого заслуживаешь. #обман #datamola',
-          createAt: new Date('2022-02-22T09:45:03'),
-          author: 'Чарльз Буковски',
+          _createAt: new Date('2022-02-22T09:45:03'),
+          _author: 'Чарльз Буковски',
           comments: [{
             id: '1616',
             text: 'Хорошо сказано',
@@ -614,17 +619,17 @@ class TweetsController {
           }],
         },
         {
-          id: '7',
+          _id: '7',
           text: 'Настоящий друг — это человек, который выскажет тебе в глаза все, что о тебе думает, а всем скажет, что ты — замечательный человек. #друг',
-          createAt: new Date('2022-01-12T15:03:11'),
-          author: 'Омар Хайям',
+          _createAt: new Date('2022-01-12T15:03:11'),
+          _author: 'Омар Хайям',
           comments: [],
         },
         {
-          id: '8',
+          _id: '8',
           text: 'Мы в жизни любим только раз, а после ищем лишь похожих.',
-          createAt: new Date('2022-02-22T16:00:11'),
-          author: 'Сергей Есенин',
+          _createAt: new Date('2022-02-22T16:00:11'),
+          _author: 'Сергей Есенин',
           comments: [{
             id: '100009',
             text: 'Очень глубоко',
@@ -633,10 +638,10 @@ class TweetsController {
           }],
         },
         {
-          id: '9',
+          _id: '9',
           text: 'Не тот велик, кто никогда не падал, а тот велик — кто падал и вставал! #борись',
-          createAt: new Date('2022-02-01T15:00:00'),
-          author: 'Конфуций',
+          _createAt: new Date('2022-02-01T15:00:00'),
+          _author: 'Конфуций',
           comments: [{
             id: '9191',
             text: 'Сила и труд все перетрут',
@@ -644,18 +649,18 @@ class TweetsController {
             author: 'Даль',
           },
           {
-            id: '9898',
+            _id: '9898',
             text: 'Понедельник начинается в субботу',
-            createAt: new Date('2022-02-21T19:00:00'),
-            author: 'Трудолюбивый Человек',
+            _createAt: new Date('2022-02-21T19:00:00'),
+            _author: 'Трудолюбивый Человек',
           },
           ],
         },
         {
-          id: '10',
+          _id: '10',
           text: 'Победи себя и выиграешь тысячи битв #самссобой',
-          createAt: new Date('2022-02-12T22:00:01'),
-          author: 'Будда',
+          _createAt: new Date('2022-02-12T22:00:01'),
+          _author: 'Будда',
           comments: [{
             id: '4545',
             text: 'Это самая главная победа',
@@ -664,17 +669,17 @@ class TweetsController {
           }],
         },
         {
-          id: '11',
+          _id: '11',
           text: 'Прежде чем диагностировать у себя депрессию и заниженную самооценку, убедитесь, что вы не окружены идиотами. #оглянись',
-          createAt: new Date('2022-02-05T03:00:11'),
-          author: 'Зигмунд Фрейд',
+          _createAt: new Date('2022-02-05T03:00:11'),
+          _author: 'Зигмунд Фрейд',
           comments: [],
         },
         {
-          id: '12',
+          _id: '12',
           text: 'Если вы уходите и вас никто не зовёт обратно – вы идете в верном направлении. #всеправильно',
-          createAt: new Date('2022-02-17T10:17:11'),
-          author: 'джим Керри',
+          _createAt: new Date('2022-02-17T10:17:11'),
+          _author: 'джим Керри',
           comments: [{
             id: '987',
             text: 'Иногда кажется, что я в тупике',
@@ -683,10 +688,10 @@ class TweetsController {
           }],
         },
         {
-          id: '12',
+          _id: '12',
           text: 'Если Вы нарушаете правила, Вас штрафуют; если Вы соблюдаете правила, Вас облагают налогами! #будьхорошим',
-          createAt: new Date('2022-01-21T14:34:25'),
-          author: 'Лоуренс Питер',
+          _createAt: new Date('2022-01-21T14:34:25'),
+          _author: 'Лоуренс Питер',
           comments: [{
             id: '412',
             text: 'И как быть?',
@@ -695,10 +700,10 @@ class TweetsController {
           }],
         },
         {
-          id: '13',
+          _id: '13',
           text: 'Боишься — не делай, делаешь — не бойся, а сделал — не сожалей. #уверенность',
-          createAt: new Date('2022-01-12T14:03:29'),
-          author: 'Чингисхан',
+          _createAt: new Date('2022-01-12T14:03:29'),
+          _author: 'Чингисхан',
           comments: [{
             id: '9996',
             text: 'Дать уголовный кодекс почитать?',
@@ -707,10 +712,10 @@ class TweetsController {
           }],
         },
         {
-          id: '14',
+          _id: '14',
           text: 'Влюбиться можно в красоту, но полюбить – лишь только душу! #любовь',
-          createAt: new Date('2022-01-22T12:21:11'),
-          author: 'Уильям Шекспир',
+          _createAt: new Date('2022-01-22T12:21:11'),
+          _author: 'Уильям Шекспир',
           comments: [{
             id: '666',
             text: 'Любовь иногда очень зла',
@@ -719,17 +724,17 @@ class TweetsController {
           }],
         },
         {
-          id: '15',
+          _id: '15',
           text: 'Безнадёжно — это когда на крышку гроба падает земля. Остальное можно исправить. #не отчаивайся',
-          createAt: new Date('2022-01-12T12:12:12'),
-          author: 'Джейсон Стэтхэм',
+          _createAt: new Date('2022-01-12T12:12:12'),
+          _author: 'Джейсон Стэтхэм',
           comments: [],
         },
         {
-          id: '16',
+          _id: '16',
           text: 'Мечтай так, как будто будешь жить вечно. Живи так, как будто завтра умрешь. #живи',
-          createAt: new Date('2022-01-12T14:03:11'),
-          author: 'Виктор Цой',
+          _createAt: new Date('2022-01-12T14:03:11'),
+          _author: 'Виктор Цой',
           comments: [{
             id: '65443',
             text: 'Цой жив!!!',
@@ -737,25 +742,25 @@ class TweetsController {
             author: 'Фан Клуб Цоя',
           },
           {
-            id: '1387',
+            _id: '1387',
             text: 'Легко сказать',
-            createAt: new Date('2022-00-22T18:02:10'),
-            author: 'Федор Федоров',
+            _createAt: new Date('2022-00-22T18:02:10'),
+            _author: 'Федор Федоров',
           },
           ],
         },
         {
-          id: '17',
+          _id: '17',
           text: 'Человека делают счастливым три вещи: любовь, интересная работа и возможность путешествовать. #счастье',
-          createAt: new Date('2022-01-27T14:02:11'),
-          author: 'Иван Бунин',
+          _createAt: new Date('2022-01-27T14:02:11'),
+          _author: 'Иван Бунин',
           comments: [],
         },
         {
-          id: '18',
+          _id: '18',
           text: 'Ни в коем случае нельзя отчитывать тех, кто старался изо всех сил, но совершил ошибку. #ошибки',
-          createAt: new Date('2022-01-11T12:11:10'),
-          author: 'Ричард Брэнсон',
+          _createAt: new Date('2022-01-11T12:11:10'),
+          _author: 'Ричард Брэнсон',
           comments: [{
             id: '191817',
             text: 'Со мной в детстве так и было!!',
@@ -764,17 +769,17 @@ class TweetsController {
           }],
         },
         {
-          id: '19',
+          _id: '19',
           text: 'Ошибки — это знаки препинания жизни, без которых, как и в тексте, не будет смысла. #смысл',
-          createAt: new Date('2022-01-06T18:00:09'),
-          author: 'Харуки Мураками',
+          _createAt: new Date('2022-01-06T18:00:09'),
+          _author: 'Харуки Мураками',
           comments: [],
         },
         {
-          id: '20',
+          _id: '20',
           text: 'Человек — это продукт своих собственных мыслей. О чем он думает, тем он и становится. #человек',
-          createAt: new Date('2022-01-23T01:12:11'),
-          author: 'Махатма Ганди',
+          _createAt: new Date('2022-01-23T01:12:11'),
+          _author: 'Махатма Ганди',
           comments: [{
             id: '777',
             text: 'Лучше и не скажешь',
@@ -783,16 +788,15 @@ class TweetsController {
           }],
         },
         {
-          id: '21',
+          _id: '21',
           text: 'В падающем самолёте нет атеистов. #вера',
-          createAt: new Date('2022-02-08T12:21:12'),
-          author: 'Михаил Задорнов',
+          _createAt: new Date('2022-02-08T12:21:12'),
+          _author: 'Михаил Задорнов',
           comments: [],
         },
       ];
       localStorage.setItem('allTws', JSON.stringify(allTws));
     }
-
     this.newAllCollectionOfTweet.addAll(JSON.parse(localStorage.getItem('allTws')));
     this.newList.display(this.newAllCollectionOfTweet.tws);
   }
@@ -883,20 +887,43 @@ dateFromFiltration?.addEventListener('change', filtrationDateFrom);
 dateToFiltration?.addEventListener('change', filtrationDateTo);
 
 function filtrationAuthor() {
-  return allTweetControl.getFeed(0, 10, { author: this.value });
+  const backup = JSON.stringify(allTweetControl.newAllCollectionOfTweet.tws);
+  localStorage.setItem('buckupTws', backup);
+  allTweetControl.getFeed(0, 10, { author: this.value });
+  allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
+  allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
 }
 
 function filtrationHashtag() {
-  return allTweetControl.getFeed(0, 10, { hashtags: this.value });
+  const backup = JSON.stringify(allTweetControl.newAllCollectionOfTweet.tws);
+  localStorage.setItem('buckupTws', backup);
+  allTweetControl.getFeed(0, 10, { hashtags: this.value });
+  allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
+  allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
 }
 
 function filtrationDateFrom() {
+  const backup = JSON.stringify(allTweetControl.newAllCollectionOfTweet.tws);
+  localStorage.setItem('buckupTws', backup);
   return allTweetControl.getFeed(0, 10, { dateFrom: new Date(this.value) });
 }
 
 function filtrationDateTo() {
+  const backup = JSON.stringify(allTweetControl.newAllCollectionOfTweet.tws);
+  localStorage.setItem('buckupTws', backup);
   return allTweetControl.getFeed(0, 10, { dateTo: new Date(this.value) });
 }
+
+const clearFilter = document.querySelector('.clearFilter');
+clearFilter?.addEventListener('click', () => {
+  const comebackTws = JSON.parse(localStorage.getItem('buckupTws'));
+  localStorage.setItem('allTws', localStorage.getItem('buckupTws'));
+  localStorage.removeItem('buckupTws');
+  allTweetControl.newList.display(JSON.parse(localStorage.getItem('allTws')));
+  allTweetControl.newAllCollectionOfTweet.addAll(JSON.parse(localStorage.getItem('allTws')));
+  allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
+  allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
+});
 
 const moreTweets = document.querySelector('.moreTrotter');
 moreTweets?.addEventListener('click', addTweets);

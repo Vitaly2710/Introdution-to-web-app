@@ -630,6 +630,32 @@ footer {
     max-width: 20rem;
 }
 
+label.humanSearch:last-child {
+    margin-bottom: 7%;
+}
+
+.authorSearch {
+    border: none;
+}
+
+.clearFilter {
+    display: block;
+    margin-bottom: 5%;
+    padding: 3% 5% 3% 5%;
+    min-width: 100%;
+    border-radius: 1rem;
+    border: none;
+    color: #FFFFFF;
+    background-color: var(--primary-color);
+    font-family: var(--button-text-style);
+    font-size: 1.7rem;
+    cursor: pointer;
+}
+
+.clearFilter:hover {
+    background-color: var(--secondary-color);
+}
+
 .hashSearch {
     display: block;
     border: none;
