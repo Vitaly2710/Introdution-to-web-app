@@ -181,6 +181,14 @@ header {
     width: 100%;
 }
 
+.toLogInInRegistration {
+    cursor: pointer;
+}
+
+.redirectToRegistration {
+    cursor: pointer;
+}
+
 .photoInput img {
     width: 8%;
     border-radius: 50%;

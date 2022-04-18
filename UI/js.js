@@ -2,17 +2,17 @@
 // eslint-disable-next-line max-classes-per-file
 
 class Tweet {
-  constructor(id, text, author, comments = []) {
+  constructor(id, text, author, comments = [], createAt = new Date()) {
     this._id = id;
     this.text = text;
-    this._createAt = new Date();
+    this._createAt = createAt;
     this._author = author;
     this.comments = comments;
   }
 
   static dateLabel(item) {
-    const day = item.createAt.getDate();
-    const month = item.createAt.getMonth();
+    const day = new Date(item.createAt).getDate();
+    const month = new Date(item.createAt).getMonth();
     let fMonth;
     switch (month) {
       case 0: fMonth = 'января'; break;
@@ -201,8 +201,9 @@ class TweetCollection {
   addAll(tws) {
     const notValid = [];
     tws.forEach((elem) => {
-      if (Tweet.validate(elem)) {
-        this._tws.push(elem);
+      const newElem = new Tweet(elem.id, elem.text, elem.author, elem.comments, new Date(elem.createAt));
+      if (Tweet.validate(newElem)) {
+        this._tws.push(newElem);
       } else {
         notValid.push(elem);
       }
@@ -221,6 +222,7 @@ const t = new TweetCollection();
 class HeaderView {
   constructor(id) {
     this._containerId = id;
+    this.display(JSON.stringify(localStorage.getItem('current User')));
   }
 
   get id() {
@@ -231,12 +233,14 @@ class HeaderView {
     const userInHead = document.querySelector(`.${this.id}`);
     const buttonLogIn = document.querySelector('.logInButton');
     const newContainer = document.createElement('div');
-    if (userName !== null && userName && allTweetControl.newAllCollectionOfTweet.user === userName) {
+    console.log(userName);
+    if (userName !== null && userName !== 'null') {
+      const userNameWithout = userName.replace(/"/g, '');
       newContainer.classList.add('headerUserBlock');
       newContainer.insertAdjacentHTML(
         'afterbegin',
         `<img src="./assets/UserFoto.svg" alt="userFoto"/>
-            <h4 id="userName">${userName}</h4>
+            <h4 id="userName">${userNameWithout}</h4>
             <a class="buttonLoginOut">
                 <img src="./assets/buttonLogOut.svg" alt="logOut">
             </a>`,
@@ -246,9 +250,9 @@ class HeaderView {
       buttonLogIn?.classList.add('hidden');
     } else {
       alert('Необходимо ввойти');
-      buttonLogIn.classList.remove('hidden');
-      userInHead.append(buttonLogIn);
-      userInHead.replaceChild(buttonLogIn, userInHead.childNodes[0]);
+      buttonLogIn?.classList.remove('hidden');
+      userInHead?.append(buttonLogIn);
+      userInHead?.replaceChild(buttonLogIn, userInHead.childNodes[0]);
     }
   }
 }
@@ -277,7 +281,7 @@ class TweetFeedView {
     } else {
       tws?.forEach((elem) => {
         let tweetOwner;
-        if (elem.author !== allTweetControl.newAllCollectionOfTweet.user || elem.author !== currentUser) {
+        if (elem.author !== currentUser) {
           tweetOwner = 'unvisibleBlock';
         } else { tweetOwner = 'correctTrotter'; }
 
@@ -330,7 +334,7 @@ class TweetFeedView {
                         <p class=trotterText>${hashtags('text')}<span>${hashtags('hashtags')}</span></p>
                         <div class="response">
                             <ul>
-                                <li>${elem.comments.length}</li>
+                                <li class="commentToTweet">${elem.comments.length}</li>
                                 <li>${Math.round(Math.random() * 100)}</li>
                                 <li>${Math.round(Math.random() * 100)}</li>
                             </ul>
@@ -352,6 +356,7 @@ class TweetFeedView {
 class TweetView {
   constructor(containerId) {
     this._containerId = containerId;
+    this.display(JSON.parse(localStorage.getItem('curentTweet')));
   }
 
   get id() {
@@ -361,7 +366,9 @@ class TweetView {
   display(curTweet) {
     const mainTrotter = document.querySelector(`#${this.id}`);
     const newContainer = document.createElement('div');
-    const currentTrott = allTweetControl.newAllCollectionOfTweet.get(curTweet);
+    const currentTrott = {
+      id: curTweet._id, text: curTweet.text, createAt: curTweet._createAt, comments: curTweet.comments, author: curTweet._author,
+    };
     const currentUser = document.querySelector('#userName')?.innerHTML;
     newContainer.classList.add('trotterList');
 
@@ -395,7 +402,7 @@ class TweetView {
       return result;
     }
 
-    if (allTweetControl.newAllCollectionOfTweet.tws.length === 0 || curTweet === null) {
+    if (curTweet === null) {
       const trottersUndefined = document.createElement('h2');
       trottersUndefined.innerHTML = 'Ups, trotters is undefined';
       trottersUndefined.classList.add('styleForUndefined');
@@ -530,15 +537,13 @@ class TweetsController {
   }
 
   restore() {
-    if (localStorage.getItem('allTws')) {
-      const allTws = JSON.parse(localStorage.getItem('allTws'));
-      this.newAllCollectionOfTweet.addAll(allTws);
-    } else {
-      this.newAllCollectionOfTweet.addAll([
+    if (localStorage.getItem('allTws') === null) {
+      console.log('work');
+      const allTws = [
         {
           id: '1',
           text: 'Привет! #js #datamola #hi',
-          createAt: new Date('2022-02-09T23:00:00'),
+          createAt: '2022-02-09T23:00:00',
           author: 'Иван Иванов',
           comments: [],
         },
@@ -784,24 +789,28 @@ class TweetsController {
           author: 'Михаил Задорнов',
           comments: [],
         },
-      ]);
-      console.log('qqqq');
+      ];
+      localStorage.setItem('allTws', JSON.stringify(allTws));
     }
+
+    this.newAllCollectionOfTweet.addAll(JSON.parse(localStorage.getItem('allTws')));
+    this.newList.display(this.newAllCollectionOfTweet.tws);
   }
 
   static save(tws) {
-    const jsonTws = JSON.stringify(tws);
-    if (localStorage.getItem('allTws')) {
-      localStorage.removeItem('allTws');
-      localStorage.setItem('allTws', jsonTws);
-    }
+    const jsonTws = tws.map((el) => ({
+      id: el.id, text: el.text, createAt: el.createAt, author: el.author, comments: el.comments,
+    }));
     const users = [];
     tws.forEach((elem) => {
-      users.push(elem.author);
+      if (users.includes(elem.author)) {
+        return true;
+      } users.push(elem.author);
     });
     const jsonUsers = JSON.stringify(users);
     localStorage.setItem('tweetUSers', jsonUsers);
-    return localStorage.setItem('allTws', jsonTws);
+
+    return localStorage.setItem('allTws', JSON.stringify(jsonTws));
   }
 
   getTws() {
@@ -812,7 +821,6 @@ class TweetsController {
     this.newAllCollectionOfTweet.user = user;
     this.headerView.display(this.newAllCollectionOfTweet.user);
     this.newList.display(this.newAllCollectionOfTweet.tws);
-    TweetsController.save(this.newAllCollectionOfTweet.tws);
   }
 
   addTweet(text) {
@@ -853,23 +861,17 @@ class TweetsController {
 
   showTweet(id) {
     if (this.newAllCollectionOfTweet.get(id)) {
-      this.selectTweet.display(id);
-    } else this.selectTweet.display(null);
+      this.selectTweet.display(this.newAllCollectionOfTweet.get(id));
+      console.log('qqqq');
+    } else {
+      this.selectTweet.display(null);
+    }
   }
 }
 
 const allTweetControl = new TweetsController();
 allTweetControl.filter.display('author', allTweetControl.getTws());
 allTweetControl.filter.display('text', allTweetControl.getTws());
-
-allTweetControl.addTweet('hello world');
-if (localStorage.getItem('current User')) {
-  allTweetControl.setCurrentUSer(localStorage.getItem('current User'));
-}
-
-allTweetControl.addTweet('heelllooo');
-allTweetControl.showTweet('2');
-
 const takeAuthorFiltration = document.querySelector('.authorSearch');
 const takeHashtagFiltration = document.querySelector('.hashSearch');
 const dateFromFiltration = document.querySelector('.dateFrom');
@@ -909,18 +911,45 @@ function pagination() {
 const closure = pagination();
 function addTweets() {
   const a = closure();
-  console.log(a);
   return allTweetControl.getFeed(0, a);
+}
+
+const mainBlockTrotteListWrapper = document.querySelector('.mainBlockTrotteListWrapper');
+
+if (localStorage.getItem('current User') === null) {
+  mainBlockTrotteListWrapper?.classList.add('hidden');
+} else {
+  allTweetControl.newAllCollectionOfTweet.user = localStorage.getItem('current User');
+}
+
+const logoBlockInHeader = document.querySelector('.logoBlockInHeader');
+logoBlockInHeader?.addEventListener('click', () => {
+  document.location.href = 'main.html';
+});
+
+const backInMain = document.querySelector('.backInMain');
+backInMain?.addEventListener('click', () => {
+  document.location.href = 'main.html';
+});
+
+function callTweet(curTw) {
+  const currentTweeter = allTweetControl.newAllCollectionOfTweet.get(curTw);
+  allTweetControl.showTweet(curTw);
+  const jsonCurTwr = JSON.stringify(currentTweeter);
+  localStorage.setItem('curentTweet', jsonCurTwr);
 }
 
 class UserController {
   constructor() {
-    this._users = [{ иван: '123' }, { пётр: '321' }, { 'Сергей Есенин': '12345' }, { 'Чарльз Буковски': '12345' }];
-    this.usersInStorage = this.setUserInStore();
+    this._users = JSON.parse(localStorage.getItem('users'));
+    this.usersInStorage = UserController.setUserInStore();
   }
 
-  setUserInStore() {
-    localStorage.setItem('users', JSON.stringify(this._users));
+  static setUserInStore() {
+    if (JSON.parse(localStorage.getItem('users')) === null) {
+      const constatnUsers = JSON.stringify([{ Administrator: '111' }]);
+      localStorage.setItem('users', constatnUsers);
+    }
   }
 
   static getUserInStorage() {
@@ -949,27 +978,31 @@ class UserController {
   static logOut() {
     alert('выполнен выход');
     allTweetControl.headerView.display(null);
+    document.location.href = 'logIn.html';
     return localStorage.removeItem('current User');
   }
 
   static registration(login, password) {
     const users = JSON.parse(UserController.getUserInStorage());
-    const existen = users.find((elem) => {
-      const key = Object.keys(elem)[0];
-      if (key === login) {
-        alert('такой логин уже существует');
+    const existen = users.every(checkUsers);
+    function checkUsers(element) {
+      console.log(Object.keys(element)[0]);
+      if (Object.keys(element)[0] === login) {
+        return false;
       }
-      return key;
-    });
-    if (existen === undefined) {
+      return true;
+    }
+    console.log(existen);
+    if (existen) {
       const newUser = {
         [login]: password,
       };
+      console.log(newUser);
       users.push(newUser);
       localStorage.removeItem('users');
       localStorage.setItem('users', JSON.stringify(users));
       alert('регистрация произошла успешно');
-    }
+    } else alert('такой пользователь существует');
   }
 }
 const usControll = new UserController();
@@ -981,11 +1014,27 @@ form?.addEventListener('submit', (e) => {
   e.preventDefault();
   if (UserController.checkLogIn(login.value, password.value)) {
     alert('вход выполнен успешно');
-    return UserController.checkLogIn(login.value, password.value);
+    UserController.checkLogIn(login.value, password.value);
+    document.location.href = 'main.html';
+    return;
   } if (!UserController.checkLogIn(login.value, password.value)) {
     alert('не верный логин или пароль');
   }
   return e.preventDefault();
+});
+
+const logInButton = document.querySelector('.logInButton');
+logInButton?.addEventListener('click', redirectToLogin);
+const toLogInInRegistration = document.querySelector('.toLogInInRegistration');
+toLogInInRegistration?.addEventListener('click', redirectToLogin);
+
+function redirectToLogin() {
+  document.location.href = 'logIn.html';
+}
+
+const redirectToRegistration = document.querySelector('.redirectToRegistration');
+redirectToRegistration?.addEventListener('click', () => {
+  document.location.href = 'Registration.html';
 });
 
 const logOut = document.querySelector('.buttonLoginOut');
@@ -998,14 +1047,14 @@ const regForm = document.querySelector('.formInRegPage');
 regForm?.addEventListener('submit', (e) => {
   e.preventDefault();
   if (passwordInReg.value === repeatPass.value) {
-    UserController.registration(loginInReg.value, passwordInReg.value);
-  } else alert('пароли не совпадают');
+    document.location.href = 'logIn.html';
+    return UserController.registration(loginInReg.value, passwordInReg.value);
+  } alert('пароли не совпадают');
 });
 
 const correctTrotter = document.querySelector('#trotterList');
 correctTrotter?.addEventListener('click', (e) => {
   const currentTweet = e.target.closest('.mainBlockTrotteListTrotter').getAttribute('id');
-  console.log(e.target);
   if (e.target.classList.contains('correctTrotter')) {
     const editMenu = e.target.children;
     editMenu[0].classList.toggle('visibleBlock');
@@ -1017,16 +1066,22 @@ correctTrotter?.addEventListener('click', (e) => {
     const changeText = prompt('Введите новый текст твита');
     allTweetControl.editTweet(currentTweet, changeText);
   }
+  if (e.target.classList.contains('commentToTweet')) {
+    callTweet(currentTweet);
+    document.location.href = 'twit.html';
+  }
 });
 
 const formForAddNewTweet = document.querySelector('.photoInput');
 const addNewTweetInList = document.querySelector('.addNewTweetInList');
 formForAddNewTweet?.addEventListener('submit', (e) => {
   e.preventDefault();
-  if (addNewTweetInList.value !== '') {
+  if (localStorage.getItem('current User') !== null) {
     allTweetControl.addTweet(addNewTweetInList.value);
     addNewTweetInList.value = '';
-  } else alert('введите хоть что-нибудь');
+  } else {
+    alert('необходимо зарегистрироваться ');
+  }
 });
 
 const formForAddNewComment = document.querySelector('.addComment');
