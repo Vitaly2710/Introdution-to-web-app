@@ -490,7 +490,7 @@ class FilterView {
     const serchContainer = document.querySelectorAll(`.${this.id}`);
     const filterElement = document.createElement('select');
     if (param === 'author') {
-      allTweetControl.newAllCollectionOfTweet.tws.forEach((elem, index) => {
+      tweets.forEach((elem, index) => {
         const itemIsSearch = elem[param];
         filterElement?.insertAdjacentHTML(
           'afterbegin',
@@ -874,8 +874,8 @@ class TweetsController {
 }
 
 const allTweetControl = new TweetsController();
-allTweetControl.filter.display('author', allTweetControl.getTws());
-allTweetControl.filter.display('text', allTweetControl.getTws());
+allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
+allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
 const takeAuthorFiltration = document.querySelector('.authorSearch');
 const takeHashtagFiltration = document.querySelector('.hashSearch');
 const dateFromFiltration = document.querySelector('.dateFrom');
@@ -890,6 +890,7 @@ function filtrationAuthor() {
   const backup = JSON.stringify(allTweetControl.newAllCollectionOfTweet.tws);
   localStorage.setItem('buckupTws', backup);
   allTweetControl.getFeed(0, 10, { author: this.value });
+  // allTweetControl.newAllCollectionOfTweet.addAll(JSON.parse(localStorage.getItem('allTws')));
   allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
   allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
 }
@@ -919,8 +920,9 @@ clearFilter?.addEventListener('click', () => {
   const comebackTws = JSON.parse(localStorage.getItem('buckupTws'));
   localStorage.setItem('allTws', localStorage.getItem('buckupTws'));
   localStorage.removeItem('buckupTws');
-  allTweetControl.newList.display(JSON.parse(localStorage.getItem('allTws')));
+
   allTweetControl.newAllCollectionOfTweet.addAll(JSON.parse(localStorage.getItem('allTws')));
+  allTweetControl.newList.display(allTweetControl.newAllCollectionOfTweet.tws);
   allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
   allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
 });
