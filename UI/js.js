@@ -911,7 +911,8 @@ function pagination() {
 const closure = pagination();
 function addTweets() {
   const a = closure();
-  return allTweetControl.getFeed(0, a);
+  const b = allTweetControl.newAllCollectionOfTweet.tws.slice(0, a);
+  allTweetControl.newList.display(b);
 }
 
 const mainBlockTrotteListWrapper = document.querySelector('.mainBlockTrotteListWrapper');
