@@ -201,7 +201,12 @@ class TweetCollection {
   addAll(tws) {
     const notValid = [];
     tws.forEach((elem) => {
-      const newElem = new Tweet(elem._id, elem.text, elem._author, elem.comments, new Date(elem._createAt));
+      let newElem;
+      if (elem._id === undefined) {
+        newElem = new Tweet(elem.id, elem.text, elem.author, elem.comments, new Date(elem.createAt));
+      } else if (elem.id === undefined) {
+        newElem = new Tweet(elem._id, elem.text, elem._author, elem.comments, new Date(elem._createAt));
+      }
       if (Tweet.validate(newElem)) {
         this._tws.push(newElem);
       } else {
