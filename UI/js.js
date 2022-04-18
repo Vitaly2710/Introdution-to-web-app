@@ -355,7 +355,7 @@ class TweetFeedView {
 class TweetView {
   constructor(containerId) {
     this._containerId = containerId;
-    this.display(JSON.parse(localStorage.getItem('curentTweet')));
+    // this.display(JSON.parse(localStorage.getItem('curentTweet')));
   }
 
   get id() {
@@ -497,8 +497,8 @@ class FilterView {
           `<option value="${elem.author}">${itemIsSearch}</option>`,
         );
       });
-      if (serchContainer[0].childNodes) {
-        serchContainer[0].replaceChild(filterElement, serchContainer[0].childNodes[0]);
+      if (serchContainer[0]?.childNodes) {
+        serchContainer[0]?.replaceChild(filterElement, serchContainer[0].childNodes[0]);
       }
       filterElement.classList.add('authorSearch');
       serchContainer[0]?.append(filterElement);
@@ -522,8 +522,8 @@ class FilterView {
         );
       });
       filterElement.classList.add('hashSearch');
-      if (serchContainer[1].childNodes) {
-        serchContainer[1].replaceChild(filterElement, serchContainer[1].childNodes[0]);
+      if (serchContainer[1]?.childNodes) {
+        serchContainer[1]?.replaceChild(filterElement, serchContainer[1].childNodes[0]);
         console.log('ssss');
       }
       serchContainer[1]?.append(filterElement);
@@ -972,7 +972,7 @@ function callTweet(curTw) {
 class UserController {
   constructor() {
     this._users = JSON.parse(localStorage.getItem('users'));
-    this.usersInStorage = UserController.setUserInStore();
+    UserController.setUserInStore();
   }
 
   static setUserInStore() {
