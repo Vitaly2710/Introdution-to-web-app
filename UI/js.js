@@ -191,7 +191,11 @@ class TweetCollection {
       id: com._id, text: com.text, createAt: com._createAt, author: com._author,
     };
     if (newComment && Comment.validateComment(comment)) {
-      console.log('wwwwwwwwwwwwwwww');
+      if (localStorage.getItem('curentTweet')) {
+        const addNewComm = JSON.parse(localStorage.getItem('curentTweet'));
+        addNewComm.comments.push(comment);
+        localStorage.setItem('curentTweet', JSON.stringify(addNewComm));
+      }
       newComment.comments.push(comment);
       return true;
     }
@@ -487,8 +491,9 @@ class TweetView {
           );
         }),
       );
-      mainTrotter?.replaceChild(newContainer, mainTrotter.childNodes[1]);
-      mainTrotter?.append(newContainer);
+      if (mainTrotter?.childNodes[1]) {
+        mainTrotter?.replaceChild(newContainer, mainTrotter.childNodes[1]);
+      } else mainTrotter?.append(newContainer);
     }
   }
 }
@@ -842,6 +847,8 @@ class TweetsController {
         jsonCom.comments.concat(haveComments);
       }
     });
+
+    console.log(jsonCom);
     localStorage.setItem('curentTweet', JSON.stringify(jsonCom));
   }
 
@@ -864,10 +871,7 @@ class TweetsController {
 
   addTweetComment(id, text) {
     if (this.newAllCollectionOfTweet.addComment(id, text)) {
-      this.selectTweet.display(this.newAllCollectionOfTweet.get(id));
-      const newCom = this.newAllCollectionOfTweet.get(id);
-      const hell = JSON.parse(localStorage.getItem('curentTweet'));
-      TweetsController.saveComment(id);
+      this.selectTweet.display(JSON.parse(localStorage.getItem('curentTweet')));
     } else this.selectTweet.display(null);
   }
 
