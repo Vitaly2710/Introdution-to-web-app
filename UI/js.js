@@ -186,8 +186,12 @@ class TweetCollection {
 
   addComment(id, text) {
     const newComment = this.get(id);
-    const comment = new Comment(TweetCollection.createNewId(), text, this.user);
+    const com = new Comment(TweetCollection.createNewId(), text, this.user);
+    const comment = {
+      id: com._id, text: com.text, createAt: com._createAt, author: com._author,
+    };
     if (newComment && Comment.validateComment(comment)) {
+      console.log('wwwwwwwwwwwwwwww');
       newComment.comments.push(comment);
       return true;
     }
@@ -360,7 +364,7 @@ class TweetFeedView {
 class TweetView {
   constructor(containerId) {
     this._containerId = containerId;
-    // this.display(JSON.parse(localStorage.getItem('curentTweet')));
+    this.display(JSON.parse(localStorage.getItem('curentTweet')));
   }
 
   get id() {
@@ -370,16 +374,23 @@ class TweetView {
   display(curTweet) {
     const mainTrotter = document.querySelector(`#${this.id}`);
     const newContainer = document.createElement('div');
-    const currentTrott = {
-      id: curTweet._id, text: curTweet.text, createAt: curTweet._createAt, comments: curTweet.comments, author: curTweet._author,
-    };
+    let currentTrott;
+    if (curTweet?._id === undefined) {
+      currentTrott = {
+        id: curTweet?.id, text: curTweet?.text, createAt: curTweet?.createAt, comments: curTweet?.comments, author: curTweet?.author,
+      };
+    } else {
+      currentTrott = {
+        id: curTweet._id, text: curTweet.text, createAt: curTweet._createAt, comments: curTweet.comments, author: curTweet._author,
+      };
+    }
     const currentUser = document.querySelector('#userName')?.innerHTML;
     newContainer.classList.add('trotterList');
 
     function editFunction(item) {
       let tweetOwner;
       console.log(item.author, currentUser);
-      if (item.author !== currentUser) {
+      if (item.author !== currentTrott) {
         tweetOwner = 'unvisibleBlock';
       } else { tweetOwner = 'correctTrotter'; }
       return tweetOwner;
@@ -476,8 +487,8 @@ class TweetView {
           );
         }),
       );
-      mainTrotter?.append(newContainer);
       mainTrotter?.replaceChild(newContainer, mainTrotter.childNodes[1]);
+      mainTrotter?.append(newContainer);
     }
   }
 }
@@ -822,6 +833,18 @@ class TweetsController {
     return localStorage.setItem('allTws', JSON.stringify(jsonTws));
   }
 
+  static saveComment(id) {
+    const jsonCom = JSON.parse(localStorage.getItem('curentTweet'));
+    const hell = allTweetControl.newAllCollectionOfTweet.get(id);
+    jsonCom.comments.forEach((elem) => {
+      const haveComments = hell.comments.map((item) => item.id !== elem.id);
+      if (haveComments) {
+        jsonCom.comments.concat(haveComments);
+      }
+    });
+    localStorage.setItem('curentTweet', JSON.stringify(jsonCom));
+  }
+
   getTws() {
     return this.newAllCollectionOfTweet.tws;
   }
@@ -841,8 +864,10 @@ class TweetsController {
 
   addTweetComment(id, text) {
     if (this.newAllCollectionOfTweet.addComment(id, text)) {
-      this.selectTweet.display(id);
-      TweetsController.save(this.newAllCollectionOfTweet.tws);
+      this.selectTweet.display(this.newAllCollectionOfTweet.get(id));
+      const newCom = this.newAllCollectionOfTweet.get(id);
+      const hell = JSON.parse(localStorage.getItem('curentTweet'));
+      TweetsController.saveComment(id);
     } else this.selectTweet.display(null);
   }
 
@@ -969,6 +994,7 @@ backInMain?.addEventListener('click', () => {
 
 function callTweet(curTw) {
   const currentTweeter = allTweetControl.newAllCollectionOfTweet.get(curTw);
+  console.log(currentTweeter);
   allTweetControl.showTweet(curTw);
   const jsonCurTwr = JSON.stringify(currentTweeter);
   localStorage.setItem('curentTweet', jsonCurTwr);
@@ -1124,8 +1150,7 @@ const valueToAddInComment = document.querySelector('.valueToAddInComment');
 formForAddNewComment?.addEventListener('submit', (e) => {
   e.preventDefault();
   if (valueToAddInComment.value !== '') {
-    const tweetw = document.querySelector('.container');
-    const idTweet = tweetw.getAttribute('id');
+    const idTweet = JSON.parse(localStorage.getItem('curentTweet'))._id;
     allTweetControl.addTweetComment(idTweet, valueToAddInComment.value);
     valueToAddInComment.value = '';
   } else alert('введите хоть что-нибудь');
