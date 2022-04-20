@@ -20,6 +20,8 @@ body { font-size: 1.8rem; }
     --headers-text-style:'Montserrat', Bold, sans-serif;
     --coomon-text-style:'Montserrat', Regular, sans-serif;
     --button-text-style:'Montserrat', Semiold, sans-serif;
+    --label-text-color:#818181;
+    --input-form-hover:#D99230
 }
 
 .mainPageContainer {
@@ -157,6 +159,36 @@ header {
     align-items: center;
 }
 
+.addComment {
+    display: flex;
+    align-items: center;
+}
+
+.addComment img {
+    width: 8%;
+    border-radius: 50%;
+    display: block;
+}
+
+.addComment input {
+    display: block;
+    margin-left: 2.3%;
+    border: none;
+    height: 3%;
+    font-family: var(--coomon-text-style);
+    font-size: 1.8rem;
+    line-height: 22px;
+    width: 100%;
+}
+
+.toLogInInRegistration {
+    cursor: pointer;
+}
+
+.redirectToRegistration {
+    cursor: pointer;
+}
+
 .photoInput img {
     width: 8%;
     border-radius: 50%;
@@ -178,10 +210,13 @@ header {
     display: flex;
     justify-content: space-between;
     margin-top: 2%;
+    width: 100%;
 }
 
 .inclosureAndInput .inclosure {
     margin-left: 10%;
+    width: 25%;
+    margin-bottom: 3%;
 }
 
 .inclosureAndInput .inclosure img {
@@ -189,7 +224,7 @@ header {
     margin-right: 6%;
 }
 
-.inclosureAndInput button {
+.buttonWhichAddNewTweetInList {
     border-radius: 30px;
     padding: 1% 3.7% 1% 3.7%;
     background-color: var(--primary-color);
@@ -199,9 +234,11 @@ header {
     width: 15%;
     font-family: var(--button-text-style) ;
     font-size: 1.6rem;
+    margin-left: 10%;
+    cursor: pointer;
 }
 
-.inclosureAndInput button:hover {
+.buttonWhichAddNewTweetInList:hover {
     background-color: var(--secondary-color);
 }
 
@@ -244,10 +281,12 @@ header {
 .correctTrotterBlock {
     position: absolute;
     background-color: #ececec;
-    transform: translateX(385%);
+    transform: translate(35%,-30%);
     padding: 1%;
     border-radius: 10%;
     display: none;
+    font-size: 1.5rem;
+    width: 500%;
 }
 
 .correctTrotterBlock li {
@@ -264,6 +303,10 @@ header {
 
 .mainBlockTrotteListTrotter .userInfo h4:last-child {
     margin-left: 1.3%;
+}
+
+.trotter {
+    position: relative;
 }
 
 .trotter .trotterText {
@@ -587,6 +630,39 @@ footer {
     max-width: 20rem;
 }
 
+label.humanSearch:last-child {
+    margin-bottom: 7%;
+}
+
+.authorSearch {
+    border: none;
+}
+
+.clearFilter {
+    display: block;
+    margin-bottom: 5%;
+    padding: 3% 5% 3% 5%;
+    min-width: 100%;
+    border-radius: 1rem;
+    border: none;
+    color: #FFFFFF;
+    background-color: var(--primary-color);
+    font-family: var(--button-text-style);
+    font-size: 1.7rem;
+    cursor: pointer;
+}
+
+.clearFilter:hover {
+    background-color: var(--secondary-color);
+}
+
+.hashSearch {
+    display: block;
+    border: none;
+    margin-top: 2%;
+    max-width: 20rem;
+}
+
 .hashtagsSearch {
     display: block;
     border: none;
@@ -601,10 +677,219 @@ footer {
     text-align: center;
 }
 
+.containerLogin {
+    max-width: 1512px;
+    margin: 1% auto;
+    display: grid;
+    grid-template-columns: 32% 68%;
+    box-shadow: 10px 5px 40px 12px rgba(0, 0, 0, 0.19);
+    border-radius: 2rem;
+}
+
+.wrapperloginBackground {
+    background-image: url('./assets/LogInBackend.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-top-right-radius: 2%;
+    border-bottom-right-radius: 2%;
+}
+
+.wrapperLoginForm {
+    padding: 20% 22% 68% 22%;
+}
+
+.wrapperForLogo {
+    width: 41%;
+    margin: 0 auto;
+}
+
+.headingInLogin {
+    text-align: center;
+    margin-top: 9%;
+    font-family: var(--headers-text-style);
+    font-size: 4.7rem;
+}
+
+.formInRegPage {
+    margin-top: 23%;
+}
+
+.formInLoginPage {
+    margin-top: 23%;
+}
+
+.formInRegPage label {
+    color: var(--label-text-color);
+    font-family: var(--headers-text-style);
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.formInLoginPage label {
+    color: var(--label-text-color);
+    font-family: var(--headers-text-style);
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.formInRegPage input {
+    display: block;
+    margin-top: 6%;
+    border: none;
+    border-bottom: 1px solid rgba(129, 129, 129, 0.5);
+    margin-bottom: 6%;
+    width: 100%;
+    padding-bottom: 3%;
+}
+
+.formInLoginPage input {
+    display: block;
+    margin-top: 6%;
+    border: none;
+    border-bottom: 1px solid rgba(129, 129, 129, 0.5);
+    margin-bottom: 6%;
+    width: 100%;
+    padding-bottom: 3%;
+}
+
+::-webkit-input-placeholder {
+    color: rgba(129, 129, 129, 0.5);
+    font-family: var(--coomon-text-style);
+    font-size: 1.7rem;
+}
+
+.buttonLOgIn {
+    width: 100%;
+    margin-top: 10%;
+    background-color: var(--primary-color);
+    color: #FFFFFF;
+    padding: 3% 10% 3% 10%;
+    border: none;
+    border-radius: 2rem;
+    font-family: var(--button-text-style);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.wrapperLoginForm a {
+    display: block;
+    text-align: center;
+    margin-top: 12%;
+    text-decoration: none;
+    font-family: var(--coomon-text-style);
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}
+
+.wrapperLoginForm a:visited {
+    color: var(--secondary-color);
+}
+
+.formInLoginPage input:focus {
+    outline: none !important;
+    border:0.2rem solid var(--input-form-hover);
+    border-radius: 0.3rem;
+}
+
+.formInRegPage input:focus {
+    outline: none !important;
+    border:0.2rem solid var(--input-form-hover);
+    border-radius: 0.3rem;
+}
+
+.buttonLOgIn:hover {
+    background-color: var(--secondary-color);
+}
+
+.wrapperForRegistration {
+    display: grid;
+    grid-template-columns: 37% 63%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-shadow: 10px 5px 40px 12px rgba(0, 0, 0, 0.19);
+    border-radius: 2rem;
+    margin-top: 3%;
+}
+
+.wrapperForYouAreBack {
+    border-right: 0.1rem solid var(--label-text-color);
+}
+
+.backgroundRegistration {
+    height: 33rem;
+    background-image: url("./assets/BackgroundRegistration.svg");
+    background-position: top;
+}
+
+.youComeBack {
+    text-align: center;
+    margin-top: 14%;
+    font-family: var(--headers-text-style);
+    font-size: 3.2rem;
+}
+
+.comeIn {
+    max-width: 16.5rem;
+    margin: 1rem auto;
+    text-align: center;
+    font-family: var(--headers-text-style);
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 2;
+}
+
+.comeIn a {
+    color: #38A6FF;
+    text-decoration: none;
+}
+
+.headingInRegistration {
+    font-family: var(--headers-text-style);
+    font-size: 4.8rem;
+    margin-top: 10rem;
+    text-align: center;
+    color: vAR(--primary-color);
+    margin-bottom: 8.8rem;
+}
+
+.comeIn a:hover {
+    color: var(--secondary-color);
+}
+
+.wrapperForRegistrationForm {
+    padding-left: 30%;
+    padding-right: 30%;
+}
 
 
+.createAc {
+    margin-top: 30%;
+    text-align: center;
+    max-width: 25.8rem;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: var(--headers-text-style);
+    font-size: 4.8rem;
+}
 
+.registrationButton {
+    width: 100%;
+    margin-top: 10%;
+    background-color: var(--primary-color);
+    color: #FFFFFF;
+    padding: 3% 10% 3% 10%;
+    border: none;
+    border-radius: 2rem;
+    font-family: var(--button-text-style);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
 
+.unvisibleBlock {
+    display: none;
+}
 
-
-
+.visibleBlock {
+    display: block;
+}

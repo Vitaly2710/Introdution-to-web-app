@@ -24,10 +24,11 @@
                     <h2>Home</h2>
                     <div class="mainBlockTrotteListWrapper">
                         <div class="mainBlockTrotteListContainer">
-                            <div class="photoInput">
+                            <form class="photoInput">
                                 <img src="./assets/UserFoto.svg"/>
-                                <input placeholder="What’s happening?" maxlength="280"/>
-                            </div>
+                                <input placeholder="What’s happening?" maxlength="280" class="addNewTweetInList"/>
+                                <button type="submit" class="buttonWhichAddNewTweetInList">Neigh</button>
+                            </form>
                             <div class="inclosureAndInput">
                                 <div class="inclosure">
                                     <img src="./assets/inclosureImg.svg" alt="img">
@@ -35,7 +36,7 @@
                                     <img src="./assets/inclosureSmile.svg" alt="smile">
                                     <img src="./assets/inclosureLocation.svg" alt="location">
                                 </div>
-                                    <button>Neigh</button>
+
                             </div>
                         </div>
                     </div>
@@ -47,30 +48,24 @@
                     <div class="filtrationBlockContainer">
                         <h2>Search filters</h2>
                         <form>
-                            <label id="humanSearch">
+                            <label class='humanSearch'>
                                 People
-<!--&lt;!&ndash;                                <input placeholder="Write the name @"/>&ndash;&gt;-->
-<!--                                <select>-->
-<!--&lt;!&ndash;                                    <option value="value1">Значение 1</option>&ndash;&gt;-->
-<!--&lt;!&ndash;                                    <option value="value2" selected>Значение 2</option>&ndash;&gt;-->
-<!--&lt;!&ndash;                                    <option value="value3">Значение 3</option>&ndash;&gt;-->
-<!--                                </select>-->
                             </label>
                             <h3>Date of publishing</h3>
                             <label>
                                 From
-                                <input type="date">
+                                <input type="date" class="dateFrom">
                             </label>
                             <label>
                             To
-                            <input type="date">
-                        </label>
+                            <input type="date" class="dateTo">
+                            </label>
 
-                            <label id="hashtagsSearch">
+                            <label class='humanSearch'>
                                 Hashtag
-
                             </label>
                         </form>
+                        <button class="clearFilter">Clear filter</button>
                     </div>
                 </aside>
             </section>

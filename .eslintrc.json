@@ -16,7 +16,9 @@
             "error",
             { "ignoreExpressions": true, "max": 10 }
         ],
-        "no-unused-vars": "off"
+        "no-unused-vars": "off",
+        "no-use-before-define": ["error", { "functions": false, "classes": true, "variables": false }],
+        "no-console": "off"
     }
 
 }

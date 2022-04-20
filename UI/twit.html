@@ -14,16 +14,9 @@
                     <h2 class="trotterInHeader">Trotter</h2>
                 </div>
                 <div class="wrapperForHeaderButton">
-                    <div class="hidden">
-                        <img src="./assets/UserFoto.svg" alt="userFoto"/>
-                        <h4 id="userName">Leo DiCaprio</h4>
-                        <a class="buttonLoginOut">
-                            <img src="./assets/buttonLogOut.svg" alt="logOut">
-                        </a>
-                    </div>
-                    <button class="logInButton">
-                        Log in
-                    </button>
+                <button class="logInButton">
+                    Log in
+                </button>
                 </div>
             </header>
             <section class="mainBlock">
@@ -38,10 +31,11 @@
                     </div>
                     <div class="mainBlockTrotteListWrapper">
                         <div class="mainBlockTrotteListContainer">
-                            <div class="photoInput">
+                            <form class="addComment">
                                 <img src="./assets/UserFoto.svg"/>
-                                <input placeholder="Neigh your reply" maxlength="280"/>
-                            </div>
+                                <input placeholder="Neigh your reply" maxlength="280" class="valueToAddInComment"/>
+                                <button class="buttonWhichAddNewTweetInList" type="submit">Neigh</button>
+                            </form>
                             <div class="inclosureAndInput">
                                 <div class="inclosure">
                                     <img src="./assets/inclosureImg.svg" alt="img">
@@ -49,22 +43,17 @@
                                     <img src="./assets/inclosureSmile.svg" alt="smile">
                                     <img src="./assets/inclosureLocation.svg" alt="location">
                                 </div>
-                                <button>Neigh</button>
+
                             </div>
                         </div>
-                    </div>                </article>
+                    </div>
+                </article>
                 <aside class="filtrationBlock">
                     <div class="filtrationBlockContainer">
                         <h2>Search filters</h2>
                         <form>
                             <label id="humanSearch">
                                 People
-                                <!--&lt;!&ndash;                                <input placeholder="Write the name @"/>&ndash;&gt;-->
-                                <!--                                <select>-->
-                                <!--&lt;!&ndash;                                    <option value="value1">Значение 1</option>&ndash;&gt;-->
-                                <!--&lt;!&ndash;                                    <option value="value2" selected>Значение 2</option>&ndash;&gt;-->
-                                <!--&lt;!&ndash;                                    <option value="value3">Значение 3</option>&ndash;&gt;-->
-                                <!--                                </select>-->
                             </label>
                             <h3>Date of publishing</h3>
                             <label>
