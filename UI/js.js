@@ -900,7 +900,6 @@ class TweetsController {
   showTweet(id) {
     if (this.newAllCollectionOfTweet.get(id)) {
       this.selectTweet.display(this.newAllCollectionOfTweet.get(id));
-      console.log('qqqq');
     } else {
       this.selectTweet.display(null);
     }
