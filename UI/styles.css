@@ -31,6 +31,12 @@ body { font-size: 1.8rem; }
     height: 100vh;
 }
 
+.wrapperErrorPage {
+    max-width: 1512px;
+    margin: 0 auto;
+    height: 100vh;
+}
+
 header {
     max-width: 100%;
     margin: 0 auto;
@@ -687,7 +693,7 @@ label.humanSearch:last-child {
 }
 
 .wrapperloginBackground {
-    background-image: url('./assets/LogInBackend.svg');
+    background-image: url('assets/LogInBackend.svg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -709,6 +715,7 @@ label.humanSearch:last-child {
     margin-top: 9%;
     font-family: var(--headers-text-style);
     font-size: 4.7rem;
+    position: relative;
 }
 
 .formInRegPage {
@@ -871,6 +878,7 @@ label.humanSearch:last-child {
     margin-right: auto;
     font-family: var(--headers-text-style);
     font-size: 4.8rem;
+    position: relative;
 }
 
 .registrationButton {
@@ -884,6 +892,11 @@ label.humanSearch:last-child {
     font-family: var(--button-text-style);
     font-size: 1.5rem;
     font-weight: 600;
+    cursor: pointer;
+}
+
+.registrationButton:hover {
+    background-color: var(--secondary-color);
 }
 
 .unvisibleBlock {
@@ -891,5 +904,36 @@ label.humanSearch:last-child {
 }
 
 .visibleBlock {
-    display: block;
+    display:block !important ;
 }
+
+.badRequest {
+    display: none;
+    position: absolute;
+    max-width: 100%;
+    color: red;
+    font-family: var(--button-text-style);
+    text-align: center;
+    transform: translate(10%,70%);
+}
+
+.accessReg {
+    display: none;
+    position: absolute;
+    max-width: 100%;
+    color: #02e102;
+    font-family: var(--button-text-style);
+    text-align: center;
+    transform: translate(0%,0%);
+}
+
+.wrapperForBackError {
+    background-image: url("./assets/backInErrorPage.svg");
+    width: 100%;
+    height: 89.8%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+

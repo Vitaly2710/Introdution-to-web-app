@@ -208,10 +208,11 @@ class TweetCollection {
 
   addAll(tws) {
     const notValid = [];
+
     tws.forEach((elem) => {
       let newElem;
       if (elem._id === undefined) {
-        newElem = new Tweet(elem.id, elem.text, elem.author, elem.comments, new Date(elem.createAt));
+        newElem = new Tweet(elem.id, elem.text, elem.author, elem.comments, elem.createAt);
       } else if (elem.id === undefined) {
         newElem = new Tweet(elem._id, elem.text, elem._author, elem.comments, new Date(elem._createAt));
       }
@@ -235,7 +236,7 @@ const t = new TweetCollection();
 class HeaderView {
   constructor(id) {
     this._containerId = id;
-    this.display(JSON.stringify(localStorage.getItem('current User')));
+    this.display(JSON.parse(localStorage.getItem('current User')).login);
   }
 
   get id() {
@@ -261,7 +262,6 @@ class HeaderView {
       userInHead?.replaceChild(newContainer, userInHead.childNodes[0]);
       buttonLogIn?.classList.add('hidden');
     } else {
-      alert('Необходимо ввойти');
       buttonLogIn?.classList.remove('hidden');
       userInHead?.append(buttonLogIn);
       userInHead?.replaceChild(buttonLogIn, userInHead.childNodes[0]);
@@ -545,7 +545,6 @@ class FilterView {
       filterElement.classList.add('hashSearch');
       if (serchContainer[1]?.childNodes) {
         serchContainer[1]?.replaceChild(filterElement, serchContainer[1].childNodes[0]);
-        console.log('ssss');
       }
       serchContainer[1]?.append(filterElement);
     }
@@ -562,264 +561,9 @@ class TweetsController {
     this.restore();
   }
 
-  restore() {
-    if (localStorage.getItem('allTws') === null || localStorage.getItem('allTws') === 'null') {
-      console.log('work');
-      const allTws = [
-        {
-          _id: '1',
-          text: 'Привет! #js #datamola #hi',
-          _createAt: '2022-02-09T23:00:00',
-          _author: 'Иван Иванов',
-          comments: [],
-        },
-        {
-          _id: '2',
-          text: 'Какие дела?',
-          _createAt: new Date('2022-02-09T23:00:01'),
-          _author: 'Петров Петр',
-          comments: [{
-            id: '912',
-            text: 'Хорошо, а у тебя?',
-            createAt: new Date('2022-02-09T23:00:05'),
-            author: 'Иван ИВанов',
-          }],
-        },
-        {
-          _id: '3',
-          text: 'Как тебе погода? #погода #погода #погода #погода',
-          _createAt: new Date('2022-02-10T11:03:00'),
-          _author: 'Семен Семенов',
-          comments: [{
-            id: '1002',
-            text: 'Мне нравится, но могла быть теплее',
-            createAt: new Date('2022-03-12:06:00'),
-            author: 'Иван Петров',
-          }],
-        },
-        {
-          _id: '4',
-          text: 'Ну где же 3-е сентября #сентябрь #datamola',
-          _createAt: new Date('2022-02-10T12:01:45'),
-          _author: 'Михаил Петров',
-          comments: [{
-            id: '143343',
-            text: 'Нужно потерпеть',
-            createAt: new Date('2022-03-11T12:22:22'),
-            author: 'Григорий Лепс',
-          }],
-        },
-        {
-          _id: '5',
-          text: 'Поехали #поехали #datamola',
-          _createAt: new Date('1961-03-12T12:00:00'),
-          _author: 'Юрий Гагарин',
-          comments: [{
-            id: '1212',
-            text: 'Ну наконец!!!',
-            createAt: new Date('1961-03-12T13:00:01'),
-            author: 'Сергей Королев',
-          },
-          {
-            _id: '1414',
-            text: 'Ура',
-            _createAt: new Date('1961-03-12T14:02:01'),
-            _author: 'Леонид Брежнев',
-          }],
-        },
-        {
-          _id: '6',
-          text: 'Если у тебя получилось обмануть человека, это не значит, что он дурак, это значит, что тебе доверяли больше, чем ты этого заслуживаешь. #обман #datamola',
-          _createAt: new Date('2022-02-22T09:45:03'),
-          _author: 'Чарльз Буковски',
-          comments: [{
-            id: '1616',
-            text: 'Хорошо сказано',
-            createAt: new Date('2022-02-22T10:01:11'),
-            author: 'Джон Буковски',
-          }],
-        },
-        {
-          _id: '7',
-          text: 'Настоящий друг — это человек, который выскажет тебе в глаза все, что о тебе думает, а всем скажет, что ты — замечательный человек. #друг',
-          _createAt: new Date('2022-01-12T15:03:11'),
-          _author: 'Омар Хайям',
-          comments: [],
-        },
-        {
-          _id: '8',
-          text: 'Мы в жизни любим только раз, а после ищем лишь похожих.',
-          _createAt: new Date('2022-02-22T16:00:11'),
-          _author: 'Сергей Есенин',
-          comments: [{
-            id: '100009',
-            text: 'Очень глубоко',
-            createAt: new Date('2022-02-22T16:56:11'),
-            author: 'Имя Фамилия',
-          }],
-        },
-        {
-          _id: '9',
-          text: 'Не тот велик, кто никогда не падал, а тот велик — кто падал и вставал! #борись',
-          _createAt: new Date('2022-02-01T15:00:00'),
-          _author: 'Конфуций',
-          comments: [{
-            id: '9191',
-            text: 'Сила и труд все перетрут',
-            createAt: new Date('2022-02-12T12:22:17'),
-            author: 'Даль',
-          },
-          {
-            _id: '9898',
-            text: 'Понедельник начинается в субботу',
-            _createAt: new Date('2022-02-21T19:00:00'),
-            _author: 'Трудолюбивый Человек',
-          },
-          ],
-        },
-        {
-          _id: '10',
-          text: 'Победи себя и выиграешь тысячи битв #самссобой',
-          _createAt: new Date('2022-02-12T22:00:01'),
-          _author: 'Будда',
-          comments: [{
-            id: '4545',
-            text: 'Это самая главная победа',
-            createAt: new Date('2022-02-13T10:10:10'),
-            author: 'Cын Будды',
-          }],
-        },
-        {
-          _id: '11',
-          text: 'Прежде чем диагностировать у себя депрессию и заниженную самооценку, убедитесь, что вы не окружены идиотами. #оглянись',
-          _createAt: new Date('2022-02-05T03:00:11'),
-          _author: 'Зигмунд Фрейд',
-          comments: [],
-        },
-        {
-          _id: '12',
-          text: 'Если вы уходите и вас никто не зовёт обратно – вы идете в верном направлении. #всеправильно',
-          _createAt: new Date('2022-02-17T10:17:11'),
-          _author: 'джим Керри',
-          comments: [{
-            id: '987',
-            text: 'Иногда кажется, что я в тупике',
-            createAt: new Date('2022-01-22T15:04:22'),
-            author: 'Тупак Шакур',
-          }],
-        },
-        {
-          _id: '12',
-          text: 'Если Вы нарушаете правила, Вас штрафуют; если Вы соблюдаете правила, Вас облагают налогами! #будьхорошим',
-          _createAt: new Date('2022-01-21T14:34:25'),
-          _author: 'Лоуренс Питер',
-          comments: [{
-            id: '412',
-            text: 'И как быть?',
-            createAt: new Date('2022-01-22T12:00:21'),
-            author: 'Злостный Нарушитель',
-          }],
-        },
-        {
-          _id: '13',
-          text: 'Боишься — не делай, делаешь — не бойся, а сделал — не сожалей. #уверенность',
-          _createAt: new Date('2022-01-12T14:03:29'),
-          _author: 'Чингисхан',
-          comments: [{
-            id: '9996',
-            text: 'Дать уголовный кодекс почитать?',
-            createAt: new Date('2022-01-13T12:00:21'),
-            author: 'Неизвестный пользователь',
-          }],
-        },
-        {
-          _id: '14',
-          text: 'Влюбиться можно в красоту, но полюбить – лишь только душу! #любовь',
-          _createAt: new Date('2022-01-22T12:21:11'),
-          _author: 'Уильям Шекспир',
-          comments: [{
-            id: '666',
-            text: 'Любовь иногда очень зла',
-            createAt: new Date('2022-01-23T11:11:11'),
-            author: 'Пол Уокер',
-          }],
-        },
-        {
-          _id: '15',
-          text: 'Безнадёжно — это когда на крышку гроба падает земля. Остальное можно исправить. #не отчаивайся',
-          _createAt: new Date('2022-01-12T12:12:12'),
-          _author: 'Джейсон Стэтхэм',
-          comments: [],
-        },
-        {
-          _id: '16',
-          text: 'Мечтай так, как будто будешь жить вечно. Живи так, как будто завтра умрешь. #живи',
-          _createAt: new Date('2022-01-12T14:03:11'),
-          _author: 'Виктор Цой',
-          comments: [{
-            id: '65443',
-            text: 'Цой жив!!!',
-            createAt: new Date('2022-01-14T10:10:01'),
-            author: 'Фан Клуб Цоя',
-          },
-          {
-            _id: '1387',
-            text: 'Легко сказать',
-            _createAt: new Date('2022-00-22T18:02:10'),
-            _author: 'Федор Федоров',
-          },
-          ],
-        },
-        {
-          _id: '17',
-          text: 'Человека делают счастливым три вещи: любовь, интересная работа и возможность путешествовать. #счастье',
-          _createAt: new Date('2022-01-27T14:02:11'),
-          _author: 'Иван Бунин',
-          comments: [],
-        },
-        {
-          _id: '18',
-          text: 'Ни в коем случае нельзя отчитывать тех, кто старался изо всех сил, но совершил ошибку. #ошибки',
-          _createAt: new Date('2022-01-11T12:11:10'),
-          _author: 'Ричард Брэнсон',
-          comments: [{
-            id: '191817',
-            text: 'Со мной в детстве так и было!!',
-            createAt: new Date('2022-01-12T19:03:12'),
-            author: 'Сэм Брэнсон',
-          }],
-        },
-        {
-          _id: '19',
-          text: 'Ошибки — это знаки препинания жизни, без которых, как и в тексте, не будет смысла. #смысл',
-          _createAt: new Date('2022-01-06T18:00:09'),
-          _author: 'Харуки Мураками',
-          comments: [],
-        },
-        {
-          _id: '20',
-          text: 'Человек — это продукт своих собственных мыслей. О чем он думает, тем он и становится. #человек',
-          _createAt: new Date('2022-01-23T01:12:11'),
-          _author: 'Махатма Ганди',
-          comments: [{
-            id: '777',
-            text: 'Лучше и не скажешь',
-            createAt: new Date('2022-01-23T16:01:11'),
-            author: 'Антон Чехов',
-          }],
-        },
-        {
-          _id: '21',
-          text: 'В падающем самолёте нет атеистов. #вера',
-          _createAt: new Date('2022-02-08T12:21:12'),
-          _author: 'Михаил Задорнов',
-          comments: [],
-        },
-      ];
-      localStorage.setItem('allTws', JSON.stringify(allTws));
-    }
-    this.newAllCollectionOfTweet.addAll(JSON.parse(localStorage.getItem('allTws')));
-    this.newList.display(this.newAllCollectionOfTweet.tws);
+  async restore() {
+    await requestToBack.getTweet();
+    await this.newList.display(this.newAllCollectionOfTweet.tws);
   }
 
   static save(tws) {
@@ -862,11 +606,23 @@ class TweetsController {
     this.newList.display(this.newAllCollectionOfTweet.tws);
   }
 
-  addTweet(text) {
-    if (this.newAllCollectionOfTweet.add(text)) {
-      this.newList.display(this.newAllCollectionOfTweet.tws);
-      TweetsController.save(this.newAllCollectionOfTweet.tws);
-    } else console.log('Валидация не пройдена');
+  async addTweet(text) {
+    await requestToBack.createTweet(text)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        if (res.text) {
+          this.newAllCollectionOfTweet.addAll(res);
+          this.newList.display(this.newAllCollectionOfTweet.tws);
+        } else if (res.statusCode === 401) {
+          localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
+          document.location.href = 'errorPage.html';
+        } else if (res.statusCode === 400) {
+          localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
+          document.location.href = 'errorPage.html';
+        }
+      })
+      .catch((error) => error.message);
   }
 
   addTweetComment(id, text) {
@@ -906,7 +662,76 @@ class TweetsController {
   }
 }
 
+class TweetFeedApiService {
+  constructor(url) {
+    this._url = url;
+  }
+
+  get url() {
+    return this._url;
+  }
+
+  _fetchElement(endpoint) {
+    return fetch(`${this.url}/${endpoint}`);
+  }
+
+  getTweet() {
+    const tweets = this._fetchElement('tweet')
+      .then((res) => res.json())
+      .then((data) => {
+        allTweetControl.newAllCollectionOfTweet.addAll(data);
+      });
+    return tweets;
+  }
+
+  registration(log, pas) {
+    const myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    const user = JSON.stringify({
+      login: `${log}`,
+      password: `${pas}`,
+    });
+    return fetch(`${this.url}/registration`, {
+      method: 'POST',
+      headers: myHeaders,
+      body: user,
+      redirect: 'follow',
+    });
+  }
+
+  loginStep(log, pas) {
+    const myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    const user = JSON.stringify({
+      login: `${log}`,
+      password: `${pas}`,
+    });
+    return fetch(`${this.url}/login`, {
+      method: 'POST',
+      headers: myHeaders,
+      body: user,
+    });
+  }
+
+  createTweet(text) {
+    const { token } = JSON.parse(localStorage.getItem('current User'));
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${token}`);
+    myHeaders.append('Content-Type', 'application/json');
+    const tweetText = JSON.stringify({
+      text: `${text}`,
+    });
+    return fetch(`${this.url}/tweet`, {
+      method: 'POST',
+      headers: myHeaders,
+      body: tweetText,
+    });
+  }
+}
+
+const requestToBack = new TweetFeedApiService('https://jslabapi.datamola.com');
 const allTweetControl = new TweetsController();
+
 allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
 allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
 const takeAuthorFiltration = document.querySelector('.authorSearch');
@@ -1021,70 +846,87 @@ class UserController {
   }
 
   static checkLogIn(login, password) {
-    const users = JSON.parse(UserController.getUserInStorage());
-    let check = false;
-    users.forEach((element) => {
-      const key = Object.keys(element)[0];
-      const value = Object.values(element)[0];
-      if (key === login) {
-        if (value === password) {
-          check = true;
-          allTweetControl.setCurrentUSer(login);
-          return localStorage.setItem('current User', `${login}`);
+    let allow;
+    const warnInLogin = document.querySelector('.badRequest');
+    requestToBack.loginStep(login, password)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        if (res.statusCode === 403) {
+          warnInLogin.innerHTML = res.message;
+          warnInLogin.classList.add('visibleBlock');
+          setTimeout(() => {
+            warnInLogin.classList.toggle('visibleBlock');
+          }, 10000);
+          allow = false;
+        } if (res.statusCode === 400) {
+          warnInLogin.innerHTML = 'Ошибка при входе';
+          warnInLogin.classList.add('visibleBlock');
+          setTimeout(() => {
+            warnInLogin.classList.toggle('visibleBlock');
+          }, 10000);
+          allow = false;
+        } else if (res.token) {
+          localStorage.setItem('current User', JSON.stringify({
+            login,
+            token: res.token,
+          }));
+          warnInLogin.innerHTML = 'Вход выполнен успешно';
+          warnInLogin.classList.add('accessReg');
+          warnInLogin.classList.add('visibleBlock');
+          setTimeout(() => {
+            warnInLogin.classList.toggle('visibleBlock');
+          }, 5000);
+          allTweetControl.setCurrentUSer(JSON.parse(localStorage.getItem('current User')));
+          allow = true;
         }
-      }
-      return check;
-    });
-
-    return check;
+      })
+      .catch((error) => error.message);
   }
 
   static logOut() {
-    alert('выполнен выход');
     allTweetControl.headerView.display(null);
     document.location.href = 'logIn.html';
     return localStorage.removeItem('current User');
   }
 
   static registration(login, password) {
-    const users = JSON.parse(UserController.getUserInStorage());
-    const existen = users.every(checkUsers);
-    function checkUsers(element) {
-      console.log(Object.keys(element)[0]);
-      if (Object.keys(element)[0] === login) {
-        return false;
-      }
-      return true;
-    }
-    console.log(existen);
-    if (existen) {
-      const newUser = {
-        [login]: password,
-      };
-      console.log(newUser);
-      users.push(newUser);
-      localStorage.removeItem('users');
-      localStorage.setItem('users', JSON.stringify(users));
-      alert('регистрация произошла успешно');
-    } else alert('такой пользователь существует');
+    requestToBack.registration(login, password)
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.statusCode) {
+          const badRes = document.querySelector('.badRequest');
+          badRes.classList.add('visibleBlock');
+          setTimeout(() => {
+            badRes.classList.toggle('visibleBlock');
+          }, 10000);
+        } else if ('login' in res) {
+          console.log('work');
+          const accessReg = document.querySelector('.accessReg');
+          accessReg.classList.add('visibleBlock');
+          setTimeout(() => {
+            accessReg.classList.toggle('visibleBlock');
+          }, 10000);
+        }
+      })
+      .catch((error) => error.message);
   }
 }
+
+const accessReg = document.querySelector('.accessReg');
 const usControll = new UserController();
 
 const login = document.querySelector('#myLogin');
 const password = document.querySelector('#password');
 const form = document.querySelector('.formInLoginPage');
-form?.addEventListener('submit', (e) => {
+form?.addEventListener('submit', async (e) => {
   e.preventDefault();
-  if (UserController.checkLogIn(login.value, password.value)) {
-    alert('вход выполнен успешно');
-    UserController.checkLogIn(login.value, password.value);
-    document.location.href = 'main.html';
-    return;
-  } if (!UserController.checkLogIn(login.value, password.value)) {
-    alert('не верный логин или пароль');
-  }
-  return e.preventDefault();
+  await UserController.checkLogIn(login.value, password.value);
+  setTimeout(() => {
+    if (localStorage.getItem('current User')) {
+      document.location.href = 'main.html';
+    }
+  }, 6000);
 });
 
 const logInButton = document.querySelector('.logInButton');
@@ -1110,10 +952,14 @@ const repeatPass = document.querySelector('#repeatPass');
 const regForm = document.querySelector('.formInRegPage');
 regForm?.addEventListener('submit', (e) => {
   e.preventDefault();
-  if (passwordInReg.value === repeatPass.value) {
-    document.location.href = 'logIn.html';
-    return UserController.registration(loginInReg.value, passwordInReg.value);
-  } alert('пароли не совпадают');
+  if (passwordInReg.value === repeatPass.value && loginInReg.value !== '' && passwordInReg.value !== '') {
+    UserController.registration(loginInReg.value, passwordInReg.value);
+    passwordInReg.value = null;
+    repeatPass.value = null;
+    loginInReg.value = null;
+  } else if (passwordInReg.value !== repeatPass.value && passwordInReg.value !== '') {
+    alert('пароли не совпадают');
+  }
 });
 
 const correctTrotter = document.querySelector('#trotterList');
@@ -1158,6 +1004,8 @@ formForAddNewComment?.addEventListener('submit', (e) => {
     valueToAddInComment.value = '';
   } else alert('введите хоть что-нибудь');
 });
+
+// https://jslabapi.datamola.com/doc/
 
 /* All
 
