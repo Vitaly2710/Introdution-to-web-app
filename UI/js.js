@@ -189,11 +189,12 @@ class TweetCollection {
 
   addComment(id, text) {
     const newComment = this.get(id);
-    const com = new Comment(TweetCollection.createNewId(), text, this.user);
+    const com = new Comment(TweetCollection.createNewId(), text, (JSON.parse(this.user)).login);
     const comment = {
       id: com._id, text: com.text, createAt: com._createAt, author: com._author,
     };
-    if (newComment && Comment.validateComment(comment)) {
+    console.log(comment);
+    if (Comment.validateComment(comment)) {
       if (localStorage.getItem('curentTweet')) {
         const addNewComm = JSON.parse(localStorage.getItem('curentTweet'));
         addNewComm.comments.push(comment);
@@ -383,11 +384,19 @@ class TweetView {
     let currentTrott;
     if (curTweet?._id === undefined) {
       currentTrott = {
-        id: curTweet?.id, text: curTweet?.text, createAt: curTweet?.createAt, comments: curTweet?.comments, author: curTweet?.author,
+        id: curTweet?.id,
+        text: curTweet?.text,
+        createAt: curTweet?.createAt,
+        comments: curTweet?.comments,
+        author: curTweet?.author,
       };
     } else {
       currentTrott = {
-        id: curTweet._id, text: curTweet.text, createAt: curTweet._createAt, comments: curTweet.comments, author: curTweet._author,
+        id: curTweet._id,
+        text: curTweet.text,
+        createAt: curTweet._createAt,
+        comments: curTweet.comments,
+        author: curTweet._author,
       };
     }
     const currentUser = document.querySelector('#userName')?.innerHTML;
@@ -395,10 +404,11 @@ class TweetView {
 
     function editFunction(item) {
       let tweetOwner;
-      console.log(item.author, currentUser);
-      if (item.author !== currentTrott) {
+      if (item.author !== currentUser) {
         tweetOwner = 'unvisibleBlock';
-      } else { tweetOwner = 'correctTrotter'; }
+      } else if (item.author === currentUser) {
+        tweetOwner = 'correctTrotter';
+      }
       return tweetOwner;
     }
 
@@ -478,6 +488,21 @@ class TweetView {
                     <h3>${elem.author}</h3>
                     <h4>@${elem.author}</h4>
                     <h4>${Tweet.dateLabel(elem)}</h4>
+                    <button class="${editFunction(elem)}">...
+                              <div class="correctTrotterBlock">
+                                  <ul>
+                                      <li> 
+                                          <img src="./assets/editTrotterIcon.svg" alt="edit trotter">
+                                          <p class="editCurrentTweet">Edit</p>
+                                      </li>
+                                      <li>
+                                          <img src="./assets/deleteTrotterIcon.svg" alt="delete trotter">
+                                          <p class="deleteCurrentTweet">Delete</p>
+                                      </li>
+                                  </ul>
+                              </div>
+                    </button>
+                    
                 </div>
                 <p class="reTrott">Reply to <span>@${hashtags('hashtags', currentTrott)}</span></p>
                 <p class="trotterText">${elem.text}</p>
@@ -616,8 +641,7 @@ class TweetsController {
           this.newAllCollectionOfTweet.addAll([res]);
           this.newList.display(this.newAllCollectionOfTweet.tws);
         } else if (res.statusCode === 401) {
-          localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
-          document.location.href = 'errorPage.html';
+          document.location.href = 'logIn.html';
         } else if (res.statusCode === 400) {
           localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
           document.location.href = 'errorPage.html';
@@ -626,10 +650,22 @@ class TweetsController {
       .catch((error) => error.message);
   }
 
-  addTweetComment(id, text) {
-    if (this.newAllCollectionOfTweet.addComment(id, text)) {
-      this.selectTweet.display(JSON.parse(localStorage.getItem('curentTweet')));
-    } else this.selectTweet.display(null);
+  async addTweetComment(id, text) {
+    await requestToBack.addcom(text, id)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        if (res.text) {
+          this.newAllCollectionOfTweet.addComment(id, text);
+          this.selectTweet.display(this.newAllCollectionOfTweet.get(id));
+        } else if (res.statusCode === 401) {
+          document.location.href = 'logIn.html';
+        } else if (res.statusCode) {
+          localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
+          // document.location.href = 'errorPage.html';
+        }
+      })
+      .catch((error) => console.log(error.message));
   }
 
   async editTweet(id, text) {
@@ -639,6 +675,8 @@ class TweetsController {
         if (res.text) {
           this.newAllCollectionOfTweet.edit(id, text);
           this.newList.display(this.newAllCollectionOfTweet.tws);
+        } else if (res.statusCode === 401) {
+          document.location.href = 'logIn.html';
         } else if (res.statusCode) {
           localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
           document.location.href = 'errorPage.html';
@@ -653,6 +691,8 @@ class TweetsController {
         if (res.status === 204) {
           this.newAllCollectionOfTweet.remove(id);
           this.newList.display(this.newAllCollectionOfTweet.tws);
+        } else if (res.statusCode === 401) {
+          document.location.href = 'logIn.html';
         } else if (res.statusCode) {
           localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
           document.location.href = 'errorPage.html';
@@ -765,6 +805,23 @@ class TweetFeedApiService {
     return fetch(`${this.url}/tweet/${id}`, {
       method: 'DELETE',
       headers: myHeaders,
+    });
+  }
+
+  addcom(text, id) {
+    const { token } = JSON.parse(localStorage.getItem('current User'));
+    console.log(id, token);
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${token}`);
+    myHeaders.append('Content-Type', 'application/json');
+    const comment = JSON.stringify({
+      text: `${text}`,
+    });
+    console.log(comment);
+    return fetch(`${this.url}/tweet/${id}/comment`, {
+      method: 'POST',
+      headers: myHeaders,
+      body: comment,
     });
   }
 }
@@ -1005,6 +1062,7 @@ regForm?.addEventListener('submit', (e) => {
 const correctTrotter = document.querySelector('#trotterList');
 correctTrotter?.addEventListener('click', (e) => {
   const currentTweet = e.target.closest('.mainBlockTrotteListTrotter').getAttribute('id');
+  console.log(currentTweet);
   if (e.target.classList.contains('correctTrotter')) {
     const editMenu = e.target.children;
     editMenu[0].classList.toggle('visibleBlock');
@@ -1019,6 +1077,19 @@ correctTrotter?.addEventListener('click', (e) => {
   if (e.target.classList.contains('commentToTweet')) {
     callTweet(currentTweet);
     document.location.href = 'twit.html';
+  }
+});
+
+const correctComment = document.querySelector('.trotterList');
+correctComment?.addEventListener('click', (e) => {
+  const currentTweet = e.target.closest('.container').getAttribute('id');
+  if (e.target.classList.contains('correctTrotter')) {
+    const editMenu = e.target.children;
+    editMenu[0].classList.toggle('visibleBlock');
+  }
+  if (e.target.classList.contains('editCurrentTweet')) {
+    const changeText = prompt('Введите новый комментарий твита');
+    allTweetControl.addTweetComment(currentTweet, changeText);
   }
 });
 
