@@ -167,7 +167,10 @@ class TweetCollection {
 
   edit(id, text) {
     const correctUser = this.get(id);
-    if (Tweet.validate(correctUser) && correctUser.author === this._user) {
+    const newCorr = {
+      id: correctUser._id, text: correctUser.text, author: correctUser._author, comments: correctUser.comments, createAt: correctUser._createAt,
+    };
+    if (Tweet.validate(newCorr)) {
       correctUser.text = text;
       return true;
     }
@@ -176,7 +179,7 @@ class TweetCollection {
 
   remove(id) {
     const indexForDelete = this.tws
-      .findIndex((elem) => elem.id === id && elem.author === this._user);
+      .findIndex((elem) => elem.id === id);
     if (indexForDelete !== -1) {
       this._tws.splice(indexForDelete, 1);
       return true;
@@ -611,7 +614,7 @@ class TweetsController {
       .then((res) => {
         if (res.text) {
           this.newAllCollectionOfTweet.addAll([res]);
-          this.restore();
+          this.newList.display(this.newAllCollectionOfTweet.tws);
         } else if (res.statusCode === 401) {
           localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
           document.location.href = 'errorPage.html';
@@ -634,25 +637,27 @@ class TweetsController {
       .then((res) => res.json())
       .then((res) => {
         if (res.text) {
-          this.restore();
+          this.newAllCollectionOfTweet.edit(id, text);
+          this.newList.display(this.newAllCollectionOfTweet.tws);
         } else if (res.statusCode) {
           localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
           document.location.href = 'errorPage.html';
         }
       })
       .catch((error) => console.log(error.message));
-    /*    if (this.newAllCollectionOfTweet.edit(id, text)) {
-      this.newList.display(this.newAllCollectionOfTweet.tws);
-      TweetsController.save(this.newAllCollectionOfTweet.tws);
-    } else console.log('Нет прав на редактирование твита'); */
   }
 
-  removeTweet(id) {
-    if (this.newAllCollectionOfTweet.remove(id)) {
-      this.newAllCollectionOfTweet.remove(id);
-      this.newList.display(this.newAllCollectionOfTweet.tws);
-      TweetsController.save(this.newAllCollectionOfTweet.tws);
-    } else console.log('Нет прав на удаление твита');
+  async removeTweet(id) {
+    await requestToBack.deleteTweet(id)
+      .then((res) => {
+        if (res.status === 204) {
+          this.newAllCollectionOfTweet.remove(id);
+          this.newList.display(this.newAllCollectionOfTweet.tws);
+        } else if (res.statusCode) {
+          localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
+          document.location.href = 'errorPage.html';
+        }
+      });
   }
 
   getFeed(skip, top, filterConfig) {
@@ -749,6 +754,17 @@ class TweetFeedApiService {
       method: 'PUT',
       headers: myHeaders,
       body: correctableText,
+    });
+  }
+
+  deleteTweet(id) {
+    const { token } = JSON.parse(localStorage.getItem('current User'));
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${token}`);
+    myHeaders.append('Content-Type', 'application/json');
+    return fetch(`${this.url}/tweet/${id}`, {
+      method: 'DELETE',
+      headers: myHeaders,
     });
   }
 }
@@ -901,7 +917,7 @@ class UserController {
           setTimeout(() => {
             warnInLogin.classList.toggle('visibleBlock');
           }, 5000);
-          allTweetControl.setCurrentUSer(JSON.parse(localStorage.getItem('current User')));
+          allTweetControl.setCurrentUSer((JSON.parse(localStorage.getItem('current User'))).login);
           allow = true;
         }
       })
