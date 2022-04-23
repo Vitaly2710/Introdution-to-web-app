@@ -936,4 +936,12 @@ label.humanSearch:last-child {
     background-size: cover;
 }
 
+.styleForError {
+    position: absolute;
+    font-family: var(--headers-text-style);
+    font-size: 4.8rem;
+    color: #FFFFFF;
+    transform: translate(40%, 20rem);
+}
+
 

@@ -208,7 +208,6 @@ class TweetCollection {
 
   addAll(tws) {
     const notValid = [];
-
     tws.forEach((elem) => {
       let newElem;
       if (elem._id === undefined) {
@@ -236,7 +235,7 @@ const t = new TweetCollection();
 class HeaderView {
   constructor(id) {
     this._containerId = id;
-    this.display(JSON.parse(localStorage.getItem('current User')).login);
+    this.display(JSON.parse(localStorage.getItem('current User')));
   }
 
   get id() {
@@ -248,7 +247,7 @@ class HeaderView {
     const buttonLogIn = document.querySelector('.logInButton');
     const newContainer = document.createElement('div');
     if (userName !== null && userName !== 'null') {
-      const userNameWithout = userName.replace(/"/g, '');
+      const userNameWithout = userName.login;
       newContainer.classList.add('headerUserBlock');
       newContainer.insertAdjacentHTML(
         'afterbegin',
@@ -610,10 +609,9 @@ class TweetsController {
     await requestToBack.createTweet(text)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
         if (res.text) {
-          this.newAllCollectionOfTweet.addAll(res);
-          this.newList.display(this.newAllCollectionOfTweet.tws);
+          this.newAllCollectionOfTweet.addAll([res]);
+          this.restore();
         } else if (res.statusCode === 401) {
           localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
           document.location.href = 'errorPage.html';
@@ -631,11 +629,22 @@ class TweetsController {
     } else this.selectTweet.display(null);
   }
 
-  editTweet(id, text) {
-    if (this.newAllCollectionOfTweet.edit(id, text)) {
+  async editTweet(id, text) {
+    await requestToBack.correctTweet(text, id)
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.text) {
+          this.restore();
+        } else if (res.statusCode) {
+          localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
+          document.location.href = 'errorPage.html';
+        }
+      })
+      .catch((error) => console.log(error.message));
+    /*    if (this.newAllCollectionOfTweet.edit(id, text)) {
       this.newList.display(this.newAllCollectionOfTweet.tws);
       TweetsController.save(this.newAllCollectionOfTweet.tws);
-    } else console.log('Нет прав на редактирование твита');
+    } else console.log('Нет прав на редактирование твита'); */
   }
 
   removeTweet(id) {
@@ -725,6 +734,21 @@ class TweetFeedApiService {
       method: 'POST',
       headers: myHeaders,
       body: tweetText,
+    });
+  }
+
+  correctTweet(text, id) {
+    const { token } = JSON.parse(localStorage.getItem('current User'));
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${token}`);
+    myHeaders.append('Content-Type', 'application/json');
+    const correctableText = JSON.stringify({
+      text: `${text}`,
+    });
+    return fetch(`${this.url}/tweet/${id}`, {
+      method: 'PUT',
+      headers: myHeaders,
+      body: correctableText,
     });
   }
 }
@@ -1005,6 +1029,15 @@ formForAddNewComment?.addEventListener('submit', (e) => {
   } else alert('введите хоть что-нибудь');
 });
 
+const wrapperForBackError = document.querySelector('.wrapperForBackError');
+const containerForError = document.createElement('p');
+const error = document.createElement('p');
+containerForError.classList.add('styleForError');
+error.classList.add('styleForError');
+error.innerHTML = JSON.parse(localStorage.getItem('error')).statusCode;
+containerForError.innerHTML = JSON.parse(localStorage.getItem('error')).error;
+wrapperForBackError?.append(error);
+wrapperForBackError?.append(containerForError);
 // https://jslabapi.datamola.com/doc/
 
 /* All
