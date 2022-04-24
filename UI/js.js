@@ -5,14 +5,21 @@ class Tweet {
   constructor(id, text, author, comments = [], createAt = new Date()) {
     this._id = id;
     this.text = text;
-    this._createAt = createAt;
+    this._createAt = new Date(createAt);
     this._author = author;
     this.comments = comments;
   }
 
   static dateLabel(item) {
-    const day = new Date(item.createAt).getDate();
-    const month = new Date(item.createAt).getMonth();
+    let day;
+    let month;
+    if (item.createAt) {
+      day = new Date(item.createAt).getDate();
+      month = new Date(item.createAt).getMonth();
+    } else if (item.createdAt) {
+      day = new Date(item.createdAt).getDate();
+      month = new Date(item.createdAt).getMonth();
+    }
     let fMonth;
     switch (month) {
       case 0: fMonth = 'января'; break;
@@ -215,9 +222,9 @@ class TweetCollection {
     tws.forEach((elem) => {
       let newElem;
       if (elem._id === undefined) {
-        newElem = new Tweet(elem.id, elem.text, elem.author, elem.comments, elem.createAt);
+        newElem = new Tweet(elem.id, elem.text, elem.author, elem.comments, elem.createdAt);
       } else if (elem.id === undefined) {
-        newElem = new Tweet(elem._id, elem.text, elem._author, elem.comments, new Date(elem._createAt));
+        newElem = new Tweet(elem._id, elem.text, elem._author, elem.comments, elem._createdAt);
       }
       if (Tweet.validate(newElem)) {
         this._tws.push(newElem);
@@ -654,15 +661,14 @@ class TweetsController {
     await requestToBack.addcom(text, id)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
         if (res.text) {
-          this.newAllCollectionOfTweet.addComment(id, text);
-          this.selectTweet.display(this.newAllCollectionOfTweet.get(id));
+          this.selectTweet.display(res);
+          localStorage.setItem('curentTweet', JSON.stringify(res));
         } else if (res.statusCode === 401) {
           document.location.href = 'logIn.html';
         } else if (res.statusCode) {
           localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
-          // document.location.href = 'errorPage.html';
+          document.location.href = 'errorPage.html';
         }
       })
       .catch((error) => console.log(error.message));
@@ -730,7 +736,7 @@ class TweetFeedApiService {
   }
 
   getTweet() {
-    const tweets = this._fetchElement('tweet')
+    const tweets = fetch(`${this.url}/tweet?count=200`)
       .then((res) => res.json())
       .then((data) => {
         allTweetControl.newAllCollectionOfTweet.addAll(data);
@@ -810,7 +816,6 @@ class TweetFeedApiService {
 
   addcom(text, id) {
     const { token } = JSON.parse(localStorage.getItem('current User'));
-    console.log(id, token);
     const myHeaders = new Headers();
     myHeaders.append('Authorization', `Bearer ${token}`);
     myHeaders.append('Content-Type', 'application/json');
@@ -828,18 +833,20 @@ class TweetFeedApiService {
 
 const requestToBack = new TweetFeedApiService('https://jslabapi.datamola.com');
 const allTweetControl = new TweetsController();
-
-allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
-allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
-const takeAuthorFiltration = document.querySelector('.authorSearch');
-const takeHashtagFiltration = document.querySelector('.hashSearch');
-const dateFromFiltration = document.querySelector('.dateFrom');
-const dateToFiltration = document.querySelector('.dateTo');
-
-takeAuthorFiltration?.addEventListener('change', filtrationAuthor);
-takeHashtagFiltration?.addEventListener('change', filtrationHashtag);
-dateFromFiltration?.addEventListener('change', filtrationDateFrom);
-dateToFiltration?.addEventListener('change', filtrationDateTo);
+if (allTweetControl.newAllCollectionOfTweet.tws) {
+  setTimeout(() => {
+    allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
+    allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
+    const takeAuthorFiltration = document.querySelector('.authorSearch');
+    const takeHashtagFiltration = document.querySelector('.hashSearch');
+    const dateFromFiltration = document.querySelector('.dateFrom');
+    const dateToFiltration = document.querySelector('.dateTo');
+    takeAuthorFiltration?.addEventListener('change', filtrationAuthor);
+    takeHashtagFiltration?.addEventListener('change', filtrationHashtag);
+    dateFromFiltration?.addEventListener('change', filtrationDateFrom);
+    dateToFiltration?.addEventListener('change', filtrationDateTo);
+  }, 1000);
+}
 
 function filtrationAuthor() {
   const backup = JSON.stringify(allTweetControl.newAllCollectionOfTweet.tws);
@@ -1062,7 +1069,6 @@ regForm?.addEventListener('submit', (e) => {
 const correctTrotter = document.querySelector('#trotterList');
 correctTrotter?.addEventListener('click', (e) => {
   const currentTweet = e.target.closest('.mainBlockTrotteListTrotter').getAttribute('id');
-  console.log(currentTweet);
   if (e.target.classList.contains('correctTrotter')) {
     const editMenu = e.target.children;
     editMenu[0].classList.toggle('visibleBlock');
