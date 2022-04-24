@@ -544,9 +544,15 @@ class FilterView {
   display(param, tweets) {
     const serchContainer = document.querySelectorAll(`.${this.id}`);
     const filterElement = document.createElement('select');
+    const filterAuthors = [];
     if (param === 'author') {
       tweets.forEach((elem, index) => {
         const itemIsSearch = elem[param];
+        if (!filterAuthors.includes(itemIsSearch)) {
+          filterAuthors.push(itemIsSearch);
+        } else if (filterAuthors.includes(itemIsSearch)) {
+          return;
+        }
         filterElement?.insertAdjacentHTML(
           'afterbegin',
           `<option value="${elem.author}">${itemIsSearch}</option>`,
@@ -565,7 +571,11 @@ class FilterView {
           const smallHash = e.split('');
           if (smallHash.some((one) => one === '#')) {
             const r = smallHash.join('');
-            hashtags.push(r);
+            if (!hashtags.includes(r)) {
+              hashtags.push(r);
+            } else if (hashtags.includes(r)) {
+
+            }
           }
         });
       });
@@ -597,7 +607,7 @@ class TweetsController {
 
   async restore() {
     await requestToBack.getTweet();
-    await this.newList.display(this.newAllCollectionOfTweet.tws);
+    await this.newList.display(this.newAllCollectionOfTweet.tws.slice(0, 10));
   }
 
   static save(tws) {
@@ -646,7 +656,7 @@ class TweetsController {
       .then((res) => {
         if (res.text) {
           this.newAllCollectionOfTweet.addAll([res]);
-          this.newList.display(this.newAllCollectionOfTweet.tws);
+          this.newList.display(this.newAllCollectionOfTweet.tws.slice(0, 10));
         } else if (res.statusCode === 401) {
           document.location.href = 'logIn.html';
         } else if (res.statusCode === 400) {
@@ -680,7 +690,7 @@ class TweetsController {
       .then((res) => {
         if (res.text) {
           this.newAllCollectionOfTweet.edit(id, text);
-          this.newList.display(this.newAllCollectionOfTweet.tws);
+          this.newList.display(this.newAllCollectionOfTweet.tws.slice(0, 10));
         } else if (res.statusCode === 401) {
           document.location.href = 'logIn.html';
         } else if (res.statusCode) {
@@ -696,7 +706,7 @@ class TweetsController {
       .then((res) => {
         if (res.status === 204) {
           this.newAllCollectionOfTweet.remove(id);
-          this.newList.display(this.newAllCollectionOfTweet.tws);
+          this.newList.display(this.newAllCollectionOfTweet.tws.slice(0, 10));
         } else if (res.statusCode === 401) {
           document.location.href = 'logIn.html';
         } else if (res.statusCode) {
@@ -893,7 +903,7 @@ const moreTweets = document.querySelector('.moreTrotter');
 moreTweets?.addEventListener('click', addTweets);
 
 function pagination() {
-  let amount = 0;
+  let amount = 10;
   return function () {
     amount += 10;
     return amount;

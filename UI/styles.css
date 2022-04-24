@@ -14,7 +14,7 @@ body { font-size: 1.8rem; }
 :root {
     --primary-color:#38A6FF;
     --secondary-color:#115D8C;
-    --border-color:rgba(129, 129, 129, 0.5);
+    --border-color: rgba(183, 183, 183, 0.5);
     --footerBackground-color:linear-gradient(355.31deg, #38A6FF 50.1%, rgba(56, 166, 255, 0.19) 96.31%);
     --white-color:#FFFFFF;
     --headers-text-style:'Montserrat', Bold, sans-serif;
