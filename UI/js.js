@@ -606,7 +606,7 @@ class TweetsController {
   }
 
   async restore() {
-    await requestToBack.getTweet();
+    await requestToBack.getTweet(10);
     await this.newList.display(this.newAllCollectionOfTweet.tws.slice(0, 10));
   }
 
@@ -741,12 +741,29 @@ class TweetFeedApiService {
     return this._url;
   }
 
+  _headers(method, tok, info) {
+    const myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    const head = {
+      method,
+      headers: myHeaders,
+    };
+    if (tok) {
+      const { token } = JSON.parse(localStorage.getItem('current User'));
+      myHeaders.append('Authorization', `Bearer ${token}`);
+    }
+    if (info) {
+      head.body = info;
+    }
+    return head;
+  }
+
   _fetchElement(endpoint) {
     return fetch(`${this.url}/${endpoint}`);
   }
 
-  getTweet() {
-    const tweets = fetch(`${this.url}/tweet?count=200`)
+  getTweet(number) {
+    const tweets = fetch(`${this.url}/tweet?count=${number}`)
       .then((res) => res.json())
       .then((data) => {
         allTweetControl.newAllCollectionOfTweet.addAll(data);
@@ -755,89 +772,62 @@ class TweetFeedApiService {
   }
 
   registration(log, pas) {
-    const myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
     const user = JSON.stringify({
       login: `${log}`,
       password: `${pas}`,
     });
-    return fetch(`${this.url}/registration`, {
-      method: 'POST',
-      headers: myHeaders,
-      body: user,
-      redirect: 'follow',
-    });
+    return fetch(
+      `${this.url}/registration`,
+      requestToBack._headers('POST', false, user),
+    );
   }
 
   loginStep(log, pas) {
-    const myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
     const user = JSON.stringify({
       login: `${log}`,
       password: `${pas}`,
     });
-    return fetch(`${this.url}/login`, {
-      method: 'POST',
-      headers: myHeaders,
-      body: user,
-    });
+    return fetch(
+      `${this.url}/login`,
+      requestToBack._headers('POST', false, user),
+    );
   }
 
   createTweet(text) {
-    const { token } = JSON.parse(localStorage.getItem('current User'));
-    const myHeaders = new Headers();
-    myHeaders.append('Authorization', `Bearer ${token}`);
-    myHeaders.append('Content-Type', 'application/json');
     const tweetText = JSON.stringify({
       text: `${text}`,
     });
-    return fetch(`${this.url}/tweet`, {
-      method: 'POST',
-      headers: myHeaders,
-      body: tweetText,
-    });
+    return fetch(
+      `${this.url}/tweet`,
+      requestToBack._headers('POST', true, tweetText),
+    );
   }
 
   correctTweet(text, id) {
-    const { token } = JSON.parse(localStorage.getItem('current User'));
-    const myHeaders = new Headers();
-    myHeaders.append('Authorization', `Bearer ${token}`);
-    myHeaders.append('Content-Type', 'application/json');
     const correctableText = JSON.stringify({
       text: `${text}`,
     });
-    return fetch(`${this.url}/tweet/${id}`, {
-      method: 'PUT',
-      headers: myHeaders,
-      body: correctableText,
-    });
+    return fetch(
+      `${this.url}/tweet/${id}`,
+      requestToBack._headers('PUT', true, correctableText),
+    );
   }
 
   deleteTweet(id) {
-    const { token } = JSON.parse(localStorage.getItem('current User'));
-    const myHeaders = new Headers();
-    myHeaders.append('Authorization', `Bearer ${token}`);
-    myHeaders.append('Content-Type', 'application/json');
-    return fetch(`${this.url}/tweet/${id}`, {
-      method: 'DELETE',
-      headers: myHeaders,
-    });
+    return fetch(
+      `${this.url}/tweet/${id}`,
+      requestToBack._headers('DELETE', true),
+    );
   }
 
   addcom(text, id) {
-    const { token } = JSON.parse(localStorage.getItem('current User'));
-    const myHeaders = new Headers();
-    myHeaders.append('Authorization', `Bearer ${token}`);
-    myHeaders.append('Content-Type', 'application/json');
     const comment = JSON.stringify({
       text: `${text}`,
     });
-    console.log(comment);
-    return fetch(`${this.url}/tweet/${id}/comment`, {
-      method: 'POST',
-      headers: myHeaders,
-      body: comment,
-    });
+    return fetch(
+      `${this.url}/tweet/${id}/comment`,
+      requestToBack._headers('POST', true, comment),
+    );
   }
 }
 
@@ -912,8 +902,9 @@ function pagination() {
 const closure = pagination();
 function addTweets() {
   const a = closure();
-  const b = allTweetControl.newAllCollectionOfTweet.tws.slice(0, a);
-  allTweetControl.newList.display(b);
+  // const b = allTweetControl.newAllCollectionOfTweet.tws.slice(0, a);
+  const b = requestToBack.getTweet(a);
+  allTweetControl.newList.display(allTweetControl.newAllCollectionOfTweet.tws);
 }
 
 const mainBlockTrotteListWrapper = document.querySelector('.mainBlockTrotteListWrapper');
