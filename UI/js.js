@@ -544,6 +544,9 @@ class FilterView {
   display(param, tweets) {
     const serchContainer = document.querySelectorAll(`.${this.id}`);
     const filterElement = document.createElement('select');
+    const startFilterByAuthor = document.createElement('option');
+    startFilterByAuthor.innerHTML = 'People';
+    filterElement.append(startFilterByAuthor);
     const filterAuthors = [];
     if (param === 'author') {
       tweets.forEach((elem, index) => {
@@ -828,6 +831,23 @@ class TweetFeedApiService {
       `${this.url}/tweet/${id}/comment`,
       requestToBack._headers('POST', true, comment),
     );
+  }
+
+  webSocket() {
+    const conn = new WebSocket('wss://jslabapi.datamola.com');
+    conn.onopen = function handleConnOpen(event) {
+      console.log('connection is open');
+    };
+    conn.onclose = function handleConnClose(event) {
+      console.warn('connection is close');
+    };
+    conn.onerror = function handleConnError(event) {
+      console.error(event);
+    };
+    conn.onmessage = function onSocketMessage(event) {
+      const { data } = event;
+      console.log(data);
+    };
   }
 }
 
@@ -1131,7 +1151,8 @@ error.innerHTML = JSON.parse(localStorage.getItem('error')).statusCode;
 containerForError.innerHTML = JSON.parse(localStorage.getItem('error')).error;
 wrapperForBackError?.append(error);
 wrapperForBackError?.append(containerForError);
-// https://jslabapi.datamola.com/doc/
+
+requestToBack.webSocket();
 
 /* All
 

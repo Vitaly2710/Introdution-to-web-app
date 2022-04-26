@@ -634,6 +634,7 @@ footer {
     border: none;
     margin-top: 2%;
     max-width: 20rem;
+    color: #FFFFFF;
 }
 
 label.humanSearch:last-child {
