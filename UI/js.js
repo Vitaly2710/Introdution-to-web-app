@@ -1050,7 +1050,7 @@ form?.addEventListener('submit', async (e) => {
     if (localStorage.getItem('current User')) {
       document.location.href = 'main.html';
     }
-  }, 6000);
+  }, 2000);
 });
 
 const logInButton = document.querySelector('.logInButton');
