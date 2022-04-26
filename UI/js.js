@@ -607,7 +607,7 @@ class TweetsController {
 
   async restore() {
     await requestToBack.getTweet(10);
-    await this.newList.display(this.newAllCollectionOfTweet.tws.slice(0, 10));
+    await this.newList.display(this.newAllCollectionOfTweet.tws);
   }
 
   static save(tws) {
@@ -833,21 +833,26 @@ class TweetFeedApiService {
 
 const requestToBack = new TweetFeedApiService('https://jslabapi.datamola.com');
 const allTweetControl = new TweetsController();
-if (allTweetControl.newAllCollectionOfTweet.tws) {
-  setTimeout(() => {
-    allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
-    allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
-    const takeAuthorFiltration = document.querySelector('.authorSearch');
-    const takeHashtagFiltration = document.querySelector('.hashSearch');
-    const dateFromFiltration = document.querySelector('.dateFrom');
-    const dateToFiltration = document.querySelector('.dateTo');
-    takeAuthorFiltration?.addEventListener('change', filtrationAuthor);
-    takeHashtagFiltration?.addEventListener('change', filtrationHashtag);
-    dateFromFiltration?.addEventListener('change', filtrationDateFrom);
-    dateToFiltration?.addEventListener('change', filtrationDateTo);
-  }, 1000);
+
+async function filtr() {
+  allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
+  allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
+  const takeAuthorFiltration = document.querySelector('.authorSearch');
+  const takeHashtagFiltration = document.querySelector('.hashSearch');
+  const dateFromFiltration = document.querySelector('.dateFrom');
+  const dateToFiltration = document.querySelector('.dateTo');
+  takeAuthorFiltration?.addEventListener('change', filtrationAuthor);
+  takeHashtagFiltration?.addEventListener('change', filtrationHashtag);
+  dateFromFiltration?.addEventListener('change', filtrationDateFrom);
+  dateToFiltration?.addEventListener('change', filtrationDateTo);
 }
 
+function asyncFilter() {
+  setTimeout(() => {
+    filtr();
+  }, 1000);
+}
+asyncFilter();
 function filtrationAuthor() {
   const backup = JSON.stringify(allTweetControl.newAllCollectionOfTweet.tws);
   localStorage.setItem('buckupTws', backup);
@@ -879,14 +884,8 @@ function filtrationDateTo() {
 
 const clearFilter = document.querySelector('.clearFilter');
 clearFilter?.addEventListener('click', () => {
-  const comebackTws = JSON.parse(localStorage.getItem('buckupTws'));
-  localStorage.setItem('allTws', localStorage.getItem('buckupTws'));
-  localStorage.removeItem('buckupTws');
-
-  allTweetControl.newAllCollectionOfTweet.addAll(JSON.parse(localStorage.getItem('allTws')));
-  allTweetControl.newList.display(allTweetControl.newAllCollectionOfTweet.tws);
-  allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
-  allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
+  allTweetControl.restore();
+  asyncFilter();
 });
 
 const moreTweets = document.querySelector('.moreTrotter');
@@ -902,9 +901,9 @@ function pagination() {
 const closure = pagination();
 function addTweets() {
   const a = closure();
-  // const b = allTweetControl.newAllCollectionOfTweet.tws.slice(0, a);
   const b = requestToBack.getTweet(a);
   allTweetControl.newList.display(allTweetControl.newAllCollectionOfTweet.tws);
+  asyncFilter();
 }
 
 const mainBlockTrotteListWrapper = document.querySelector('.mainBlockTrotteListWrapper');
