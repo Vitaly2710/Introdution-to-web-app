@@ -378,24 +378,31 @@ class TweetFeedView {
 class TweetView {
   constructor(containerId) {
     this._containerId = containerId;
-    this.display(JSON.parse(localStorage.getItem('current Tweet')));
+    this.firstStart();
   }
 
   get id() {
     return this._containerId;
   }
 
+  firstStart() {
+    foo()
+      .then((res) => this.display(res))
+      .catch((error) => console.warn(error.message));
+  }
+
   display(curTweet) {
+    console.log(curTweet);
     const mainTrotter = document.querySelector(`#${this.id}`);
     const newContainer = document.createElement('div');
     let currentTrott;
     if (curTweet?._id === undefined) {
       currentTrott = {
-        id: curTweet[0]?.id,
-        text: curTweet[0]?.text,
-        createAt: curTweet[0]?.createAt,
-        comments: curTweet[0]?.comments,
-        author: curTweet[0]?.author,
+        id: curTweet?.id,
+        text: curTweet?.text,
+        createAt: curTweet?.createdAt,
+        comments: curTweet?.comments,
+        author: curTweet?.author,
       };
     } else {
       currentTrott = {
@@ -610,7 +617,6 @@ class TweetsController {
 
   async restore() {
     await requestToBack.getTweet();
-    // await this.newList.display(this.newAllCollectionOfTweet.tws);
   }
 
   static save(tws) {
@@ -623,10 +629,6 @@ class TweetsController {
         return true;
       } users.push(elem.author);
     });
-    const jsonUsers = JSON.stringify(users);
-    localStorage.setItem('tweetUSers', jsonUsers);
-
-    return localStorage.setItem('allTws', JSON.stringify(jsonTws));
   }
 
   static saveComment(id) {
@@ -675,7 +677,7 @@ class TweetsController {
       .then((res) => {
         if (res.text) {
           this.selectTweet.display(res);
-          localStorage.setItem('curentTweet', JSON.stringify(res));
+          localStorage.setItem('current Tweet', JSON.stringify([res]));
         } else if (res.statusCode === 401) {
           document.location.href = 'logIn.html';
         } else if (res.statusCode) {
@@ -804,10 +806,9 @@ class TweetFeedApiService {
       const tweets = fetch(`${this.url}/tweet?${la}`)
         .then((res) => res.json())
         .then((data) => {
-          localStorage.setItem('current Tweet', JSON.stringify(data));
           localStorage.setItem('filterConfig', JSON.stringify(la));
+          localStorage.setItem('allTws', JSON.stringify(data));
           allTweetControl.newList.display(data);
-          console.log(data);
           asyncFilter();
         })
         .catch((error) => console.log(error.message));
@@ -822,6 +823,10 @@ class TweetFeedApiService {
     }
 
     return true;
+  }
+
+  getCurrentTweet(author, text) {
+    return fetch(`${this.url}/tweet?author=${author}&text=${text}`);
   }
 
   registration(log, pas) {
@@ -902,6 +907,14 @@ class TweetFeedApiService {
 }
 
 const requestToBack = new TweetFeedApiService('https://jslabapi.datamola.com');
+async function foo() {
+  if (localStorage.getItem('current Tweet') === undefined) {
+    await requestToBack.getTweet();
+  }
+  const takeTws = JSON.parse(localStorage.getItem('current Tweet'))[0];
+  return takeTws;
+}
+
 const allTweetControl = new TweetsController();
 
 async function filtr(twwweeettts) {
@@ -923,35 +936,20 @@ function asyncFilter(tws) {
   }, 1000);
 }
 asyncFilter();
-function filtrationAuthor() {
-  const backup = JSON.stringify(allTweetControl.newAllCollectionOfTweet.tws);
-  /*  // localStorage.setItem('buckupTws', backup);
-  // allTweetControl.getFeed(0, 10, { author: this.value });
-  // allTweetControl.newAllCollectionOfTweet.addAll(JSON.parse(localStorage.getItem('allTws'))); */
-
+async function filtrationAuthor() {
   requestToBack.getTweet(this.value);
-  allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
-  allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
 }
 
 function filtrationHashtag() {
-  const backup = JSON.stringify(allTweetControl.newAllCollectionOfTweet.tws);
-  localStorage.setItem('buckupTws', backup);
-  allTweetControl.getFeed(0, 10, { hashtags: this.value });
-  allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
-  allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
+  requestToBack.getTweet(undefined, undefined, undefined, undefined, undefined, undefined, this.value);
 }
 
 function filtrationDateFrom() {
-  const backup = JSON.stringify(allTweetControl.newAllCollectionOfTweet.tws);
-  localStorage.setItem('buckupTws', backup);
-  return allTweetControl.getFeed(0, 10, { dateFrom: new Date(this.value) });
+  requestToBack.getTweet(undefined, undefined, this.value);
 }
 
 function filtrationDateTo() {
-  const backup = JSON.stringify(allTweetControl.newAllCollectionOfTweet.tws);
-  localStorage.setItem('buckupTws', backup);
-  return allTweetControl.getFeed(0, 10, { dateTo: new Date(this.value) });
+  requestToBack.getTweet(undefined, undefined, undefined, this.value);
 }
 
 const clearFilter = document.querySelector('.clearFilter');
@@ -1150,13 +1148,16 @@ correctTrotter?.addEventListener('click', (e) => {
     allTweetControl.editTweet(currentTweet, changeText);
   }
   if (e.target.classList.contains('commentToTweet')) {
-    async function setCurrUser() {
-      const ok = await requestToBack.getTweet(author, text);
-      setTimeout(() => {
-        document.location.href = 'twit.html';
-      }, 500);
-    }
-    setCurrUser();
+    requestToBack.getCurrentTweet(author, text)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data instanceof Array) {
+          const currentTws = data.filter((el) => el.id === currentTweet);
+          localStorage.setItem('current Tweet', JSON.stringify(currentTws));
+          document.location.href = 'twit.html';
+        }
+      })
+      .catch((error) => console.log(error.message));
   }
 });
 
@@ -1190,7 +1191,8 @@ const valueToAddInComment = document.querySelector('.valueToAddInComment');
 formForAddNewComment?.addEventListener('submit', (e) => {
   e.preventDefault();
   if (valueToAddInComment.value !== '') {
-    const idTweet = JSON.parse(localStorage.getItem('curentTweet'))._id;
+    const idTweet = (JSON.parse(localStorage.getItem('current Tweet')))[0].id;
+    console.log(idTweet, valueToAddInComment.value);
     allTweetControl.addTweetComment(idTweet, valueToAddInComment.value);
     valueToAddInComment.value = '';
   } else alert('введите хоть что-нибудь');
