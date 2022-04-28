@@ -5,14 +5,21 @@ class Tweet {
   constructor(id, text, author, comments = [], createAt = new Date()) {
     this._id = id;
     this.text = text;
-    this._createAt = createAt;
+    this._createAt = new Date(createAt);
     this._author = author;
     this.comments = comments;
   }
 
   static dateLabel(item) {
-    const day = new Date(item.createAt).getDate();
-    const month = new Date(item.createAt).getMonth();
+    let day;
+    let month;
+    if (item.createAt) {
+      day = new Date(item.createAt).getDate();
+      month = new Date(item.createAt).getMonth();
+    } else if (item.createdAt) {
+      day = new Date(item.createdAt).getDate();
+      month = new Date(item.createdAt).getMonth();
+    }
     let fMonth;
     switch (month) {
       case 0: fMonth = 'января'; break;
@@ -167,7 +174,10 @@ class TweetCollection {
 
   edit(id, text) {
     const correctUser = this.get(id);
-    if (Tweet.validate(correctUser) && correctUser.author === this._user) {
+    const newCorr = {
+      id: correctUser._id, text: correctUser.text, author: correctUser._author, comments: correctUser.comments, createAt: correctUser._createAt,
+    };
+    if (Tweet.validate(newCorr)) {
       correctUser.text = text;
       return true;
     }
@@ -176,7 +186,7 @@ class TweetCollection {
 
   remove(id) {
     const indexForDelete = this.tws
-      .findIndex((elem) => elem.id === id && elem.author === this._user);
+      .findIndex((elem) => elem.id === id);
     if (indexForDelete !== -1) {
       this._tws.splice(indexForDelete, 1);
       return true;
@@ -186,11 +196,12 @@ class TweetCollection {
 
   addComment(id, text) {
     const newComment = this.get(id);
-    const com = new Comment(TweetCollection.createNewId(), text, this.user);
+    const com = new Comment(TweetCollection.createNewId(), text, (JSON.parse(this.user)).login);
     const comment = {
       id: com._id, text: com.text, createAt: com._createAt, author: com._author,
     };
-    if (newComment && Comment.validateComment(comment)) {
+    console.log(comment);
+    if (Comment.validateComment(comment)) {
       if (localStorage.getItem('curentTweet')) {
         const addNewComm = JSON.parse(localStorage.getItem('curentTweet'));
         addNewComm.comments.push(comment);
@@ -211,9 +222,9 @@ class TweetCollection {
     tws.forEach((elem) => {
       let newElem;
       if (elem._id === undefined) {
-        newElem = new Tweet(elem.id, elem.text, elem.author, elem.comments, new Date(elem.createAt));
+        newElem = new Tweet(elem.id, elem.text, elem.author, elem.comments, elem.createdAt);
       } else if (elem.id === undefined) {
-        newElem = new Tweet(elem._id, elem.text, elem._author, elem.comments, new Date(elem._createAt));
+        newElem = new Tweet(elem._id, elem.text, elem._author, elem.comments, elem._createdAt);
       }
       if (Tweet.validate(newElem)) {
         this._tws.push(newElem);
@@ -235,7 +246,7 @@ const t = new TweetCollection();
 class HeaderView {
   constructor(id) {
     this._containerId = id;
-    this.display(JSON.stringify(localStorage.getItem('current User')));
+    this.display(JSON.parse(localStorage.getItem('current User')));
   }
 
   get id() {
@@ -247,7 +258,7 @@ class HeaderView {
     const buttonLogIn = document.querySelector('.logInButton');
     const newContainer = document.createElement('div');
     if (userName !== null && userName !== 'null') {
-      const userNameWithout = userName.replace(/"/g, '');
+      const userNameWithout = userName.login;
       newContainer.classList.add('headerUserBlock');
       newContainer.insertAdjacentHTML(
         'afterbegin',
@@ -261,7 +272,6 @@ class HeaderView {
       userInHead?.replaceChild(newContainer, userInHead.childNodes[0]);
       buttonLogIn?.classList.add('hidden');
     } else {
-      alert('Необходимо ввойти');
       buttonLogIn?.classList.remove('hidden');
       userInHead?.append(buttonLogIn);
       userInHead?.replaceChild(buttonLogIn, userInHead.childNodes[0]);
@@ -324,7 +334,7 @@ class TweetFeedView {
                     </div>
                     <div class="trotter">
                         <div class="userInfo">
-                            <h3>${elem.author}</h3>
+                            <h3 class="currentUserNAme">${elem.author}</h3>
                             <h4>@${elem.author}</h4>
                             <h4>${Tweet.dateLabel(elem)}</h4>
                             <button class="${tweetOwner}">...
@@ -368,24 +378,39 @@ class TweetFeedView {
 class TweetView {
   constructor(containerId) {
     this._containerId = containerId;
-    this.display(JSON.parse(localStorage.getItem('curentTweet')));
+    this.firstStart();
   }
 
   get id() {
     return this._containerId;
   }
 
+  firstStart() {
+    foo()
+      .then((res) => this.display(res))
+      .catch((error) => console.warn(error.message));
+  }
+
   display(curTweet) {
+    console.log(curTweet);
     const mainTrotter = document.querySelector(`#${this.id}`);
     const newContainer = document.createElement('div');
     let currentTrott;
     if (curTweet?._id === undefined) {
       currentTrott = {
-        id: curTweet?.id, text: curTweet?.text, createAt: curTweet?.createAt, comments: curTweet?.comments, author: curTweet?.author,
+        id: curTweet?.id,
+        text: curTweet?.text,
+        createAt: curTweet?.createdAt,
+        comments: curTweet?.comments,
+        author: curTweet?.author,
       };
     } else {
       currentTrott = {
-        id: curTweet._id, text: curTweet.text, createAt: curTweet._createAt, comments: curTweet.comments, author: curTweet._author,
+        id: curTweet._id,
+        text: curTweet.text,
+        createAt: curTweet._createAt,
+        comments: curTweet.comments,
+        author: curTweet._author,
       };
     }
     const currentUser = document.querySelector('#userName')?.innerHTML;
@@ -393,10 +418,11 @@ class TweetView {
 
     function editFunction(item) {
       let tweetOwner;
-      console.log(item.author, currentUser);
-      if (item.author !== currentTrott) {
+      if (item.author !== currentUser) {
         tweetOwner = 'unvisibleBlock';
-      } else { tweetOwner = 'correctTrotter'; }
+      } else if (item.author === currentUser) {
+        tweetOwner = 'correctTrotter';
+      }
       return tweetOwner;
     }
 
@@ -473,9 +499,24 @@ class TweetView {
             </div>
             <div class="trotter">
                 <div class="userInfo">
-                    <h3>${elem.author}</h3>
+                    <h3 class="currentUserNAme">${elem.author}</h3>
                     <h4>@${elem.author}</h4>
                     <h4>${Tweet.dateLabel(elem)}</h4>
+                    <button class="${editFunction(elem)}">...
+                              <div class="correctTrotterBlock">
+                                  <ul>
+                                      <li> 
+                                          <img src="./assets/editTrotterIcon.svg" alt="edit trotter">
+                                          <p class="editCurrentTweet">Edit</p>
+                                      </li>
+                                      <li>
+                                          <img src="./assets/deleteTrotterIcon.svg" alt="delete trotter">
+                                          <p class="deleteCurrentTweet">Delete</p>
+                                      </li>
+                                  </ul>
+                              </div>
+                    </button>
+                    
                 </div>
                 <p class="reTrott">Reply to <span>@${hashtags('hashtags', currentTrott)}</span></p>
                 <p class="trotterText">${elem.text}</p>
@@ -510,9 +551,18 @@ class FilterView {
   display(param, tweets) {
     const serchContainer = document.querySelectorAll(`.${this.id}`);
     const filterElement = document.createElement('select');
+    const startFilterByAuthor = document.createElement('option');
+    startFilterByAuthor.innerHTML = 'People';
+    filterElement.append(startFilterByAuthor);
+    const filterAuthors = [];
     if (param === 'author') {
-      tweets.forEach((elem, index) => {
+      tweets?.forEach((elem, index) => {
         const itemIsSearch = elem[param];
+        if (!filterAuthors.includes(itemIsSearch)) {
+          filterAuthors.push(itemIsSearch);
+        } else if (filterAuthors.includes(itemIsSearch)) {
+          return;
+        }
         filterElement?.insertAdjacentHTML(
           'afterbegin',
           `<option value="${elem.author}">${itemIsSearch}</option>`,
@@ -525,13 +575,17 @@ class FilterView {
       serchContainer[0]?.append(filterElement);
     } else if (param === 'text') {
       const hashtags = [];
-      tweets.forEach((elem) => {
+      tweets?.forEach((elem) => {
         const text = elem[param].split(' ');
         text.forEach((e) => {
           const smallHash = e.split('');
           if (smallHash.some((one) => one === '#')) {
             const r = smallHash.join('');
-            hashtags.push(r);
+            if (!hashtags.includes(r)) {
+              hashtags.push(r);
+            } else if (hashtags.includes(r)) {
+
+            }
           }
         });
       });
@@ -545,7 +599,6 @@ class FilterView {
       filterElement.classList.add('hashSearch');
       if (serchContainer[1]?.childNodes) {
         serchContainer[1]?.replaceChild(filterElement, serchContainer[1].childNodes[0]);
-        console.log('ssss');
       }
       serchContainer[1]?.append(filterElement);
     }
@@ -562,264 +615,8 @@ class TweetsController {
     this.restore();
   }
 
-  restore() {
-    if (localStorage.getItem('allTws') === null || localStorage.getItem('allTws') === 'null') {
-      console.log('work');
-      const allTws = [
-        {
-          _id: '1',
-          text: 'Привет! #js #datamola #hi',
-          _createAt: '2022-02-09T23:00:00',
-          _author: 'Иван Иванов',
-          comments: [],
-        },
-        {
-          _id: '2',
-          text: 'Какие дела?',
-          _createAt: new Date('2022-02-09T23:00:01'),
-          _author: 'Петров Петр',
-          comments: [{
-            id: '912',
-            text: 'Хорошо, а у тебя?',
-            createAt: new Date('2022-02-09T23:00:05'),
-            author: 'Иван ИВанов',
-          }],
-        },
-        {
-          _id: '3',
-          text: 'Как тебе погода? #погода #погода #погода #погода',
-          _createAt: new Date('2022-02-10T11:03:00'),
-          _author: 'Семен Семенов',
-          comments: [{
-            id: '1002',
-            text: 'Мне нравится, но могла быть теплее',
-            createAt: new Date('2022-03-12:06:00'),
-            author: 'Иван Петров',
-          }],
-        },
-        {
-          _id: '4',
-          text: 'Ну где же 3-е сентября #сентябрь #datamola',
-          _createAt: new Date('2022-02-10T12:01:45'),
-          _author: 'Михаил Петров',
-          comments: [{
-            id: '143343',
-            text: 'Нужно потерпеть',
-            createAt: new Date('2022-03-11T12:22:22'),
-            author: 'Григорий Лепс',
-          }],
-        },
-        {
-          _id: '5',
-          text: 'Поехали #поехали #datamola',
-          _createAt: new Date('1961-03-12T12:00:00'),
-          _author: 'Юрий Гагарин',
-          comments: [{
-            id: '1212',
-            text: 'Ну наконец!!!',
-            createAt: new Date('1961-03-12T13:00:01'),
-            author: 'Сергей Королев',
-          },
-          {
-            _id: '1414',
-            text: 'Ура',
-            _createAt: new Date('1961-03-12T14:02:01'),
-            _author: 'Леонид Брежнев',
-          }],
-        },
-        {
-          _id: '6',
-          text: 'Если у тебя получилось обмануть человека, это не значит, что он дурак, это значит, что тебе доверяли больше, чем ты этого заслуживаешь. #обман #datamola',
-          _createAt: new Date('2022-02-22T09:45:03'),
-          _author: 'Чарльз Буковски',
-          comments: [{
-            id: '1616',
-            text: 'Хорошо сказано',
-            createAt: new Date('2022-02-22T10:01:11'),
-            author: 'Джон Буковски',
-          }],
-        },
-        {
-          _id: '7',
-          text: 'Настоящий друг — это человек, который выскажет тебе в глаза все, что о тебе думает, а всем скажет, что ты — замечательный человек. #друг',
-          _createAt: new Date('2022-01-12T15:03:11'),
-          _author: 'Омар Хайям',
-          comments: [],
-        },
-        {
-          _id: '8',
-          text: 'Мы в жизни любим только раз, а после ищем лишь похожих.',
-          _createAt: new Date('2022-02-22T16:00:11'),
-          _author: 'Сергей Есенин',
-          comments: [{
-            id: '100009',
-            text: 'Очень глубоко',
-            createAt: new Date('2022-02-22T16:56:11'),
-            author: 'Имя Фамилия',
-          }],
-        },
-        {
-          _id: '9',
-          text: 'Не тот велик, кто никогда не падал, а тот велик — кто падал и вставал! #борись',
-          _createAt: new Date('2022-02-01T15:00:00'),
-          _author: 'Конфуций',
-          comments: [{
-            id: '9191',
-            text: 'Сила и труд все перетрут',
-            createAt: new Date('2022-02-12T12:22:17'),
-            author: 'Даль',
-          },
-          {
-            _id: '9898',
-            text: 'Понедельник начинается в субботу',
-            _createAt: new Date('2022-02-21T19:00:00'),
-            _author: 'Трудолюбивый Человек',
-          },
-          ],
-        },
-        {
-          _id: '10',
-          text: 'Победи себя и выиграешь тысячи битв #самссобой',
-          _createAt: new Date('2022-02-12T22:00:01'),
-          _author: 'Будда',
-          comments: [{
-            id: '4545',
-            text: 'Это самая главная победа',
-            createAt: new Date('2022-02-13T10:10:10'),
-            author: 'Cын Будды',
-          }],
-        },
-        {
-          _id: '11',
-          text: 'Прежде чем диагностировать у себя депрессию и заниженную самооценку, убедитесь, что вы не окружены идиотами. #оглянись',
-          _createAt: new Date('2022-02-05T03:00:11'),
-          _author: 'Зигмунд Фрейд',
-          comments: [],
-        },
-        {
-          _id: '12',
-          text: 'Если вы уходите и вас никто не зовёт обратно – вы идете в верном направлении. #всеправильно',
-          _createAt: new Date('2022-02-17T10:17:11'),
-          _author: 'джим Керри',
-          comments: [{
-            id: '987',
-            text: 'Иногда кажется, что я в тупике',
-            createAt: new Date('2022-01-22T15:04:22'),
-            author: 'Тупак Шакур',
-          }],
-        },
-        {
-          _id: '12',
-          text: 'Если Вы нарушаете правила, Вас штрафуют; если Вы соблюдаете правила, Вас облагают налогами! #будьхорошим',
-          _createAt: new Date('2022-01-21T14:34:25'),
-          _author: 'Лоуренс Питер',
-          comments: [{
-            id: '412',
-            text: 'И как быть?',
-            createAt: new Date('2022-01-22T12:00:21'),
-            author: 'Злостный Нарушитель',
-          }],
-        },
-        {
-          _id: '13',
-          text: 'Боишься — не делай, делаешь — не бойся, а сделал — не сожалей. #уверенность',
-          _createAt: new Date('2022-01-12T14:03:29'),
-          _author: 'Чингисхан',
-          comments: [{
-            id: '9996',
-            text: 'Дать уголовный кодекс почитать?',
-            createAt: new Date('2022-01-13T12:00:21'),
-            author: 'Неизвестный пользователь',
-          }],
-        },
-        {
-          _id: '14',
-          text: 'Влюбиться можно в красоту, но полюбить – лишь только душу! #любовь',
-          _createAt: new Date('2022-01-22T12:21:11'),
-          _author: 'Уильям Шекспир',
-          comments: [{
-            id: '666',
-            text: 'Любовь иногда очень зла',
-            createAt: new Date('2022-01-23T11:11:11'),
-            author: 'Пол Уокер',
-          }],
-        },
-        {
-          _id: '15',
-          text: 'Безнадёжно — это когда на крышку гроба падает земля. Остальное можно исправить. #не отчаивайся',
-          _createAt: new Date('2022-01-12T12:12:12'),
-          _author: 'Джейсон Стэтхэм',
-          comments: [],
-        },
-        {
-          _id: '16',
-          text: 'Мечтай так, как будто будешь жить вечно. Живи так, как будто завтра умрешь. #живи',
-          _createAt: new Date('2022-01-12T14:03:11'),
-          _author: 'Виктор Цой',
-          comments: [{
-            id: '65443',
-            text: 'Цой жив!!!',
-            createAt: new Date('2022-01-14T10:10:01'),
-            author: 'Фан Клуб Цоя',
-          },
-          {
-            _id: '1387',
-            text: 'Легко сказать',
-            _createAt: new Date('2022-00-22T18:02:10'),
-            _author: 'Федор Федоров',
-          },
-          ],
-        },
-        {
-          _id: '17',
-          text: 'Человека делают счастливым три вещи: любовь, интересная работа и возможность путешествовать. #счастье',
-          _createAt: new Date('2022-01-27T14:02:11'),
-          _author: 'Иван Бунин',
-          comments: [],
-        },
-        {
-          _id: '18',
-          text: 'Ни в коем случае нельзя отчитывать тех, кто старался изо всех сил, но совершил ошибку. #ошибки',
-          _createAt: new Date('2022-01-11T12:11:10'),
-          _author: 'Ричард Брэнсон',
-          comments: [{
-            id: '191817',
-            text: 'Со мной в детстве так и было!!',
-            createAt: new Date('2022-01-12T19:03:12'),
-            author: 'Сэм Брэнсон',
-          }],
-        },
-        {
-          _id: '19',
-          text: 'Ошибки — это знаки препинания жизни, без которых, как и в тексте, не будет смысла. #смысл',
-          _createAt: new Date('2022-01-06T18:00:09'),
-          _author: 'Харуки Мураками',
-          comments: [],
-        },
-        {
-          _id: '20',
-          text: 'Человек — это продукт своих собственных мыслей. О чем он думает, тем он и становится. #человек',
-          _createAt: new Date('2022-01-23T01:12:11'),
-          _author: 'Махатма Ганди',
-          comments: [{
-            id: '777',
-            text: 'Лучше и не скажешь',
-            createAt: new Date('2022-01-23T16:01:11'),
-            author: 'Антон Чехов',
-          }],
-        },
-        {
-          _id: '21',
-          text: 'В падающем самолёте нет атеистов. #вера',
-          _createAt: new Date('2022-02-08T12:21:12'),
-          _author: 'Михаил Задорнов',
-          comments: [],
-        },
-      ];
-      localStorage.setItem('allTws', JSON.stringify(allTws));
-    }
-    this.newAllCollectionOfTweet.addAll(JSON.parse(localStorage.getItem('allTws')));
-    this.newList.display(this.newAllCollectionOfTweet.tws);
+  async restore() {
+    await requestToBack.getTweet();
   }
 
   static save(tws) {
@@ -832,10 +629,6 @@ class TweetsController {
         return true;
       } users.push(elem.author);
     });
-    const jsonUsers = JSON.stringify(users);
-    localStorage.setItem('tweetUSers', jsonUsers);
-
-    return localStorage.setItem('allTws', JSON.stringify(jsonTws));
   }
 
   static saveComment(id) {
@@ -862,32 +655,67 @@ class TweetsController {
     this.newList.display(this.newAllCollectionOfTweet.tws);
   }
 
-  addTweet(text) {
-    if (this.newAllCollectionOfTweet.add(text)) {
-      this.newList.display(this.newAllCollectionOfTweet.tws);
-      TweetsController.save(this.newAllCollectionOfTweet.tws);
-    } else console.log('Валидация не пройдена');
+  async addTweet(text) {
+    await requestToBack.createTweet(text)
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.text) {
+          requestToBack.getTweet();
+        } else if (res.statusCode === 401) {
+          document.location.href = 'logIn.html';
+        } else if (res.statusCode === 400) {
+          localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
+          document.location.href = 'errorPage.html';
+        }
+      })
+      .catch((error) => error.message);
   }
 
-  addTweetComment(id, text) {
-    if (this.newAllCollectionOfTweet.addComment(id, text)) {
-      this.selectTweet.display(JSON.parse(localStorage.getItem('curentTweet')));
-    } else this.selectTweet.display(null);
+  async addTweetComment(id, text) {
+    await requestToBack.addcom(text, id)
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.text) {
+          this.selectTweet.display(res);
+          localStorage.setItem('current Tweet', JSON.stringify([res]));
+        } else if (res.statusCode === 401) {
+          document.location.href = 'logIn.html';
+        } else if (res.statusCode) {
+          localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
+          document.location.href = 'errorPage.html';
+        }
+      })
+      .catch((error) => console.log(error.message));
   }
 
-  editTweet(id, text) {
-    if (this.newAllCollectionOfTweet.edit(id, text)) {
-      this.newList.display(this.newAllCollectionOfTweet.tws);
-      TweetsController.save(this.newAllCollectionOfTweet.tws);
-    } else console.log('Нет прав на редактирование твита');
+  async editTweet(id, text) {
+    await requestToBack.correctTweet(text, id)
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.text) {
+          requestToBack.getTweet();
+        } else if (res.statusCode === 401) {
+          document.location.href = 'logIn.html';
+        } else if (res.statusCode) {
+          localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
+          document.location.href = 'errorPage.html';
+        }
+      })
+      .catch((error) => console.log(error.message));
   }
 
-  removeTweet(id) {
-    if (this.newAllCollectionOfTweet.remove(id)) {
-      this.newAllCollectionOfTweet.remove(id);
-      this.newList.display(this.newAllCollectionOfTweet.tws);
-      TweetsController.save(this.newAllCollectionOfTweet.tws);
-    } else console.log('Нет прав на удаление твита');
+  async removeTweet(id) {
+    await requestToBack.deleteTweet(id)
+      .then((res) => {
+        if (res.status === 204) {
+          requestToBack.getTweet();
+        } else if (res.statusCode === 401) {
+          document.location.href = 'logIn.html';
+        } else if (res.statusCode) {
+          localStorage.setItem('error', JSON.stringify({ statusCode: res.statusCode, error: res.message }));
+          document.location.href = 'errorPage.html';
+        }
+      });
   }
 
   getFeed(skip, top, filterConfig) {
@@ -906,58 +734,229 @@ class TweetsController {
   }
 }
 
+class TweetFeedApiService {
+  constructor(url) {
+    this._url = url;
+  }
+
+  get url() {
+    return this._url;
+  }
+
+  _headers(method, tok, info) {
+    const myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    const head = {
+      method,
+      headers: myHeaders,
+    };
+    if (tok) {
+      const { token } = JSON.parse(localStorage.getItem('current User'));
+      myHeaders.append('Authorization', `Bearer ${token}`);
+    }
+    if (info) {
+      head.body = info;
+    }
+    return head;
+  }
+
+  _fetchElement(endpoint) {
+    return fetch(`${this.url}/${endpoint}`);
+  }
+
+  getTweet(author, text, dateFrom, dateTo, from, count, hashtags) {
+    const arrayParams = [author, text, dateFrom, dateTo, from, count, hashtags];
+    const urlToFetch = [];
+    arrayParams.forEach((elem) => {
+      if (elem !== undefined) {
+        switch (elem) {
+          case author:
+            urlToFetch.push(`author=${elem}&`);
+            break;
+          case text:
+            urlToFetch.push(`text=${elem}&`);
+            break;
+          case dateFrom:
+            urlToFetch.push(`dateFrom=${dateFrom}&`);
+            break;
+          case dateTo:
+            urlToFetch.push(`dateTo=${dateTo}&`);
+            break;
+          case from:
+            urlToFetch.push(`from=${from}&`);
+            break;
+          case count:
+            urlToFetch.push(`count=${count}&`);
+            break;
+          case hashtags:
+            urlToFetch.push(`hashtags=${hashtags}&`);
+            break;
+          default:
+        }
+      }
+    });
+    let la;
+    if (localStorage.getItem('filterConfig')) {
+      la = (JSON.parse(localStorage.getItem('filterConfig')));
+    }
+    if (urlToFetch.length !== 0) {
+      la = urlToFetch.join('');
+    }
+    console.log(la);
+    if (la !== undefined) {
+      const tweets = fetch(`${this.url}/tweet?${la}`)
+        .then((res) => res.json())
+        .then((data) => {
+          localStorage.setItem('filterConfig', JSON.stringify(la));
+          localStorage.setItem('allTws', JSON.stringify(data));
+          allTweetControl.newList.display(data);
+          asyncFilter(data);
+        })
+        .catch((error) => console.log(error.message));
+    } else if (la === undefined) {
+      const tweets = fetch(`${this.url}/tweet`)
+        .then((res) => res.json())
+        .then((data) => {
+          allTweetControl.newList.display(data);
+          asyncFilter(data);
+        })
+        .catch((error) => console.log(error.message));
+    }
+
+    return true;
+  }
+
+  getCurrentTweet(author, text) {
+    return fetch(`${this.url}/tweet?author=${author}&text=${text}`);
+  }
+
+  registration(log, pas) {
+    const user = JSON.stringify({
+      login: `${log}`,
+      password: `${pas}`,
+    });
+    return fetch(
+      `${this.url}/registration`,
+      requestToBack._headers('POST', false, user),
+    );
+  }
+
+  loginStep(log, pas) {
+    const user = JSON.stringify({
+      login: `${log}`,
+      password: `${pas}`,
+    });
+    return fetch(
+      `${this.url}/login`,
+      requestToBack._headers('POST', false, user),
+    );
+  }
+
+  createTweet(text) {
+    const tweetText = JSON.stringify({
+      text: `${text}`,
+    });
+    return fetch(
+      `${this.url}/tweet`,
+      requestToBack._headers('POST', true, tweetText),
+    );
+  }
+
+  correctTweet(text, id) {
+    const correctableText = JSON.stringify({
+      text: `${text}`,
+    });
+    return fetch(
+      `${this.url}/tweet/${id}`,
+      requestToBack._headers('PUT', true, correctableText),
+    );
+  }
+
+  deleteTweet(id) {
+    return fetch(
+      `${this.url}/tweet/${id}`,
+      requestToBack._headers('DELETE', true),
+    );
+  }
+
+  addcom(text, id) {
+    const comment = JSON.stringify({
+      text: `${text}`,
+    });
+    return fetch(
+      `${this.url}/tweet/${id}/comment`,
+      requestToBack._headers('POST', true, comment),
+    );
+  }
+
+  webSocket() {
+    const conn = new WebSocket('wss://jslabapi.datamola.com');
+    conn.onopen = function handleConnOpen(event) {
+      console.log('connection is open');
+    };
+    conn.onclose = function handleConnClose(event) {
+      console.warn('connection is close');
+    };
+    conn.onerror = function handleConnError(event) {
+      console.error(event);
+    };
+    conn.onmessage = function onSocketMessage(event) {
+      const { data } = event;
+      console.log(data);
+    };
+  }
+}
+
+const requestToBack = new TweetFeedApiService('https://jslabapi.datamola.com');
+async function foo() {
+  if (localStorage.getItem('current Tweet') === undefined) {
+    await requestToBack.getTweet();
+  }
+  const takeTws = JSON.parse(localStorage.getItem('current Tweet'))[0];
+  return takeTws;
+}
+
 const allTweetControl = new TweetsController();
-allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
-allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
-const takeAuthorFiltration = document.querySelector('.authorSearch');
-const takeHashtagFiltration = document.querySelector('.hashSearch');
-const dateFromFiltration = document.querySelector('.dateFrom');
-const dateToFiltration = document.querySelector('.dateTo');
 
-takeAuthorFiltration?.addEventListener('change', filtrationAuthor);
-takeHashtagFiltration?.addEventListener('change', filtrationHashtag);
-dateFromFiltration?.addEventListener('change', filtrationDateFrom);
-dateToFiltration?.addEventListener('change', filtrationDateTo);
+async function filtr(twwweeettts) {
+  allTweetControl.filter.display('author', twwweeettts);
+  allTweetControl.filter.display('text', twwweeettts);
+  const takeAuthorFiltration = document.querySelector('.authorSearch');
+  const takeHashtagFiltration = document.querySelector('.hashSearch');
+  const dateFromFiltration = document.querySelector('.dateFrom');
+  const dateToFiltration = document.querySelector('.dateTo');
+  takeAuthorFiltration?.addEventListener('change', filtrationAuthor);
+  takeHashtagFiltration?.addEventListener('change', filtrationHashtag);
+  dateFromFiltration?.addEventListener('change', filtrationDateFrom);
+  dateToFiltration?.addEventListener('change', filtrationDateTo);
+}
 
-function filtrationAuthor() {
-  const backup = JSON.stringify(allTweetControl.newAllCollectionOfTweet.tws);
-  localStorage.setItem('buckupTws', backup);
-  allTweetControl.getFeed(0, 10, { author: this.value });
-  // allTweetControl.newAllCollectionOfTweet.addAll(JSON.parse(localStorage.getItem('allTws')));
-  allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
-  allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
+function asyncFilter(tws) {
+  setTimeout(() => {
+    filtr(tws);
+  }, 1000);
+}
+asyncFilter();
+async function filtrationAuthor() {
+  requestToBack.getTweet(this.value);
 }
 
 function filtrationHashtag() {
-  const backup = JSON.stringify(allTweetControl.newAllCollectionOfTweet.tws);
-  localStorage.setItem('buckupTws', backup);
-  allTweetControl.getFeed(0, 10, { hashtags: this.value });
-  allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
-  allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
+  requestToBack.getTweet(undefined, undefined, undefined, undefined, undefined, undefined, this.value);
 }
 
 function filtrationDateFrom() {
-  const backup = JSON.stringify(allTweetControl.newAllCollectionOfTweet.tws);
-  localStorage.setItem('buckupTws', backup);
-  return allTweetControl.getFeed(0, 10, { dateFrom: new Date(this.value) });
+  requestToBack.getTweet(undefined, undefined, this.value);
 }
 
 function filtrationDateTo() {
-  const backup = JSON.stringify(allTweetControl.newAllCollectionOfTweet.tws);
-  localStorage.setItem('buckupTws', backup);
-  return allTweetControl.getFeed(0, 10, { dateTo: new Date(this.value) });
+  requestToBack.getTweet(undefined, undefined, undefined, this.value);
 }
 
 const clearFilter = document.querySelector('.clearFilter');
 clearFilter?.addEventListener('click', () => {
-  const comebackTws = JSON.parse(localStorage.getItem('buckupTws'));
-  localStorage.setItem('allTws', localStorage.getItem('buckupTws'));
-  localStorage.removeItem('buckupTws');
-
-  allTweetControl.newAllCollectionOfTweet.addAll(JSON.parse(localStorage.getItem('allTws')));
-  allTweetControl.newList.display(allTweetControl.newAllCollectionOfTweet.tws);
-  allTweetControl.filter.display('author', allTweetControl.newAllCollectionOfTweet.tws);
-  allTweetControl.filter.display('text', allTweetControl.newAllCollectionOfTweet.tws);
+  localStorage.removeItem('filterConfig');
+  allTweetControl.restore();
 });
 
 const moreTweets = document.querySelector('.moreTrotter');
@@ -973,8 +972,11 @@ function pagination() {
 const closure = pagination();
 function addTweets() {
   const a = closure();
-  const b = allTweetControl.newAllCollectionOfTweet.tws.slice(0, a);
-  allTweetControl.newList.display(b);
+  // if (localStorage.getItem('filterConfig')) {
+  //   requestToBack.getTweet(undefined, undefined, undefined, undefined, undefined, a);
+  // }
+  requestToBack.getTweet(undefined, undefined, undefined, undefined, undefined, a);
+  asyncFilter();
 }
 
 const mainBlockTrotteListWrapper = document.querySelector('.mainBlockTrotteListWrapper');
@@ -995,14 +997,6 @@ backInMain?.addEventListener('click', () => {
   document.location.href = 'main.html';
 });
 
-function callTweet(curTw) {
-  const currentTweeter = allTweetControl.newAllCollectionOfTweet.get(curTw);
-  console.log(currentTweeter);
-  allTweetControl.showTweet(curTw);
-  const jsonCurTwr = JSON.stringify(currentTweeter);
-  localStorage.setItem('curentTweet', jsonCurTwr);
-}
-
 class UserController {
   constructor() {
     this._users = JSON.parse(localStorage.getItem('users'));
@@ -1021,70 +1015,87 @@ class UserController {
   }
 
   static checkLogIn(login, password) {
-    const users = JSON.parse(UserController.getUserInStorage());
-    let check = false;
-    users.forEach((element) => {
-      const key = Object.keys(element)[0];
-      const value = Object.values(element)[0];
-      if (key === login) {
-        if (value === password) {
-          check = true;
-          allTweetControl.setCurrentUSer(login);
-          return localStorage.setItem('current User', `${login}`);
+    let allow;
+    const warnInLogin = document.querySelector('.badRequest');
+    requestToBack.loginStep(login, password)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        if (res.statusCode === 403) {
+          warnInLogin.innerHTML = res.message;
+          warnInLogin.classList.add('visibleBlock');
+          setTimeout(() => {
+            warnInLogin.classList.toggle('visibleBlock');
+          }, 10000);
+          allow = false;
+        } if (res.statusCode === 400) {
+          warnInLogin.innerHTML = 'Ошибка при входе';
+          warnInLogin.classList.add('visibleBlock');
+          setTimeout(() => {
+            warnInLogin.classList.toggle('visibleBlock');
+          }, 10000);
+          allow = false;
+        } else if (res.token) {
+          localStorage.setItem('current User', JSON.stringify({
+            login,
+            token: res.token,
+          }));
+          warnInLogin.innerHTML = 'Вход выполнен успешно';
+          warnInLogin.classList.add('accessReg');
+          warnInLogin.classList.add('visibleBlock');
+          setTimeout(() => {
+            warnInLogin.classList.toggle('visibleBlock');
+          }, 5000);
+          allTweetControl.setCurrentUSer((JSON.parse(localStorage.getItem('current User'))).login);
+          allow = true;
         }
-      }
-      return check;
-    });
-
-    return check;
+      })
+      .catch((error) => error.message);
   }
 
   static logOut() {
-    alert('выполнен выход');
     allTweetControl.headerView.display(null);
     document.location.href = 'logIn.html';
     return localStorage.removeItem('current User');
   }
 
   static registration(login, password) {
-    const users = JSON.parse(UserController.getUserInStorage());
-    const existen = users.every(checkUsers);
-    function checkUsers(element) {
-      console.log(Object.keys(element)[0]);
-      if (Object.keys(element)[0] === login) {
-        return false;
-      }
-      return true;
-    }
-    console.log(existen);
-    if (existen) {
-      const newUser = {
-        [login]: password,
-      };
-      console.log(newUser);
-      users.push(newUser);
-      localStorage.removeItem('users');
-      localStorage.setItem('users', JSON.stringify(users));
-      alert('регистрация произошла успешно');
-    } else alert('такой пользователь существует');
+    requestToBack.registration(login, password)
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.statusCode) {
+          const badRes = document.querySelector('.badRequest');
+          badRes.classList.add('visibleBlock');
+          setTimeout(() => {
+            badRes.classList.toggle('visibleBlock');
+          }, 10000);
+        } else if ('login' in res) {
+          console.log('work');
+          const accessReg = document.querySelector('.accessReg');
+          accessReg.classList.add('visibleBlock');
+          setTimeout(() => {
+            accessReg.classList.toggle('visibleBlock');
+          }, 10000);
+        }
+      })
+      .catch((error) => error.message);
   }
 }
+
+const accessReg = document.querySelector('.accessReg');
 const usControll = new UserController();
 
 const login = document.querySelector('#myLogin');
 const password = document.querySelector('#password');
 const form = document.querySelector('.formInLoginPage');
-form?.addEventListener('submit', (e) => {
+form?.addEventListener('submit', async (e) => {
   e.preventDefault();
-  if (UserController.checkLogIn(login.value, password.value)) {
-    alert('вход выполнен успешно');
-    UserController.checkLogIn(login.value, password.value);
-    document.location.href = 'main.html';
-    return;
-  } if (!UserController.checkLogIn(login.value, password.value)) {
-    alert('не верный логин или пароль');
-  }
-  return e.preventDefault();
+  await UserController.checkLogIn(login.value, password.value);
+  setTimeout(() => {
+    if (localStorage.getItem('current User')) {
+      document.location.href = 'main.html';
+    }
+  }, 2000);
 });
 
 const logInButton = document.querySelector('.logInButton');
@@ -1110,18 +1121,27 @@ const repeatPass = document.querySelector('#repeatPass');
 const regForm = document.querySelector('.formInRegPage');
 regForm?.addEventListener('submit', (e) => {
   e.preventDefault();
-  if (passwordInReg.value === repeatPass.value) {
-    document.location.href = 'logIn.html';
-    return UserController.registration(loginInReg.value, passwordInReg.value);
-  } alert('пароли не совпадают');
+  if (passwordInReg.value === repeatPass.value && loginInReg.value !== '' && passwordInReg.value !== '') {
+    UserController.registration(loginInReg.value, passwordInReg.value);
+    passwordInReg.value = null;
+    repeatPass.value = null;
+    loginInReg.value = null;
+  } else if (passwordInReg.value !== repeatPass.value && passwordInReg.value !== '') {
+    alert('пароли не совпадают');
+  }
 });
 
 const correctTrotter = document.querySelector('#trotterList');
 correctTrotter?.addEventListener('click', (e) => {
   const currentTweet = e.target.closest('.mainBlockTrotteListTrotter').getAttribute('id');
+  const author = e.target.closest('.mainBlockTrotteListTrotter').children[0].children[1].children[0].children[0].childNodes[0].textContent;
+  const text = e.target.closest('.mainBlockTrotteListTrotter').children[0].children[1].children[1].childNodes[0].textContent;
   if (e.target.classList.contains('correctTrotter')) {
     const editMenu = e.target.children;
     editMenu[0].classList.toggle('visibleBlock');
+    setTimeout(() => {
+      editMenu[0].classList.toggle('visibleBlock');
+    }, 5000);
   }
   if (e.target.classList.contains('deleteCurrentTweet')) {
     allTweetControl.removeTweet(currentTweet);
@@ -1131,8 +1151,29 @@ correctTrotter?.addEventListener('click', (e) => {
     allTweetControl.editTweet(currentTweet, changeText);
   }
   if (e.target.classList.contains('commentToTweet')) {
-    callTweet(currentTweet);
-    document.location.href = 'twit.html';
+    requestToBack.getCurrentTweet(author, text)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data instanceof Array) {
+          const currentTws = data.filter((el) => el.id === currentTweet);
+          localStorage.setItem('current Tweet', JSON.stringify(currentTws));
+          document.location.href = 'twit.html';
+        }
+      })
+      .catch((error) => console.log(error.message));
+  }
+});
+
+const correctComment = document.querySelector('.trotterList');
+correctComment?.addEventListener('click', (e) => {
+  const currentTweet = e.target.closest('.container').getAttribute('id');
+  if (e.target.classList.contains('correctTrotter')) {
+    const editMenu = e.target.children;
+    editMenu[0].classList.toggle('visibleBlock');
+  }
+  if (e.target.classList.contains('editCurrentTweet')) {
+    const changeText = prompt('Введите новый комментарий твита');
+    allTweetControl.addTweetComment(currentTweet, changeText);
   }
 });
 
@@ -1153,11 +1194,27 @@ const valueToAddInComment = document.querySelector('.valueToAddInComment');
 formForAddNewComment?.addEventListener('submit', (e) => {
   e.preventDefault();
   if (valueToAddInComment.value !== '') {
-    const idTweet = JSON.parse(localStorage.getItem('curentTweet'))._id;
+    const idTweet = (JSON.parse(localStorage.getItem('current Tweet')))[0].id;
+    console.log(idTweet, valueToAddInComment.value);
     allTweetControl.addTweetComment(idTweet, valueToAddInComment.value);
     valueToAddInComment.value = '';
   } else alert('введите хоть что-нибудь');
 });
+
+const wrapperForBackError = document.querySelector('.wrapperForBackError');
+const containerForError = document.createElement('p');
+const error = document.createElement('p');
+containerForError.classList.add('styleForError');
+error.classList.add('styleForError');
+if (JSON.parse(localStorage.getItem('error')) && error) {
+  error.innerHTML = JSON.parse(localStorage.getItem('error')).statusCode;
+  containerForError.innerHTML = JSON.parse(localStorage.getItem('error')).error;
+}
+
+wrapperForBackError?.append(error);
+wrapperForBackError?.append(containerForError);
+
+requestToBack.webSocket();
 
 /* All
 
