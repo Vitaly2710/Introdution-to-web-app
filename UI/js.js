@@ -767,9 +767,6 @@ class TweetFeedApiService {
   getTweet(author, text, dateFrom, dateTo, from, count, hashtags) {
     const arrayParams = [author, text, dateFrom, dateTo, from, count, hashtags];
     const urlToFetch = [];
-    if (localStorage.getItem('filterConfig')) {
-      urlToFetch.push(JSON.parse(localStorage.getItem('filterConfig')));
-    }
     arrayParams.forEach((elem) => {
       if (elem !== undefined) {
         switch (elem) {
@@ -777,7 +774,7 @@ class TweetFeedApiService {
             urlToFetch.push(`author=${elem}&`);
             break;
           case text:
-            urlToFetch.push(`text=${elem}`);
+            urlToFetch.push(`text=${elem}&`);
             break;
           case dateFrom:
             urlToFetch.push(`dateFrom=${dateFrom}&`);
@@ -799,9 +796,13 @@ class TweetFeedApiService {
       }
     });
     let la;
+    if (localStorage.getItem('filterConfig')) {
+      la = (JSON.parse(localStorage.getItem('filterConfig')));
+    }
     if (urlToFetch.length !== 0) {
       la = urlToFetch.join('');
     }
+    console.log(la);
     if (la !== undefined) {
       const tweets = fetch(`${this.url}/tweet?${la}`)
         .then((res) => res.json())
@@ -809,7 +810,7 @@ class TweetFeedApiService {
           localStorage.setItem('filterConfig', JSON.stringify(la));
           localStorage.setItem('allTws', JSON.stringify(data));
           allTweetControl.newList.display(data);
-          asyncFilter();
+          asyncFilter(data);
         })
         .catch((error) => console.log(error.message));
     } else if (la === undefined) {
@@ -971,11 +972,10 @@ function pagination() {
 const closure = pagination();
 function addTweets() {
   const a = closure();
-  if (localStorage.getItem('filterConfig')) {
-    requestToBack.getTweet(undefined, undefined, undefined, undefined, undefined, a);
-  }
+  // if (localStorage.getItem('filterConfig')) {
+  //   requestToBack.getTweet(undefined, undefined, undefined, undefined, undefined, a);
+  // }
   requestToBack.getTweet(undefined, undefined, undefined, undefined, undefined, a);
-  // allTweetControl.newList.display(allTweetControl.newAllCollectionOfTweet.tws);
   asyncFilter();
 }
 
@@ -1139,6 +1139,9 @@ correctTrotter?.addEventListener('click', (e) => {
   if (e.target.classList.contains('correctTrotter')) {
     const editMenu = e.target.children;
     editMenu[0].classList.toggle('visibleBlock');
+    setTimeout(() => {
+      editMenu[0].classList.toggle('visibleBlock');
+    }, 5000);
   }
   if (e.target.classList.contains('deleteCurrentTweet')) {
     allTweetControl.removeTweet(currentTweet);
